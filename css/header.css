@@ -1,0 +1,166 @@
+/* Mobile Sidebar Styles */
+.mobile-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.mobile-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    z-index: 9999;
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
+}
+
+.mobile-sidebar.active {
+    right: 0;
+}
+
+/* Mobile Navigation Items */
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: #1f2937;
+    text-decoration: none;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.mobile-nav-item:hover {
+    background: #f8fafc;
+    color: #800000;
+}
+
+.mobile-nav-item.active {
+    background: #800000;
+    color: white;
+}
+
+/* Mobile Accordion */
+.mobile-accordion {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.mobile-accordion-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    color: #1f2937;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.mobile-accordion-btn:hover {
+    background: #f8fafc;
+    color: #800000;
+}
+
+.mobile-accordion-btn.active {
+    background: #f8fafc;
+}
+
+.mobile-accordion-btn.active i:last-child {
+    transform: rotate(180deg);
+}
+
+.mobile-accordion-content {
+    background: #f8fafc;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.mobile-accordion-content.active {
+    max-height: 500px;
+}
+
+.mobile-subnav-item {
+    display: block;
+    padding: 0.875rem 1.5rem 0.875rem 3.5rem;
+    color: #4b5563;
+    text-decoration: none;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.mobile-subnav-item:hover {
+    background: #e5e7eb;
+    color: #800000;
+}
+
+.mobile-subnav-item.active {
+    color: #800000;
+    font-weight: 600;
+    background: #e5e7eb;
+}
+
+/* Logo Container */
+.logo-container {
+    width: 180px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Sticky Header */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Responsive Design */
+@media (min-width: 640px) {
+    .mobile-sidebar {
+        width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-container {
+        width: 120px;
+        height: 40px;
+    }
+}
+
+/* Hide body overflow when sidebar is open */
+body.sidebar-open {
+    overflow: hidden;
+}
+

@@ -1,0 +1,51 @@
+ .bg-primary {
+        background-color: #1A1A1A;
+    }
+
+    .bg-accent {
+        background-color: #DC2626;
+    }
+
+    .text-primary {
+        color: #1A1A1A;
+    }
+
+    .text-accent {
+        color: #DC2626;
+    }
+
+    .text-secondary {
+        color: #4B5563;
+    }
+
+    .bg-light {
+        background-color: #F8FAFC;
+    }
+
+    .font-serif {
+        font-family: 'Georgia', serif;
+    }
+
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .btn-primary {
+        background-color: #DC2626;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #B91C1C;
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+        .section-padding {
+            padding: 60px 0;
+        }
+    }

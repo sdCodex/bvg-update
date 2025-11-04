@@ -1,0 +1,379 @@
+/* Blog Main Styles */
+.blog-container {
+    min-height: 100vh;
+}
+
+.blog-hero {
+    background: linear-gradient(135deg, #003366 0%, #800000 100%);
+    color: white;
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.blog-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.blog-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Featured Posts */
+.featured-posts {
+    padding: 60px 0;
+    background: #f8fafc;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #003366;
+    font-family: 'Playfair Display', serif;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.featured-post {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featured-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.post-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.featured-post:hover .post-image img {
+    transform: scale(1.05);
+}
+
+.post-content {
+    padding: 1.5rem;
+}
+
+.category-tag {
+    background: #800000;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.post-content h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.3rem;
+}
+
+.post-content h3 a {
+    color: #003366;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post-content h3 a:hover {
+    color: #800000;
+}
+
+.post-excerpt {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.post-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Latest Posts */
+.latest-posts {
+    padding: 60px 0;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.post-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+}
+
+.pagination a {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #003366;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover,
+.pagination a.active {
+    background: #800000;
+    color: white;
+    border-color: #800000;
+}
+
+/* Downloads Styles */
+.downloads-container,
+.question-papers-container {
+    min-height: 100vh;
+}
+
+.downloads-hero,
+.papers-hero {
+    background: linear-gradient(135deg, #003366 0%, #3e2723 100%);
+    color: white;
+    padding: 60px 0 40px;
+    text-align: center;
+}
+
+.downloads-hero h1,
+.papers-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Filters */
+.filters-section {
+    padding: 2rem 0;
+    background: #f8fafc;
+}
+
+.filters-form {
+    display: flex;
+    gap: 1.5rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #003366;
+}
+
+.filter-group select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 150px;
+}
+
+.filter-btn {
+    background: #800000;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #600000;
+}
+
+.clear-filters {
+    color: #800000;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+/* Downloads Grid */
+.downloads-list,
+.papers-list {
+    padding: 3rem 0;
+}
+
+.downloads-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.download-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.download-item:hover {
+    transform: translateX(5px);
+}
+
+.file-icon {
+    font-size: 2rem;
+}
+
+.download-info {
+    flex: 1;
+}
+
+.download-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #003366;
+}
+
+.download-desc {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.download-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.download-btn,
+.download-link {
+    background: #800000;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.download-btn:hover,
+.download-link:hover {
+    background: #600000;
+}
+
+/* Question Papers Table */
+.papers-table {
+    overflow-x: auto;
+}
+
+.papers-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.papers-table th,
+.papers-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.papers-table th {
+    background: #003366;
+    color: white;
+    font-weight: 600;
+}
+
+.papers-table tr:hover {
+    background: #f8fafc;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .blog-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .featured-grid,
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .download-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .download-meta {
+        justify-content: center;
+    }
+    
+    .papers-table {
+        font-size: 0.9rem;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}

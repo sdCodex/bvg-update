@@ -1,0 +1,234 @@
+/* New Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.stat-card.blog::before { background: #800000; }
+.stat-card.downloads::before { background: #059669; }
+.stat-card.papers::before { background: #3b82f6; }
+.stat-card.inspiration::before { background: #dc2626; }
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.blog { background: #800000; }
+.stat-icon.downloads { background: #059669; }
+.stat-icon.papers { background: #3b82f6; }
+.stat-icon.inspiration { background: #dc2626; }
+
+.stat-info h3 {
+    font-size: 2rem;
+    margin: 0;
+    color: #003366;
+}
+
+.stat-info p {
+    margin: 0;
+    color: #666;
+}
+
+.stat-link {
+    margin-left: auto;
+    color: #800000;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Activities Grid */
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.activity-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.activity-card h3 {
+    margin-top: 0;
+    color: #003366;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 0.5rem;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-title {
+    font-weight: 500;
+    color: #333;
+}
+
+.activity-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* New Badges */
+.badge-featured {
+    background: #f59e0b;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+}
+
+.badge-category {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+/* Navigation Dropdown */
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-submenu {
+    display: none;
+    padding-left: 1.5rem;
+}
+
+.nav-dropdown.active .nav-submenu {
+    display: block;
+}
+
+.nav-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-toggle .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.nav-dropdown.active .nav-toggle .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+
+/* Settings Tabs */
+.settings-tabs {
+    margin-top: 1rem;
+}
+
+.tab-buttons {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.tab-btn.active {
+    color: #800000;
+    border-bottom-color: #800000;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Permission Grid */
+.permission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 4px;
+}
+
+.admin-permission {
+    margin-bottom: 1.5rem;
+}
+
+.admin-permission h4 {
+    margin: 0 0 1rem 0;
+    color: #003366;
+}
