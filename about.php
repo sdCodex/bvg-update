@@ -113,15 +113,15 @@ if(file_exists($header_file)) {
     <div class="max-w-7xl mx-auto px-4">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center fade-in-up">
-                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">500+</div>
+                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">50+</div>
                 <div class="text-secondary font-medium">Students Enrolled</div>
             </div>
             <div class="text-center fade-in-up">
-                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">50+</div>
+                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">20+</div>
                 <div class="text-secondary font-medium">Expert Faculty</div>
             </div>
             <div class="text-center fade-in-up">
-                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">15+</div>
+                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">5+</div>
                 <div class="text-secondary font-medium">Years Experience</div>
             </div>
             <div class="text-center fade-in-up">
@@ -241,59 +241,68 @@ if(file_exists($header_file)) {
         <!-- Timeline -->
         <div class="max-w-4xl mx-auto">
             <div class="relative">
-                <!-- Timeline Line -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-accent/20 h-full"></div>
+                <!-- Timeline Line - Hidden on mobile -->
+                <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-accent/20 h-full"></div>
                 
                 <?php
                 $timeline_events = [
                     [
-                        'year' => '2008',
-                        'title' => 'Foundation Laid',
-                        'description' => 'Bhaktivedanta Gurukul established under divine inspiration of Srila Prabhupada',
+                        'year' => '2021',
+                        'title' => 'Conceived',
+                        'description' => 'On the 125th Appearance (Birth) Anniversary of Srila Prabhupada, a dire need of authentic Vedic-value-based chain of schools was thought of.',
                         'icon' => 'fas fa-seedling',
                         'side' => 'left'
                     ],
                     [
-                        'year' => '2010',
-                        'title' => 'First Graduation',
-                        'description' => 'First batch of students successfully completes primary education',
+                        'year' => '2025',
+                        'title' => 'Execution Started',
+                        'description' => 'To impart Prabhupada\'s teachings and Vedic sanskaras along with academic excellence, planning was started by the IITians ISKCON devotees.',
                         'icon' => 'fas fa-graduation-cap',
                         'side' => 'right'
                     ],
                     [
-                        'year' => '2013',
-                        'title' => 'Campus Expansion',
-                        'description' => 'New infrastructure development with modern facilities',
+                        'year' => '2025',
+                        'title' => 'Established',
+                        'description' => 'As Prayagraj is the divine land of the first creation of the universe by Sri Mahamabi Bhardwaj, so just after Mahakumbh 2025, Prayagraj thought to be the 1st centre of Bhaktivedanta Gurukul.',
                         'icon' => 'fas fa-building',
                         'side' => 'left'
                     ],
                     [
-                        'year' => '2016',
-                        'title' => 'CBSE Affiliation',
-                        'description' => 'Received CBSE affiliation for comprehensive curriculum',
+                        'year' => '2026',
+                        'title' => 'GURUKUL FORTUNATE 50',
+                        'description' => 'We\'re going to launch a nationwide scholarship exam for select students, providing free education & free accommodation for 50–50 students of classes 6, 7, 8.',
                         'icon' => 'fas fa-award',
                         'side' => 'right'
                     ],
                     [
-                        'year' => '2020',
-                        'title' => 'Digital Transformation',
+                        'year' => '2030',
+                        'title' => 'Upcoming 5-Year Plan',
                         'description' => 'Implemented digital learning platforms and smart classrooms',
                         'icon' => 'fas fa-laptop',
                         'side' => 'left'
                     ],
                     [
-                        'year' => '2024',
-                        'title' => 'Excellence Achieved',
-                        'description' => 'Recognized as leading institution for holistic education',
+                        'year' => '2050',
+                        'title' => 'Upcoming 25-Year Plan',
+                        'description' => 'To have presence of Bhaktivedanta Gurukul in every state of Bharat.',
                         'icon' => 'fas fa-trophy',
                         'side' => 'right'
+                    ],
+                    [
+                        'year' => '2096',
+                        'title' => 'AIM Offering to Srila Prabhupada on his 200th Birth Anniversary (Vyasa Puja)',
+                        'description' => 'To have a branch of Bhaktivedanta Gurukul in every district of Bharat (India).',
+                        'icon' => 'fas fa-trophy',
+                        'side' => 'left'
                     ]
                 ];
                 
                 foreach ($timeline_events as $index => $event):
                 ?>
-                <div class="relative mb-12 fade-in-up pb-4">
-                    <div class="flex items-center w-full <?php echo $event['side'] === 'left' ? 'flex-row' : 'flex-row-reverse'; ?>">
+                <!-- Timeline Item -->
+                <div class="relative mb-8 fade-in-up">
+                    <!-- Desktop Layout -->
+                    <div class="hidden md:flex items-center w-full pb-5 <?php echo $event['side'] === 'left' ? 'flex-row' : 'flex-row-reverse'; ?>">
                         <div class="w-1/2 <?php echo $event['side'] === 'left' ? 'pr-8 text-right' : 'pl-8'; ?>">
                             <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover-lift">
                                 <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mb-4 mx-<?php echo $event['side'] === 'left' ? 'auto ml-0' : 'auto mr-0'; ?>">
@@ -306,6 +315,33 @@ if(file_exists($header_file)) {
                         </div>
                         <div class="w-8 h-8 bg-accent rounded-full border-4 border-white shadow-lg z-10"></div>
                         <div class="w-1/2"></div>
+                    </div>
+                    
+                    <!-- Mobile Layout - Simple and Clean -->
+                    <div class="md:hidden w-full">
+                        <div class="flex items-start">
+                            <!-- Timeline Dot and Line -->
+                            <div class="flex flex-col items-center w-8 mr-4 flex-shrink-0">
+                                <div class="w-6 h-6 bg-accent rounded-full border-2 border-white shadow-md z-10"></div>
+                                <?php if($index < count($timeline_events) - 1): ?>
+                                <div class="w-1 bg-accent/20 flex-grow mt-2"></div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="flex-1 bg-white rounded-xl shadow-md p-4 border border-gray-100 mb-4">
+                                <div class="flex items-start mb-3">
+                                    <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                                        <i class="<?php echo $event['icon']; ?> text-white text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-lg font-bold text-accent mb-1"><?php echo $event['year']; ?></div>
+                                        <h3 class="font-serif text-base font-bold text-primary mb-2"><?php echo $event['title']; ?></h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed"><?php echo $event['description']; ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -446,12 +482,12 @@ if(file_exists($header_file)) {
                 <div class="rounded-2xl overflow-hidden shadow-lg">
                     <img src="<?php echo $base_url; ?>/images/icons/about-page1.jpeg" 
                          alt="Modern Classroom" 
-                         class="w-full h-48 object-cover hover:scale-105 transition-transform duration-500">
+                         class="w-full h-42 object-cover hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="rounded-2xl overflow-hidden shadow-lg">
                     <img src="<?php echo $base_url; ?>/images/icons/class1.jpeg" 
                          alt="School Library" 
-                         class="w-full h-48 object-cover hover:scale-105 transition-transform duration-500">
+                         class="w-full h-42 object-cover hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="rounded-2xl overflow-hidden shadow-lg">
                     <img src="<?php echo $base_url; ?>/images/icons/class2.jpeg" 

@@ -99,10 +99,10 @@
                             Our mission is to nurture young minds with knowledge, values, and skills for a meaningful life.
                         </p>
                         <div class="flex space-x-4">
-                              <a href="https://whatsapp.com/channel/0029VbB2O3F8KMqcp0Eu4A21" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
+                            <a href="https://whatsapp.com/channel/0029VbB2O3F8KMqcp0Eu4A21" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
-                             <a href="https://www.instagram.com/bhaktivedanta.gurukul" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
+                            <a href="https://www.instagram.com/bhaktivedanta.gurukul" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-instagram"></i>
                             </a>
                             <a href="https://www.facebook.com/share/1Bd7wGt7PP/" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
@@ -111,14 +111,14 @@
                             <a href="#" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-twitter"></i>
                             </a>
-                           
+
                             <a href="https://www.youtube.com/@BhaktivedantaGurukul" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-youtube"></i>
                             </a>
                             <a href="https://www.linkedin.com/in/bhaktivedanta-gurukul/" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
-                          
+
                             <a href="https://t.me/BhaktivedantaGurukul" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-telegram"></i>
                             </a>
@@ -137,24 +137,35 @@
                             <li><a href="<?php echo $base_url; ?>/contact.php" class="footer-link text-gray-300 hover:text-white block">Contact</a></li>
                         </ul>
                     </div>
-
                     <!-- Contact Info -->
                     <div>
                         <h4 class="font-serif text-lg font-semibold mb-6 pb-2 border-b border-accent inline-block">Contact Info</h4>
                         <div class="space-y-4 text-gray-300">
+
+                            <!-- Location -->
                             <div class="flex items-start space-x-3">
                                 <i class="fas fa-map-marker-alt text-accent mt-1"></i>
-                                <span>Bhaktivedanta Gurukul, Near ISKCON Prayagraj,
-                                    Mutthi Ganj, Prayagraj, UP- 211003</span>
+                                <a href="https://www.google.com/maps?q=Bhaktivedanta+Gurukul,+Near+ISKCON+Prayagraj,+Mutthi+Ganj,+Prayagraj,+UP-211003"
+                                    target="_blank"
+                                    class="hover:text-accent transition-colors">
+                                    Bhaktivedanta Gurukul, Near ISKCON Prayagraj,
+                                    Mutthi Ganj, Prayagraj, UP- 211003
+                                </a>
                             </div>
+
+                            <!-- Phone -->
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-phone text-accent"></i>
-                                <span>+91 7618040040</span>
+                                <a href="tel:+917618040040" class="hover:text-accent transition-colors">+91 7618040040</a>
                             </div>
+
+                            <!-- Email -->
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-envelope text-accent"></i>
-                                <span>info@ourgurukul.org</span>
+                                <a href="mailto:info@ourgurukul.org" class="hover:text-accent transition-colors">info@ourgurukul.org</a>
                             </div>
+
+                            <!-- Timing -->
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-clock text-accent"></i>
                                 <span>Mon - Sat: 8:00 AM - 2:00 PM</span>
@@ -162,11 +173,12 @@
                         </div>
                     </div>
 
+
                     <!-- Map Section -->
                     <div>
                         <h4 class="font-serif text-lg font-semibold mb-6 pb-2 border-b border-accent inline-block">Our Location</h4>
                         <div class="map-container bg-secondary flex items-center justify-center">
-                          
+
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3603.4065403354293!2d81.83626877605948!3d25.424668522448314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39853530acb4005f%3A0x5e240b741f40b60a!2sISKCON%20Prayagraj%20-%20Shri%20Shri%20Radha%20Venimadhava%20Mandir!5e0!3m2!1sen!2sin!4v1761634042246!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>

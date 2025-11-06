@@ -378,7 +378,7 @@
             <div class="bg-red-50 rounded-2xl p-8">
                 <h3 class="font-serif text-2xl font-bold text-primary mb-4">Still have questions?</h3>
                 <p class="text-gray-600 mb-6">Our HR team is here to help you with any career-related queries.</p>
-                <a href="../contact.php" class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center">
+                <a href="<?php echo $base_url; ?>/contact.php" class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center">
                     <i class="fas fa-envelope mr-3"></i> Contact HR Department
                 </a>
             </div>
@@ -399,7 +399,7 @@
             <a href="application.php" class="bg-white text-primary hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center">
                 Start Your Application
             </a>
-            <a href="../../contact.php" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center">
+            <a href="<?php echo $base_url; ?>/contact.php" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center">
                 Contact HR Team
             </a>
         </div>

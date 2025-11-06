@@ -67,10 +67,10 @@ $current_directory = '';
                         Integrating academic excellence with spiritual growth and character development
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="<?php echo $base_url; ?>/admissions/index.php" class="btn-primary">
+                        <a href="<?php echo $base_url; ?>/pages/admissions/index.php" class="btn-primary">
                             Admission Process <i class="fas fa-user-graduate ml-2"></i>
                         </a>
-                        <a href="<?php echo $base_url; ?>/campus/virtual-tour.php" class="btn-secondary">
+                        <a href="<?php echo $base_url; ?>/about.php" class="btn-secondary">
                             Virtual Tour <i class="fas fa-vr-cardboard ml-2"></i>
                         </a>
                     </div>
@@ -80,7 +80,7 @@ $current_directory = '';
             <!-- Slide 3 -->
             <div class="swiper-slide">
                 <div class="absolute inset-0 bg-gradient-to-br from-secondary/30 to-primary/40 z-10"></div>
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?php echo $base_url; ?>/images/background/hero-yoga.jpg')"></div>
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?php echo $base_url; ?>/images/icons/home-hero-11.jpeg')"></div>
                 <div class="swiper-slide-content">
                     <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow">
                         Vedic <span class="text-accent">Wisdom</span>
@@ -142,7 +142,7 @@ $current_directory = '';
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
                 <div class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-6">
-                    <i class="fas fa-star mr-2"></i> Established 2008
+                    <i class="fas fa-star mr-2"></i> Established 2025
                 </div>
                 <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-6">
                     Tradition Meets <span class="text-accent">Innovation</span>
@@ -458,7 +458,7 @@ $current_directory = '';
 
                         <!-- Action Buttons -->
                         <div class="program-actions">
-                            <a href="<?php echo $base_url; ?>/contact.php?program=<?php echo urlencode($program['title']); ?>"
+                            <a href="<?php echo $base_url; ?>/pages/admissions/apply.php?program=<?php echo urlencode($program['title']); ?>"
                                 class="btn-primary w-full text-center block">
                                 <i class="fas fa-info-circle mr-2"></i>Enquire Now
                             </a>
@@ -623,7 +623,7 @@ $current_directory = '';
             Join our community dedicated to nurturing young minds with Vedic wisdom and modern education
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="<?php echo $base_url; ?>/admissions/index.php" class="bg-white text-primary hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-all duration-300 inline-flex items-center justify-center">
+            <a href="<?php echo $base_url; ?>/pages/admissions/index.php" class="bg-white text-primary hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-all duration-300 inline-flex items-center justify-center">
                 <i class="fas fa-user-graduate mr-3"></i> Admission Inquiry
             </a>
             <a href="<?php echo $base_url; ?>/contact.php" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold py-4 px-8 rounded-lg transition-all duration-300 inline-flex items-center justify-center">

@@ -323,7 +323,7 @@ try {
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-gray-200">
-                        <a href="../contact.php" class="w-full bg-accent hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 inline-flex items-center justify-center">
+                        <a href="<?php echo $base_url; ?>/contact.php" class="w-full bg-accent hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 inline-flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i>
                             Visit Campus
                         </a>
