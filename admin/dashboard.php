@@ -12,146 +12,122 @@ require_once '../includes/db.php';
 
 $base_url = '/Gurkul_Project';
 
-// Get counts for dashboard from ALL tables with error handling
+// Initialize variables
+$students_count = 0;
+$teachers_count = 0;
+$applications_count = 0;
+$total_applications = 0;
+$admission_inquiries_count = 0;
+$pending_inquiries = 0;
+$contact_messages_count = 0;
+$job_applications_count = 0;
+$scholarship_submissions_count = 0;
+$blog_count = 0;
+$downloads_count = 0;
+$question_papers_count = 0;
+$inspiration_count = 0;
+
+$recent_applications = [];
+$recent_inquiries = [];
+$recent_contacts = [];
+$recent_jobs = [];
+$recent_scholarships = [];
+$recent_posts = [];
+$recent_downloads = [];
+
+// Get applications data - OPTIMIZED VERSION
 try {
-    // Active counts with table existence check
-    $students_count = 0;
-    $teachers_count = 0;
-    $applications_count = 0;
-    $total_applications = 0;
-    $admission_inquiries_count = 0;
-    $pending_inquiries = 0;
-    $contact_messages_count = 0;
-    $job_applications_count = 0;
-    $scholarship_submissions_count = 0;
+    // Check if applications table exists and get data
+    $stmt = $pdo->query("SHOW TABLES LIKE 'applications'");
+    $tableExists = $stmt->fetch();
     
-    // New module counts
-    $blog_count = 0;
-    $downloads_count = 0;
-    $question_papers_count = 0;
-    $inspiration_count = 0;
-
-    // Check each table and get counts
-    $tables = [
-        'students' => "SELECT COUNT(*) FROM students WHERE status = 'Active'",
-        'teachers' => "SELECT COUNT(*) FROM teachers WHERE status = 'Active'",
-        'applications' => "SELECT COUNT(*) FROM applications",
-        'applications_pending' => "SELECT COUNT(*) FROM applications WHERE status = 'Pending'",
-        'admission_inquiries' => "SELECT COUNT(*) FROM admission_inquiries",
-        'admission_inquiries_pending' => "SELECT COUNT(*) FROM admission_inquiries WHERE status = 'pending'",
-        'contact_messages' => "SELECT COUNT(*) FROM contact_messages",
-        'job_applications' => "SELECT COUNT(*) FROM job_applications",
-        'scholarship_submissions' => "SELECT COUNT(*) FROM scholarship_submissions",
-        'blog_posts' => "SELECT COUNT(*) FROM blog_posts",
-        'downloads' => "SELECT COUNT(*) FROM downloads",
-        'question_papers' => "SELECT COUNT(*) FROM question_papers",
-        'inspiration' => "SELECT COUNT(*) FROM inspiration"
-    ];
-
-    foreach ($tables as $key => $query) {
+    if ($tableExists) {
+        // Get total applications count
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM applications");
+        $total_applications = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        
+        // Get pending applications count - handle different possible status values
+        $stmt = $pdo->query("SELECT COUNT(*) as pending FROM applications WHERE status = 'Pending' OR status = 'pending' OR status IS NULL OR status = ''");
+        $applications_count = $stmt->fetch(PDO::FETCH_ASSOC)['pending'];
+        
+        // Get recent applications - handle different date columns
         try {
-            if (strpos($key, 'pending') !== false) {
-                if ($key === 'applications_pending') {
-                    $applications_count = $pdo->query($query)->fetchColumn();
-                } elseif ($key === 'admission_inquiries_pending') {
-                    $pending_inquiries = $pdo->query($query)->fetchColumn();
-                }
-            } else {
-                switch ($key) {
-                    case 'students':
-                        $students_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'teachers':
-                        $teachers_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'applications':
-                        $total_applications = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'admission_inquiries':
-                        $admission_inquiries_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'contact_messages':
-                        $contact_messages_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'job_applications':
-                        $job_applications_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'scholarship_submissions':
-                        $scholarship_submissions_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'blog_posts':
-                        $blog_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'downloads':
-                        $downloads_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'question_papers':
-                        $question_papers_count = $pdo->query($query)->fetchColumn();
-                        break;
-                    case 'inspiration':
-                        $inspiration_count = $pdo->query($query)->fetchColumn();
-                        break;
-                }
-            }
+            $stmt = $pdo->query("SELECT * FROM applications ORDER BY created_at DESC LIMIT 5");
+            $recent_applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Table doesn't exist or error, continue with next
-            error_log("Table $key not found: " . $e->getMessage());
+            try {
+                $stmt = $pdo->query("SELECT * FROM applications ORDER BY application_date DESC LIMIT 5");
+                $recent_applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e2) {
+                $stmt = $pdo->query("SELECT * FROM applications ORDER BY id DESC LIMIT 5");
+                $recent_applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
         }
     }
-
-    // Get recent data from ALL tables with error handling
-    $recent_data_queries = [
-        'applications' => "SELECT * FROM applications ORDER BY created_at DESC LIMIT 5",
-        'admission_inquiries' => "SELECT * FROM admission_inquiries ORDER BY created_at DESC LIMIT 5",
-        'contact_messages' => "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5",
-        'job_applications' => "SELECT * FROM job_applications ORDER BY applied_at DESC LIMIT 5",
-        'scholarship_submissions' => "SELECT * FROM scholarship_submissions ORDER BY created_at DESC LIMIT 5",
-        'blog_posts' => "SELECT title, created_at FROM blog_posts ORDER BY created_at DESC LIMIT 5",
-        'downloads' => "SELECT title, created_at FROM downloads ORDER BY created_at DESC LIMIT 5"
+    
+    // Get other counts with error handling
+    $tables_to_check = [
+        'students' => ['count' => &$students_count, 'query' => "SELECT COUNT(*) as cnt FROM students WHERE status = 'Active'"],
+        'teachers' => ['count' => &$teachers_count, 'query' => "SELECT COUNT(*) as cnt FROM teachers WHERE status = 'Active'"],
+        'admission_inquiries' => ['count' => &$admission_inquiries_count, 'query' => "SELECT COUNT(*) as cnt FROM admission_inquiries"],
+        'contact_messages' => ['count' => &$contact_messages_count, 'query' => "SELECT COUNT(*) as cnt FROM contact_messages"],
+        'job_applications' => ['count' => &$job_applications_count, 'query' => "SELECT COUNT(*) as cnt FROM job_applications"],
+        'scholarship_submissions' => ['count' => &$scholarship_submissions_count, 'query' => "SELECT COUNT(*) as cnt FROM scholarship_submissions"],
+        'blog_posts' => ['count' => &$blog_count, 'query' => "SELECT COUNT(*) as cnt FROM blog_posts"],
+        'downloads' => ['count' => &$downloads_count, 'query' => "SELECT COUNT(*) as cnt FROM downloads"],
+        'question_papers' => ['count' => &$question_papers_count, 'query' => "SELECT COUNT(*) as cnt FROM question_papers"],
+        'inspiration' => ['count' => &$inspiration_count, 'query' => "SELECT COUNT(*) as cnt FROM inspiration"]
     ];
-
-    $recent_applications = [];
-    $recent_inquiries = [];
-    $recent_contacts = [];
-    $recent_jobs = [];
-    $recent_scholarships = [];
-    $recent_posts = [];
-    $recent_downloads = [];
-
-    foreach ($recent_data_queries as $key => $query) {
+    
+    foreach ($tables_to_check as $table => $data) {
         try {
-            $stmt = $pdo->prepare($query);
-            $stmt->execute();
-            switch ($key) {
-                case 'applications':
-                    $recent_applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'admission_inquiries':
-                    $recent_inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'contact_messages':
-                    $recent_contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'job_applications':
-                    $recent_jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'scholarship_submissions':
-                    $recent_scholarships = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'blog_posts':
-                    $recent_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
-                case 'downloads':
-                    $recent_downloads = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    break;
+            $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
+            if ($stmt->fetch()) {
+                $count_stmt = $pdo->query($data['query']);
+                $result = $count_stmt->fetch(PDO::FETCH_ASSOC);
+                $data['count'] = $result['cnt'];
             }
         } catch (PDOException $e) {
-            error_log("Error fetching recent $key: " . $e->getMessage());
+            // Table doesn't exist or error, continue
+            error_log("Table $table error: " . $e->getMessage());
+        }
+    }
+    
+    // Get pending inquiries count
+    try {
+        $stmt = $pdo->query("SHOW TABLES LIKE 'admission_inquiries'");
+        if ($stmt->fetch()) {
+            $stmt = $pdo->query("SELECT COUNT(*) as cnt FROM admission_inquiries WHERE status = 'pending'");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $pending_inquiries = $result['cnt'];
+        }
+    } catch (PDOException $e) {
+        error_log("Pending inquiries error: " . $e->getMessage());
+    }
+    
+    // Get recent data from other tables
+    $recent_queries = [
+        'admission_inquiries' => ['data' => &$recent_inquiries, 'query' => "SELECT * FROM admission_inquiries ORDER BY created_at DESC LIMIT 5"],
+        'contact_messages' => ['data' => &$recent_contacts, 'query' => "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5"],
+        'job_applications' => ['data' => &$recent_jobs, 'query' => "SELECT * FROM job_applications ORDER BY applied_at DESC LIMIT 5"],
+        'scholarship_submissions' => ['data' => &$recent_scholarships, 'query' => "SELECT * FROM scholarship_submissions ORDER BY created_at DESC LIMIT 5"],
+        'blog_posts' => ['data' => &$recent_posts, 'query' => "SELECT title, created_at FROM blog_posts ORDER BY created_at DESC LIMIT 5"],
+        'downloads' => ['data' => &$recent_downloads, 'query' => "SELECT title, created_at FROM downloads ORDER BY created_at DESC LIMIT 5"]
+    ];
+    
+    foreach ($recent_queries as $table => $data) {
+        try {
+            $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
+            if ($stmt->fetch()) {
+                $recent_stmt = $pdo->query($data['query']);
+                $data['data'] = $recent_stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            error_log("Recent $table error: " . $e->getMessage());
         }
     }
 
 } catch(PDOException $e) {
-    // General database error
     error_log("Dashboard database error: " . $e->getMessage());
 }
 ?>
@@ -189,6 +165,10 @@ try {
         .admin-badge {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
         }
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -215,6 +195,84 @@ try {
                 <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                     <i class="fas fa-clock mr-1"></i><?php echo date('g:i A'); ?>
                 </span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="info-card text-white p-6 rounded-xl shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm">Pending Applications</p>
+                        <p class="text-2xl font-bold mt-1"><?php echo $applications_count; ?></p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Approved</p>
+                        <p class="text-2xl font-bold text-gray-800 mt-1">
+                            <?php 
+                            $approved_count = 0;
+                            if ($tableExists) {
+                                $stmt = $pdo->query("SELECT COUNT(*) as approved FROM applications WHERE status = 'Approved'");
+                                $approved_count = $stmt->fetch(PDO::FETCH_ASSOC)['approved'];
+                            }
+                            echo $approved_count; 
+                            ?>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Rejected</p>
+                        <p class="text-2xl font-bold text-gray-800 mt-1">
+                            <?php 
+                            $rejected_count = 0;
+                            if ($tableExists) {
+                                $stmt = $pdo->query("SELECT COUNT(*) as rejected FROM applications WHERE status = 'Rejected'");
+                                $rejected_count = $stmt->fetch(PDO::FETCH_ASSOC)['rejected'];
+                            }
+                            echo $rejected_count; 
+                            ?>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-times text-red-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Under Review</p>
+                        <p class="text-2xl font-bold text-gray-800 mt-1">
+                            <?php 
+                            $review_count = 0;
+                            if ($tableExists) {
+                                $stmt = $pdo->query("SELECT COUNT(*) as review FROM applications WHERE status = 'Under Review'");
+                                $review_count = $stmt->fetch(PDO::FETCH_ASSOC)['review'];
+                            }
+                            echo $review_count; 
+                            ?>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-search text-blue-600 text-xl"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -271,20 +329,20 @@ try {
                 </a>
             </div>
 
-            <!-- Admission Inquiries -->
+            <!-- Total Applications -->
             <div class="stat-card bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500 animate-fade-in">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm font-medium">Admission Inquiries</p>
-                        <h3 class="text-2xl font-bold text-gray-800"><?php echo $admission_inquiries_count; ?></h3>
-                        <p class="text-xs text-gray-500 mt-1"><?php echo $pending_inquiries; ?> pending</p>
+                        <p class="text-gray-600 text-sm font-medium">Total Applications</p>
+                        <h3 class="text-2xl font-bold text-gray-800"><?php echo $total_applications; ?></h3>
+                        <p class="text-xs text-gray-500 mt-1">All time applications</p>
                     </div>
                     <div class="bg-purple-100 p-3 rounded-full">
-                        <i class="fas fa-question-circle text-purple-500 text-xl"></i>
+                        <i class="fas fa-file-contract text-purple-500 text-xl"></i>
                     </div>
                 </div>
-                <a href="admission_inquiries.php" class="text-purple-600 hover:text-purple-800 text-sm mt-3 inline-block font-medium">
-                    View Inquiries →
+                <a href="applications.php" class="text-purple-600 hover:text-purple-800 text-sm mt-3 inline-block font-medium">
+                    View All →
                 </a>
             </div>
         </div>
@@ -437,18 +495,25 @@ try {
                                         <div class="flex items-center space-x-4 mt-1">
                                             <p class="text-sm text-gray-600">
                                                 <i class="fas fa-graduation-cap mr-1"></i>
-                                                Class: <?php echo htmlspecialchars($application['class_applied'] ?? $application['applied_class'] ?? 'N/A'); ?>
+                                                Class: <?php echo htmlspecialchars($application['applied_class'] ?? $application['class_applied'] ?? 'N/A'); ?>
                                             </p>
                                             <p class="text-xs text-gray-500">
                                                 <i class="far fa-clock mr-1"></i>
-                                                <?php echo date('M j, Y', strtotime($application['application_date'] ?? $application['created_at'] ?? 'N/A')); ?>
+                                                <?php 
+                                                $date = $application['application_date'] ?? $application['created_at'] ?? $application['submitted_at'] ?? 'now';
+                                                echo date('M j, Y', strtotime($date)); 
+                                                ?>
                                             </p>
                                         </div>
                                     </div>
                                     <span class="px-3 py-1 rounded-full text-xs font-medium 
-                                        <?php echo ($application['status'] ?? 'Pending') == 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                               (($application['status'] ?? 'Pending') == 'Approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
-                                        <?php echo $application['status'] ?? 'Pending'; ?>
+                                        <?php 
+                                        $status = $application['status'] ?? 'Pending';
+                                        echo ($status == 'Pending' || $status == 'pending') ? 'bg-yellow-100 text-yellow-800' : 
+                                               ($status == 'Approved' ? 'bg-green-100 text-green-800' : 
+                                               ($status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800')); 
+                                        ?>">
+                                        <?php echo ucfirst($status); ?>
                                     </span>
                                 </div>
                             <?php endforeach; ?>
@@ -456,7 +521,9 @@ try {
                             <div class="text-center py-6">
                                 <i class="fas fa-file-alt text-gray-300 text-4xl mb-3"></i>
                                 <p class="text-gray-500">No applications found.</p>
-                                <p class="text-sm text-gray-400 mt-1">Applications will appear here when submitted</p>
+                                <p class="text-sm text-gray-400 mt-1">
+                                    <?php echo $tableExists ? 'No applications in database' : 'Applications table not found'; ?>
+                                </p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -682,8 +749,10 @@ try {
                 second: '2-digit',
                 hour12: true 
             });
-            document.querySelector('.bg-blue-100 .fa-clock').parentElement.innerHTML = 
-                `<i class="fas fa-clock mr-1"></i>${timeString}`;
+            const timeElement = document.querySelector('.bg-blue-100 .fa-clock');
+            if (timeElement) {
+                timeElement.parentElement.innerHTML = `<i class="fas fa-clock mr-1"></i>${timeString}`;
+            }
         }
 
         // Update time immediately and then every minute

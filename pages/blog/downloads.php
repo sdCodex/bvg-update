@@ -41,6 +41,43 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_COLUMN);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Downloads - Bhaktivedanta Gurukul</title>
     <link rel="stylesheet" href="<?php echo $base_url; ?>/pages/blog/style.css">
+    <!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
 </head>
 <body>
     <div class="downloads-container">

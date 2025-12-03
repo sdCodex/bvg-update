@@ -1,4 +1,8 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: login.php');
@@ -26,20 +30,22 @@ if (isset($_GET['delete_id'])) {
         $files = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // Delete physical files
-        if ($files['resume_path'] && file_exists('../' . $files['resume_path'])) {
+        if ($files && $files['resume_path'] && file_exists('../' . $files['resume_path'])) {
             unlink('../' . $files['resume_path']);
         }
-        if ($files['cover_letter_path'] && file_exists('../' . $files['cover_letter_path'])) {
+        if ($files && $files['cover_letter_path'] && file_exists('../' . $files['cover_letter_path'])) {
             unlink('../' . $files['cover_letter_path']);
         }
         
         // Delete from database
         $stmt = $pdo->prepare("DELETE FROM job_applications WHERE id = ?");
         $stmt->execute([$_GET['delete_id']]);
-        header('Location: job_applications.php?success=Job application deleted successfully');
+        $_SESSION['success'] = "Job application deleted successfully";
+        header('Location: job_applications.php');
         exit;
     } catch (PDOException $e) {
-        header('Location: job_applications.php?error=Error deleting job application: ' . $e->getMessage());
+        $_SESSION['error'] = "Error deleting job application: " . $e->getMessage();
+        header('Location: job_applications.php');
         exit;
     }
 }
@@ -49,13 +55,20 @@ if (isset($_POST['update_status'])) {
     try {
         $stmt = $pdo->prepare("UPDATE job_applications SET status = ? WHERE id = ?");
         $stmt->execute([$_POST['status'], $_POST['application_id']]);
-        header('Location: job_applications.php?success=Application status updated successfully');
+        $_SESSION['success'] = "Application status updated successfully";
+        header('Location: job_applications.php');
         exit;
     } catch (PDOException $e) {
-        header('Location: job_applications.php?error=Error updating status: ' . $e->getMessage());
+        $_SESSION['error'] = "Error updating status: " . $e->getMessage();
+        header('Location: job_applications.php');
         exit;
     }
 }
+
+// Store messages in session to persist after redirect
+$success = $_SESSION['success'] ?? '';
+$error = $_SESSION['error'] ?? ($error ?? '');
+unset($_SESSION['success'], $_SESSION['error']);
 ?>
 
 <!DOCTYPE html>
@@ -93,6 +106,22 @@ if (isset($_POST['update_status'])) {
         .status-interview { background-color: #fce7f3; color: #be185d; }
         .status-approved { background-color: #d1fae5; color: #065f46; }
         .status-rejected { background-color: #fee2e2; color: #991b1b; }
+        .info-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -105,9 +134,9 @@ if (isset($_POST['update_status'])) {
     <div class="container mx-auto px-4 py-8 mt-16">
         <div class="max-w-7xl mx-auto">
             <!-- Header Section -->
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Job Applications</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Job Applications</h1>
                     <p class="text-gray-600">Manage all job applications and candidate profiles</p>
                 </div>
                 <div class="bg-red-100 text-red-800 px-4 py-2 rounded-lg">
@@ -118,7 +147,7 @@ if (isset($_POST['update_status'])) {
 
             <!-- Status Summary -->
             <?php if (!empty($job_applications)): ?>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6">
                 <?php
                 $status_counts = [
                     'pending' => 0,
@@ -137,45 +166,39 @@ if (isset($_POST['update_status'])) {
                     }
                 }
                 ?>
-                <div class="bg-white rounded-lg p-4 text-center border-l-4 border-yellow-500">
-                    <div class="text-2xl font-bold text-yellow-600"><?php echo $status_counts['pending']; ?></div>
-                    <div class="text-sm text-gray-600">Pending</div>
+                <div class="bg-white rounded-lg p-3 md:p-4 text-center border-l-4 border-yellow-500">
+                    <div class="text-xl md:text-2xl font-bold text-yellow-600"><?php echo $status_counts['pending']; ?></div>
+                    <div class="text-xs md:text-sm text-gray-600">Pending</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 text-center border-l-4 border-blue-500">
-                    <div class="text-2xl font-bold text-blue-600"><?php echo $status_counts['reviewed']; ?></div>
-                    <div class="text-sm text-gray-600">Reviewed</div>
+                <div class="bg-white rounded-lg p-3 md:p-4 text-center border-l-4 border-blue-500">
+                    <div class="text-xl md:text-2xl font-bold text-blue-600"><?php echo $status_counts['reviewed']; ?></div>
+                    <div class="text-xs md:text-sm text-gray-600">Reviewed</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 text-center border-l-4 border-pink-500">
-                    <div class="text-2xl font-bold text-pink-600"><?php echo $status_counts['interview']; ?></div>
-                    <div class="text-sm text-gray-600">Interview</div>
+                <div class="bg-white rounded-lg p-3 md:p-4 text-center border-l-4 border-pink-500">
+                    <div class="text-xl md:text-2xl font-bold text-pink-600"><?php echo $status_counts['interview']; ?></div>
+                    <div class="text-xs md:text-sm text-gray-600">Interview</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 text-center border-l-4 border-green-500">
-                    <div class="text-2xl font-bold text-green-600"><?php echo $status_counts['approved']; ?></div>
-                    <div class="text-sm text-gray-600">Approved</div>
+                <div class="bg-white rounded-lg p-3 md:p-4 text-center border-l-4 border-green-500">
+                    <div class="text-xl md:text-2xl font-bold text-green-600"><?php echo $status_counts['approved']; ?></div>
+                    <div class="text-xs md:text-sm text-gray-600">Approved</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 text-center border-l-4 border-red-500">
-                    <div class="text-2xl font-bold text-red-600"><?php echo $status_counts['rejected']; ?></div>
-                    <div class="text-sm text-gray-600">Rejected</div>
+                <div class="bg-white rounded-lg p-3 md:p-4 text-center border-l-4 border-red-500">
+                    <div class="text-xl md:text-2xl font-bold text-red-600"><?php echo $status_counts['rejected']; ?></div>
+                    <div class="text-xs md:text-sm text-gray-600">Rejected</div>
                 </div>
             </div>
             <?php endif; ?>
 
             <!-- Messages -->
-            <?php if (isset($_GET['success'])): ?>
+            <?php if (!empty($success)): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                    <i class="fas fa-check-circle mr-2"></i><?php echo htmlspecialchars($_GET['success']); ?>
+                    <i class="fas fa-check-circle mr-2"></i><?php echo htmlspecialchars($success); ?>
                 </div>
             <?php endif; ?>
 
-            <?php if (isset($_GET['error'])): ?>
+            <?php if (!empty($error)): ?>
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-                    <i class="fas fa-exclamation-circle mr-2"></i><?php echo htmlspecialchars($_GET['error']); ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if (isset($error)): ?>
-                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6">
-                    <i class="fas fa-exclamation-triangle mr-2"></i><?php echo htmlspecialchars($error); ?>
+                    <i class="fas fa-exclamation-circle mr-2"></i><?php echo htmlspecialchars($error); ?>
                 </div>
             <?php endif; ?>
 
@@ -188,25 +211,25 @@ if (isset($_POST['update_status'])) {
                         <p class="text-gray-500">Job applications will appear here when candidates apply.</p>
                     </div>
                 <?php else: ?>
-                    <div class="overflow-x-auto">
+                    <div class="table-container">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Experience</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Position</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Salary</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Experience</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Position</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Salary</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <?php foreach ($job_applications as $application): ?>
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <!-- Candidate Info -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
                                                 <i class="fas fa-user text-blue-600"></i>
@@ -228,7 +251,7 @@ if (isset($_POST['update_status'])) {
                                     </td>
 
                                     <!-- Position Info -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4">
                                         <div class="text-sm font-medium text-gray-900">
                                             <?php echo htmlspecialchars($application['position_applied']); ?>
                                         </div>
@@ -238,12 +261,12 @@ if (isset($_POST['update_status'])) {
                                     </td>
 
                                     <!-- Experience -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-4 py-4 text-sm text-gray-900">
                                         <?php echo htmlspecialchars($application['experience_years']); ?> years
                                     </td>
 
                                     <!-- Current Position -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4">
                                         <div class="text-sm text-gray-900">
                                             <?php echo htmlspecialchars($application['current_organization'] ?? 'N/A'); ?>
                                         </div>
@@ -253,12 +276,19 @@ if (isset($_POST['update_status'])) {
                                     </td>
 
                                     <!-- Expected Salary -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ₹<?php echo number_format($application['expected_salary'] ?? 0); ?>
-                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">
+    ₹<?php 
+    $salary = $application['expected_salary'] ?? 0;
+    // Convert string to float if needed
+    if (is_string($salary)) {
+        $salary = (float) $salary;
+    }
+    echo number_format($salary); 
+    ?>
+</td>
 
                                     <!-- Status -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4">
                                         <?php
                                         $status = strtolower($application['status'] ?? 'pending');
                                         $statusClass = 'status-' . $status;
@@ -270,25 +300,27 @@ if (isset($_POST['update_status'])) {
                                     </td>
 
                                     <!-- Applied Date -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-4 py-4 text-sm text-gray-900">
                                         <?php echo date('M j, Y', strtotime($application['applied_at'])); ?>
                                     </td>
 
                                     <!-- Actions -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button onclick="viewApplication(<?php echo $application['id']; ?>)" 
-                                                class="text-blue-600 hover:text-blue-900 mr-3 transition-colors">
-                                            <i class="fas fa-eye mr-1"></i> View
-                                        </button>
-                                        <button onclick="openStatusModal(<?php echo $application['id']; ?>, '<?php echo $application['status'] ?? 'pending'; ?>')" 
-                                                class="text-green-600 hover:text-green-900 mr-3 transition-colors">
-                                            <i class="fas fa-edit mr-1"></i> Status
-                                        </button>
-                                        <a href="job_applications.php?delete_id=<?php echo $application['id']; ?>" 
-                                           class="text-red-600 hover:text-red-900 transition-colors"
-                                           onclick="return confirm('Are you sure you want to delete this job application? This will also remove the resume and cover letter files.')">
-                                            <i class="fas fa-trash mr-1"></i> Delete
-                                        </a>
+                                    <td class="px-4 py-4 text-sm font-medium">
+                                        <div class="flex flex-col space-y-2">
+                                            <button onclick="viewApplication(<?php echo $application['id']; ?>)" 
+                                                    class="text-blue-600 hover:text-blue-900 transition-colors text-left">
+                                                <i class="fas fa-eye mr-1"></i> View
+                                            </button>
+                                            <button onclick="openStatusModal(<?php echo $application['id']; ?>, '<?php echo $application['status'] ?? 'pending'; ?>')" 
+                                                    class="text-green-600 hover:text-green-900 transition-colors text-left">
+                                                <i class="fas fa-edit mr-1"></i> Status
+                                            </button>
+                                            <a href="job_applications.php?delete_id=<?php echo $application['id']; ?>" 
+                                               class="text-red-600 hover:text-red-900 transition-colors text-left"
+                                               onclick="return confirm('Are you sure you want to delete this job application? This will also remove the resume and cover letter files.')">
+                                                <i class="fas fa-trash mr-1"></i> Delete
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -360,58 +392,36 @@ if (isset($_POST['update_status'])) {
 
     <script>
         // Job applications data from PHP
-        const jobApplications = <?php echo json_encode($job_applications); ?>;
+        const jobApplications = <?php echo !empty($job_applications) ? json_encode($job_applications) : '[]'; ?>;
+
+        console.log('Loaded applications:', jobApplications);
 
         function viewApplication(applicationId) {
+            console.log('Viewing application ID:', applicationId);
             const application = jobApplications.find(app => app.id == applicationId);
-            if (application) {
-                const content = document.getElementById('applicationContent');
-                
-                let html = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Personal Information -->
-                        <div class="space-y-4">
-                            <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-blue-600">
-                                <i class="fas fa-user mr-2"></i>Personal Information
-                            </h4>
-                            <div class="space-y-2">
-                                <p><strong class="text-gray-700">Full Name:</strong> ${application.full_name}</p>
-                                <p><strong class="text-gray-700">Email:</strong> ${application.email}</p>
-                                ${application.phone ? `<p><strong class="text-gray-700">Phone:</strong> ${application.phone}</p>` : ''}
+            
+            if (!application) {
+                console.error('Application not found:', applicationId);
+                alert('Error: Application data not found!');
+                return;
+            }
+
+            const content = document.getElementById('applicationContent');
+            
+            let html = `
+                <div class="space-y-6">
+                    <!-- Application Information -->
+                    <div class="info-section">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-id-card mr-2 text-blue-500"></i>
+                            Application Information
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong class="text-gray-700">Application ID:</strong> ${application.id}</p>
                                 <p><strong class="text-gray-700">Applied On:</strong> ${new Date(application.applied_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                             </div>
-                        </div>
-
-                        <!-- Position Information -->
-                        <div class="space-y-4">
-                            <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-green-600">
-                                <i class="fas fa-briefcase mr-2"></i>Position Information
-                            </h4>
-                            <div class="space-y-2">
-                                <p><strong class="text-gray-700">Position Applied:</strong> ${application.position_applied}</p>
-                                <p><strong class="text-gray-700">Position Type:</strong> ${application.position_type.charAt(0).toUpperCase() + application.position_type.slice(1)}</p>
-                                <p><strong class="text-gray-700">Experience:</strong> ${application.experience_years} years</p>
-                                <p><strong class="text-gray-700">Expected Salary:</strong> ₹${application.expected_salary ? application.expected_salary.toLocaleString('en-IN') : '0'}</p>
-                            </div>
-                        </div>
-
-                        <!-- Current Employment -->
-                        <div class="space-y-4">
-                            <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-purple-600">
-                                <i class="fas fa-building mr-2"></i>Current Employment
-                            </h4>
-                            <div class="space-y-2">
-                                <p><strong class="text-gray-700">Organization:</strong> ${application.current_organization || 'Not specified'}</p>
-                                <p><strong class="text-gray-700">Position:</strong> ${application.current_position || 'Not specified'}</p>
-                            </div>
-                        </div>
-
-                        <!-- Application Status -->
-                        <div class="space-y-4">
-                            <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-orange-600">
-                                <i class="fas fa-info-circle mr-2"></i>Application Status
-                            </h4>
-                            <div class="space-y-2">
+                            <div>
                                 <p>
                                     <strong class="text-gray-700">Status:</strong> 
                                     <span class="px-2 py-1 text-xs font-medium rounded-full status-${application.status ? application.status.toLowerCase() : 'pending'}">
@@ -420,74 +430,159 @@ if (isset($_POST['update_status'])) {
                                 </p>
                             </div>
                         </div>
-                `;
+                    </div>
 
-                // Files section
-                html += `
-                    <div class="md:col-span-2 space-y-4">
-                        <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-red-600">
-                            <i class="fas fa-paperclip mr-2"></i>Attachments
+                    <!-- Personal Information -->
+                    <div class="info-section">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-user mr-2 text-green-500"></i>
+                            Personal Information
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong class="text-gray-700">Full Name:</strong> ${application.full_name || 'N/A'}</p>
+                                <p><strong class="text-gray-700">Email:</strong> ${application.email || 'N/A'}</p>
+                            </div>
+                            <div>
+                                ${application.phone ? `<p><strong class="text-gray-700">Phone:</strong> ${application.phone}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Position Information -->
+                    <div class="info-section">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-briefcase mr-2 text-purple-500"></i>
+                            Position Information
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong class="text-gray-700">Position Applied:</strong> ${application.position_applied || 'N/A'}</p>
+                                <p><strong class="text-gray-700">Position Type:</strong> ${application.position_type ? application.position_type.charAt(0).toUpperCase() + application.position_type.slice(1) : 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p><strong class="text-gray-700">Experience:</strong> ${application.experience_years || '0'} years</p>
+                                <p><strong class="text-gray-700">Expected Salary:</strong> ₹${application.expected_salary ? application.expected_salary.toLocaleString('en-IN') : '0'}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Employment -->
+                    <div class="info-section">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-building mr-2 text-orange-500"></i>
+                            Current Employment
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong class="text-gray-700">Organization:</strong> ${application.current_organization || 'Not specified'}</p>
+                            </div>
+                            <div>
+                                <p><strong class="text-gray-700">Position:</strong> ${application.current_position || 'Not specified'}</p>
+                            </div>
+                        </div>
+                    </div>
+            `;
+
+            // Files section
+            html += `
+                <div class="info-section">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-paperclip mr-2 text-red-500"></i>
+                        Attachments
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            `;
+
+            if (application.resume_path) {
+                html += `
+                    <div class="border rounded-lg p-3 bg-gray-50 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-pdf text-red-500 mr-3 text-xl"></i>
+                            <div>
+                                <div class="font-medium">Resume</div>
+                                <div class="text-sm text-gray-500 truncate max-w-xs">${application.resume_path.split('/').pop()}</div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="../${application.resume_path}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm bg-white px-2 py-1 rounded border">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </a>
+                            <a href="../${application.resume_path}" download class="text-green-600 hover:text-green-800 text-sm bg-white px-2 py-1 rounded border">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </a>
+                        </div>
+                    </div>
                 `;
-
-                if (application.resume_path) {
-                    html += `
-                        <div class="border rounded-lg p-3 bg-gray-50">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <i class="fas fa-file-pdf text-red-500 mr-2"></i>
-                                    <span class="font-medium">Resume</span>
-                                </div>
-                                <a href="../${application.resume_path}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
-                                    <i class="fas fa-download mr-1"></i>Download
-                                </a>
+            } else {
+                html += `
+                    <div class="border rounded-lg p-3 bg-gray-50">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-pdf text-gray-400 mr-3 text-xl"></i>
+                            <div>
+                                <div class="font-medium text-gray-500">Resume</div>
+                                <div class="text-sm text-gray-400">Not provided</div>
                             </div>
                         </div>
-                    `;
-                }
-
-                if (application.cover_letter_path) {
-                    html += `
-                        <div class="border rounded-lg p-3 bg-gray-50">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <i class="fas fa-file-alt text-blue-500 mr-2"></i>
-                                    <span class="font-medium">Cover Letter</span>
-                                </div>
-                                <a href="../${application.cover_letter_path}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
-                                    <i class="fas fa-download mr-1"></i>Download
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                if (!application.resume_path && !application.cover_letter_path) {
-                    html += `<p class="text-gray-500 italic">No attachments available</p>`;
-                }
-
-                html += `</div></div>`;
-
-                // Additional Information
-                if (application.additional_info) {
-                    html += `
-                        <div class="md:col-span-2 space-y-4">
-                            <h4 class="font-semibold text-gray-800 text-lg border-b pb-2 text-teal-600">
-                                <i class="fas fa-sticky-note mr-2"></i>Additional Information
-                            </h4>
-                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <p class="text-gray-700 whitespace-pre-wrap">${application.additional_info}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                html += `</div>`;
-                
-                content.innerHTML = html;
-                document.getElementById('applicationModal').style.display = 'block';
+                    </div>
+                `;
             }
+
+            if (application.cover_letter_path) {
+                html += `
+                    <div class="border rounded-lg p-3 bg-gray-50 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 text-xl"></i>
+                            <div>
+                                <div class="font-medium">Cover Letter</div>
+                                <div class="text-sm text-gray-500 truncate max-w-xs">${application.cover_letter_path.split('/').pop()}</div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="../${application.cover_letter_path}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm bg-white px-2 py-1 rounded border">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </a>
+                            <a href="../${application.cover_letter_path}" download class="text-green-600 hover:text-green-800 text-sm bg-white px-2 py-1 rounded border">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="border rounded-lg p-3 bg-gray-50">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt text-gray-400 mr-3 text-xl"></i>
+                            <div>
+                                <div class="font-medium text-gray-500">Cover Letter</div>
+                                <div class="text-sm text-gray-400">Not provided</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div></div>`;
+
+            // Additional Information
+            if (application.additional_info) {
+                html += `
+                    <div class="info-section">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-sticky-note mr-2 text-teal-500"></i>
+                            Additional Information
+                        </h4>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <p class="text-gray-700 whitespace-pre-wrap">${application.additional_info || 'No additional information provided.'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            
+            content.innerHTML = html;
+            document.getElementById('applicationModal').style.display = 'block';
         }
 
         function openStatusModal(applicationId, currentStatus) {

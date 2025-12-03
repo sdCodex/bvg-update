@@ -1,5 +1,43 @@
 <?php include '../../includes/header.php'; ?>
 
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul - School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul - School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
+
 <!-- Hero Section -->
 <section class="bg-gradient-to-br from-primary to-accent text-white py-20 lg:py-28">
     <div class="max-w-7xl mx-auto px-4">
@@ -258,37 +296,37 @@
             </div>
 
             <!-- Benefit 2 -->
-            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-home text-blue-600 text-xl"></i>
-                    </div>
-                    <h3 class="font-bold text-primary text-lg">Accommodation</h3>
-                </div>
-                <p class="text-gray-600">Comfortable on-campus accommodation for outstation faculty and staff</p>
-            </div>
+            <!--<div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">-->
+            <!--    <div class="flex items-center mb-4">-->
+            <!--        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">-->
+            <!--            <i class="fas fa-home text-blue-600 text-xl"></i>-->
+            <!--        </div>-->
+            <!--        <h3 class="font-bold text-primary text-lg">Accommodation</h3>-->
+            <!--    </div>-->
+            <!--    <p class="text-gray-600">Comfortable on-campus accommodation for outstation faculty and staff</p>-->
+            <!--</div>-->
 
             <!-- Benefit 3 -->
-            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-utensils text-purple-600 text-xl"></i>
-                    </div>
-                    <h3 class="font-bold text-primary text-lg">Meals Provided</h3>
-                </div>
-                <p class="text-gray-600">Nutritious and wholesome meals in our campus dining facility</p>
-            </div>
+            <!--<div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">-->
+            <!--    <div class="flex items-center mb-4">-->
+            <!--        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">-->
+            <!--            <i class="fas fa-utensils text-purple-600 text-xl"></i>-->
+            <!--        </div>-->
+            <!--        <h3 class="font-bold text-primary text-lg">Meals Provided</h3>-->
+            <!--    </div>-->
+            <!--    <p class="text-gray-600">Nutritious and wholesome meals in our campus dining facility</p>-->
+            <!--</div>-->
 
             <!-- Benefit 4 -->
-            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-heartbeat text-red-600 text-xl"></i>
-                    </div>
-                    <h3 class="font-bold text-primary text-lg">Health Insurance</h3>
-                </div>
-                <p class="text-gray-600">Comprehensive health insurance coverage for employees and family</p>
-            </div>
+            <!--<div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">-->
+            <!--    <div class="flex items-center mb-4">-->
+            <!--        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">-->
+            <!--            <i class="fas fa-heartbeat text-red-600 text-xl"></i>-->
+            <!--        </div>-->
+            <!--        <h3 class="font-bold text-primary text-lg">Health Insurance</h3>-->
+            <!--    </div>-->
+            <!--    <p class="text-gray-600">Comprehensive health insurance coverage for employees and family</p>-->
+            <!--</div>-->
 
             <!-- Benefit 5 -->
             <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">

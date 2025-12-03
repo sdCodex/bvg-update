@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
 // Get applications data
 try {
-    $stmt = $pdo->query("SELECT * FROM applications ORDER BY application_date DESC");
+    // Try different date columns for ordering
+    $stmt = $pdo->query("SELECT * FROM applications ORDER BY COALESCE(application_date, created_at) DESC");
     $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $applications = [];
@@ -157,7 +158,7 @@ if (isset($_SESSION['error_message'])) {
                         <div>
                             <p class="text-blue-100 text-sm">Pending</p>
                             <p class="text-2xl font-bold mt-1">
-                                <?php echo count(array_filter($applications, fn($i) => ($i['status'] ?? 'Pending') === 'Pending')); ?>
+                                <?php echo count(array_filter($applications, fn($i) => ($i['status'] ?? 'Pending') === 'Pending' || ($i['status'] ?? 'Pending') === 'pending')); ?>
                             </p>
                         </div>
                         <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -221,22 +222,6 @@ if (isset($_SESSION['error_message'])) {
                 <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
                     <i class="fas fa-exclamation-circle mr-2"></i>
                     <?php echo $error_message; ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- Debug Info (Remove in production) -->
-            <?php if (empty($applications)): ?>
-                <div class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg mb-6">
-                    <p><strong>Debug Info:</strong> No applications found in database.</p>
-                    <p class="text-sm mt-1">Table: applications | Columns: <?php 
-                        try {
-                            $stmt = $pdo->query("SHOW COLUMNS FROM applications");
-                            $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
-                            echo implode(', ', $columns);
-                        } catch (Exception $e) {
-                            echo "Error fetching columns: " . $e->getMessage();
-                        }
-                    ?></p>
                 </div>
             <?php endif; ?>
 
@@ -305,17 +290,24 @@ if (isset($_SESSION['error_message'])) {
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="status-badge status-<?php echo strtolower(str_replace(' ', '-', $application['status'] ?? 'pending')); ?>">
+                                        <?php 
+                                        $status = $application['status'] ?? 'Pending';
+                                        $status_class = 'status-' . strtolower(str_replace(' ', '-', $status));
+                                        ?>
+                                        <span class="status-badge <?php echo $status_class; ?>">
                                             <i class="fas fa-circle text-xs"></i>
-                                            <?php echo htmlspecialchars($application['status'] ?? 'Pending'); ?>
+                                            <?php echo htmlspecialchars($status); ?>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900 font-medium">
-                                            <?php echo date('M j, Y', strtotime($application['application_date'] ?? $application['created_at'] ?? 'now')); ?>
+                                            <?php 
+                                            $date = $application['application_date'] ?? $application['created_at'] ?? 'now';
+                                            echo date('M j, Y', strtotime($date)); 
+                                            ?>
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            <?php echo date('g:i A', strtotime($application['application_date'] ?? $application['created_at'] ?? 'now')); ?>
+                                            <?php echo date('g:i A', strtotime($date)); ?>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

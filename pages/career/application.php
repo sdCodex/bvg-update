@@ -184,6 +184,43 @@ $administrative_positions = [
 ];
 ?>
 
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
 <!-- Hero Section -->
 <section class="bg-gradient-to-br from-primary to-accent text-white py-20 lg:py-28">
     <div class="max-w-7xl mx-auto px-4">
@@ -201,11 +238,11 @@ $administrative_positions = [
             <!-- Quick Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-2xl mx-auto">
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-yellow-300 mb-2">50+</div>
+                    <div class="text-2xl font-bold text-yellow-300 mb-2">20+</div>
                     <div class="text-gray-300 text-sm">Faculty Members</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-yellow-300 mb-2">100+</div>
+                    <div class="text-2xl font-bold text-yellow-300 mb-2">10+</div>
                     <div class="text-gray-300 text-sm">Staff Members</div>
                 </div>
                 <div class="text-center">
@@ -390,7 +427,7 @@ $administrative_positions = [
                             <input type="text" id="expected_salary" name="expected_salary" 
                                 value="<?php echo htmlspecialchars($_POST['expected_salary'] ?? ''); ?>"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                                placeholder="e.g., ₹35,000 - ₹45,000">
+                                placeholder="e.g., ₹15,000 - ₹25,000">
                         </div>
                         
                         <div class="flex items-end">
@@ -522,7 +559,7 @@ $administrative_positions = [
                 </div>
                 <h3 class="font-semibold text-primary mb-2 text-lg">Call Us</h3>
                 <p class="text-gray-600 font-medium">+91-7618040040</p>
-                <p class="text-gray-500 text-sm mt-1">Mon-Sat, 8:00 AM - 5:00 PM</p>
+                <p class="text-gray-500 text-sm mt-1">Mon-Sat, 8:00 AM - 2:00 PM</p>
             </div>
             
             <div class="text-center p-6 bg-gray-50 rounded-xl hover:shadow-md transition-shadow duration-300">
@@ -530,7 +567,7 @@ $administrative_positions = [
                     <i class="fas fa-envelope text-white text-xl"></i>
                 </div>
                 <h3 class="font-semibold text-primary mb-2 text-lg">Email Us</h3>
-                <p class="text-gray-600 font-medium">hr@ourgurukul.org</p>
+                <p class="text-gray-600 font-medium">info@ourgurukul.org</p>
                 <p class="text-gray-500 text-sm mt-1">We respond within 24 hours</p>
             </div>
             

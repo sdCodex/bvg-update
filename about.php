@@ -19,6 +19,8 @@ if(file_exists($header_file)) {
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
         <style>
@@ -59,6 +61,44 @@ if(file_exists($header_file)) {
 }
 ?>
 
+<title>Bhaktivedanta Gurukul - School of Excellence</title>
+
+
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul - School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<!--<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">-->
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
 <!-- Hero Section -->
 <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary via-primary to-accent">
     <!-- Animated Background -->
@@ -73,17 +113,17 @@ if(file_exists($header_file)) {
     
     <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
         <!-- Breadcrumb -->
-        <div class="flex justify-center mb-8">
-            <nav class="flex items-center space-x-2 text-white/80 text-sm">
-                <a href="<?php echo $base_url; ?>/index.php" class="hover:text-white transition-colors">Home</a>
-                <span class="text-white/60">/</span>
-                <span class="text-white font-medium">About Us</span>
-            </nav>
-        </div>
+        <!--<div class="flex justify-center mb-8">-->
+        <!--    <nav class="flex items-center space-x-2 text-white/80 text-sm">-->
+        <!--        <a href="<?php echo $base_url; ?>/index.php" class="hover:text-white transition-colors">Home</a>-->
+        <!--        <span class="text-white/60">/</span>-->
+        <!--        <span class="text-white font-medium">About Us</span>-->
+        <!--    </nav>-->
+        <!--</div>-->
         
         <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             About <span class="text-yellow-300">Bhaktivedanta</span><br>
-            <span class="text-3xl md:text-4xl lg:text-5xl">Gurukul & School</span>
+            <span class="text-3xl md:text-4xl lg:text-5xl">Gurukul</span>
         </h1>
         
         <p class="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto mb-8 leading-relaxed">
@@ -100,11 +140,11 @@ if(file_exists($header_file)) {
         </div>
         
         <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <a href="#mission" class="text-white/80 hover:text-white transition-colors">
-                <i class="fas fa-chevron-down text-2xl"></i>
-            </a>
-        </div>
+        <!--<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">-->
+        <!--    <a href="#mission" class="text-white/80 hover:text-white transition-colors">-->
+        <!--        <i class="fas fa-chevron-down text-2xl"></i>-->
+        <!--    </a>-->
+        <!--</div>-->
     </div>
 </section>
 
@@ -121,8 +161,8 @@ if(file_exists($header_file)) {
                 <div class="text-secondary font-medium">Expert Faculty</div>
             </div>
             <div class="text-center fade-in-up">
-                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">5+</div>
-                <div class="text-secondary font-medium">Years Experience</div>
+                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">8+</div>
+                <div class="text-secondary font-medium"> Years Teaching Experience</div>
             </div>
             <div class="text-center fade-in-up">
                 <div class="text-3xl md:text-4xl font-bold text-accent mb-2">100%</div>
@@ -224,7 +264,7 @@ if(file_exists($header_file)) {
 </section>
 
 <!-- History Timeline -->
-<section class="section-padding bg-light mt-5">
+<section id="history" class="section-padding bg-light mt-5 >
     <div class="max-w-7xl mx-auto px-4">
         <div class="text-center mb-16 fade-in-up">
             <span class="inline-flex items-center px-4 py-2 mt-4 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
@@ -234,7 +274,7 @@ if(file_exists($header_file)) {
                 Our <span class="text-accent">History</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                A legacy of spiritual and educational excellence spanning decades
+                A legacy of spiritual and educational excellence  
             </p>
         </div>
 
@@ -249,12 +289,12 @@ if(file_exists($header_file)) {
                     [
                         'year' => '2021',
                         'title' => 'Conceived',
-                        'description' => 'On the 125th Appearance (Birth) Anniversary of Srila Prabhupada, a dire need of authentic Vedic-value-based chain of schools was thought of.',
+                        'description' => 'On the 125th Appearance Day (Birth Anniversary) of Srila Prabhupada, a dire need of authentic Vedic-value-based chain of schools was thought of.',
                         'icon' => 'fas fa-seedling',
                         'side' => 'left'
                     ],
                     [
-                        'year' => '2025',
+                        'year' => '2024',
                         'title' => 'Execution Started',
                         'description' => 'To impart Prabhupada\'s teachings and Vedic sanskaras along with academic excellence, planning was started by the IITians ISKCON devotees.',
                         'icon' => 'fas fa-graduation-cap',
@@ -263,38 +303,38 @@ if(file_exists($header_file)) {
                     [
                         'year' => '2025',
                         'title' => 'Established',
-                        'description' => 'As Prayagraj is the divine land of the first creation of the universe by Sri Mahamabi Bhardwaj, so just after Mahakumbh 2025, Prayagraj thought to be the 1st centre of Bhaktivedanta Gurukul.',
+                        'description' => 'As Prayagraj is the divine land of the first Gurukul of the universe by Maharshi Bhardwaj, so just after Mahakumbh 2025, Prayagraj was thought to be the 1st centre of Bhaktivedanta Gurukul.',
                         'icon' => 'fas fa-building',
                         'side' => 'left'
                     ],
                     [
                         'year' => '2026',
-                        'title' => 'GURUKUL FORTUNATE 50',
-                        'description' => 'We\'re going to launch a nationwide scholarship exam for select students, providing free education & free accommodation for 50–50 students of classes 6, 7, 8.',
+                        'title' => 'GURUKUL FORTUNATE 51',
+                        'description' => 'We\'re going to launch a nationwide scholarship exam to select students for providing free education & free accommodation for 51–51 students of classes 6, 7, 8.',
                         'icon' => 'fas fa-award',
                         'side' => 'right'
                     ],
                     [
                         'year' => '2030',
                         'title' => 'Upcoming 5-Year Plan',
-                        'description' => 'Implemented digital learning platforms and smart classrooms',
+                        'description' => 'In every division of Bharat (East, West, North, and South), there\'ll be at least one branch of Bhaktivedanta Gurukul.',
                         'icon' => 'fas fa-laptop',
                         'side' => 'left'
                     ],
-                    [
-                        'year' => '2050',
-                        'title' => 'Upcoming 25-Year Plan',
-                        'description' => 'To have presence of Bhaktivedanta Gurukul in every state of Bharat.',
-                        'icon' => 'fas fa-trophy',
-                        'side' => 'right'
-                    ],
-                    [
-                        'year' => '2096',
-                        'title' => 'AIM Offering to Srila Prabhupada on his 200th Birth Anniversary (Vyasa Puja)',
-                        'description' => 'To have a branch of Bhaktivedanta Gurukul in every district of Bharat (India).',
-                        'icon' => 'fas fa-trophy',
-                        'side' => 'left'
-                    ]
+                    // [
+                    //     'year' => '2050',
+                    //     'title' => 'Upcoming 25-Year Plan',
+                    //     'description' => 'To have presence of Bhaktivedanta Gurukul in every state of Bharat.',
+                    //     'icon' => 'fas fa-trophy',
+                    //     'side' => 'right'
+                    // ],
+                    // [
+                    //     'year' => '2096',
+                    //     'title' => 'AIM - Offering to Srila Prabhupada on his 200th Birth Anniversary (Vyasa Puja)',
+                    //     'description' => 'To have a branch of Bhaktivedanta Gurukul in every district of Bharat (India).',
+                    //     'icon' => 'fas fa-trophy',
+                    //     'side' => 'left'
+                    // ]
                 ];
                 
                 foreach ($timeline_events as $index => $event):
@@ -350,52 +390,52 @@ if(file_exists($header_file)) {
     </div>
 </section>
 
-<!-- Faculty Section -->
+ <!--Faculty Section -->
 <section class="section-padding bg-white">
     <div class="max-w-7xl mx-auto px-4">
         <div class="text-center mb-16 fade-in-up">
             <span class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
-                <i class="fas fa-users mr-2"></i> Meet Our Team
+                <i class="fas fa-users mr-2"></i> Meet Our Board of Advisors
             </span>
             <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-4">
-                Our <span class="text-accent">Faculty</span>
+            Board of <span class="text-accent">Advisors</span>
             </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Dedicated educators committed to holistic development and academic excellence
+           <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            The Board of Advisors is a group of experienced personalities who provide guidance and support to the school.
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php
             $faculty_members = [
-                [
-                    'name' => 'Dr. Rajesh Sharma',
-                    'position' => 'Principal & Academic Head',
-                    'qualification' => 'Ph.D. in Education, M.A. Sanskrit',
-                    'experience' => '25+ years in education',
-                    'specialization' => 'Educational Leadership & Vedic Studies',
-                    'icon' => 'fas fa-user-tie',
-                    'image' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                ],
-                [
-                    'name' => 'Shri Gopal Das',
-                    'position' => 'Head of Spiritual Education',
-                    'qualification' => 'M.A. Philosophy, Bhakti Shastri',
-                    'experience' => '20+ years in spiritual teaching',
-                    'specialization' => 'Vedic Philosophy & Meditation',
-                    'icon' => 'fas fa-om',
-                    'image' => 'https://images.unsplash.com/photo-1587132137056-d4d5e19e9209?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                ],
-                [
-                    'name' => 'Mrs. Anjali Patel',
-                    'position' => 'Science Department Head',
-                    'qualification' => 'M.Sc. Physics, B.Ed.',
-                    'experience' => '15+ years teaching experience',
-                    'specialization' => 'Physics & Environmental Science',
-                    'icon' => 'fas fa-atom',
-                    'image' => 'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                ]
-            ];
+            [
+                'name' => 'His Holiness Bhakti Prema Swami Maharaj',
+                'position' => 'Advisor, ISKCON Spiritual Leader',
+                'qualification' => 'Sannyasa Disciple of H.H. Bhakti Charu Swami',
+                'experience' => '36+ years in guiding youth in Spiritual Wisdom',
+                'specialization' => 'Community Development & Youth Mentorship',
+                'icon' => 'fas fa-praying-hands',
+                'image' => 'https://i.ytimg.com/vi/o-pB33uz1mc/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFkgVyhlMA8=&rs=AOn4CLB8DQJK15rIrqZFjPnQWG8bZxDmSA'
+            ],
+            [
+                'name' => 'Gauranga Das ',
+                'position' => 'Advisor',
+                'qualification' => 'B.Tech, IIT Bombay',
+                'experience' => '30+ years in guiding & leading youth in every sphere of life',
+                'specialization' => 'Vedic Wisdom & Sustainable Living',
+                'icon' => 'fas fa-leaf',
+                'image' => 'https://c.ndtvimg.com/2023-05/duiuv5g_gauranga-das-prabhu-talks-about-true-friendship-heres-what-he-said_625x300_17_May_23.jpg?downsize=930:*'
+            ],
+            [
+                'name' => 'Kanai Krishna Das',
+                'position' => 'Advisor',
+                'qualification' => 'M.A. Philosophy | Dean, ISKCON Bhagavat Mahavidyalaya',
+                'experience' => '22+ years in Vedic Education',
+                'specialization' => 'Vedic Philosophy & Value-based Education',
+                'icon' => 'fas fa-hands-praying',
+                'image' => 'https://dme2wmiz2suov.cloudfront.net/User(52192965)/4195620-IMG_5326_-_Kanai_Krishna_Das_(2).jpg'
+            ]
+        ];
             
             foreach ($faculty_members as $index => $faculty):
             ?>
@@ -430,11 +470,11 @@ if(file_exists($header_file)) {
                     </div>
                 </div>
                 
-                <div class="pt-4 border-t border-gray-100">
-                    <button class="text-primary hover:text-accent text-sm font-medium transition-colors inline-flex items-center">
-                        <i class="fas fa-envelope mr-2"></i> Contact Faculty
-                    </button>
-                </div>
+                <!--<div class="pt-4 border-t border-gray-100">-->
+                <!--    <button class="text-primary hover:text-accent text-sm font-medium transition-colors inline-flex items-center">-->
+                <!--        <i class="fas fa-envelope mr-2"></i> Contact Faculty-->
+                <!--    </button>-->
+                <!--</div>-->
             </div>
             <?php endforeach; ?>
         </div>
@@ -534,7 +574,7 @@ if(file_exists($header_file)) {
                     </div>
                 </div>
             </div>
-
+<!--next -->
             <!-- Daily Schedule -->
             <div class="fade-in-up">
                 <div class="bg-white rounded-2xl shadow-lg p-6 h-full hover-lift">
@@ -544,14 +584,15 @@ if(file_exists($header_file)) {
                     <div class="space-y-4">
                         <?php
                         $schedule = [
-                            ['4:30 AM', 'Morning Prayers & Meditation', 'fas fa-pray'],
-                            ['6:00 AM', 'Yoga & Physical Exercise', 'fas fa-spa'],
-                            ['8:00 AM', 'Academic Classes Begin', 'fas fa-graduation-cap'],
-                            ['12:30 PM', 'Lunch & Rest Period', 'fas fa-utensils'],
-                            ['2:00 PM', 'Practical & Creative Sessions', 'fas fa-paint-brush'],
-                            ['4:30 PM', 'Sports & Extracurricular', 'fas fa-running'],
-                            ['6:30 PM', 'Evening Prayers & Culture', 'fas fa-music'],
-                            ['8:00 PM', 'Self Study & Reflection', 'fas fa-book-reader']
+                            ['7:30 AM', 'Morning Prayers & Meditation', 'fas fa-pray'],
+                            ['8:10 AM', '1st Class', 'fas fa-spa'],
+                            ['8:50 AM', '2nd Class', 'fas fa-graduation-cap'],
+                            ['9:30 AM', '3rd Class', 'fas fa-utensils'],
+                            ['10:10 AM', 'Lunch ', 'fas fa-paint-brush'],
+                            ['11:10 AM', '4th Class', 'fas fa-running'],
+                            ['11:50 AM', '6th Class', 'fas fa-music'],
+                            ['12:25 PM', '7th Class', 'fas fa-music'],
+                            ['1:00 PM', 'Dispersal', 'fas fa-book-reader']
                         ];
                         
                         foreach ($schedule as $item):
@@ -645,3 +686,5 @@ if(file_exists($footer_file)) {
     echo '</body></html>';
 }
 ?>
+
+

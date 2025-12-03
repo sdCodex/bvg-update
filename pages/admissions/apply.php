@@ -115,6 +115,46 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 
 <?php include '../../includes/header.php'; ?>
 
+
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
+
+
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-primary via-primary to-accent text-white overflow-hidden">
     <!-- Background Pattern -->
@@ -130,7 +170,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
             <nav class="flex items-center space-x-2 text-white/80 text-sm">
                 <a href="<?php echo $base_url; ?>/index.php" class="hover:text-white transition-colors">Home</a>
                 <span class="text-white/60">/</span>
-                <a href="<?php echo $base_url; ?>/admissions/index.php" class="hover:text-white transition-colors">Admissions</a>
+                <a href="<?php echo $base_url; ?>/pages/admissions/index.php" class="hover:text-white transition-colors">Admissions</a>
                 <span class="text-white/60">/</span>
                 <span class="text-white font-medium">Apply Now</span>
             </nav>
@@ -165,10 +205,115 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
     </div>
 </section>
 
-<!-- Progress Steps -->
+<!-- Admission at Prayagraj Section -->
+<section class="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-blue-200">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left Content -->
+                <div class="p-8 lg:p-12 bg-gradient-to-br from-primary to-blue-800 text-white">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-map-marker-alt text-primary text-xl"></i>
+                        </div>
+                        <h2 class="font-serif text-3xl font-bold">Admission at Prayagraj</h2>
+                    </div>
+                    
+                    <p class="text-blue-100 text-lg mb-6 leading-relaxed">
+                        Experience the perfect blend of modern education and spiritual wisdom at our serene campus in the holy city of Prayagraj.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-yellow-300 mr-3 text-lg"></i>
+                            <span class="text-blue-100">Located in the spiritual capital of India</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-yellow-300 mr-3 text-lg"></i>
+                            <span class="text-blue-100">State-of-the-art infrastructure</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-yellow-300 mr-3 text-lg"></i>
+                            <span class="text-blue-100">Peaceful and conducive learning environment</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-yellow-300 mr-3 text-lg"></i>
+                            <span class="text-blue-100">Expert faculty with spiritual orientation</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+                        <h3 class="font-semibold text-yellow-300 mb-3 text-lg">📍 Campus Location</h3>
+                        <p class="text-blue-100 mb-2">
+                            <i class="fas fa-location-dot mr-2"></i>
+                            Bhaktivedanta Gurukul Campus<br>
+                            Near ISKCON Prayagraj, Mutthi Ganj,<br> Prayagraj, 211003<br>
+                            Uttar Pradesh, India
+                        </p>
+                        <p class="text-blue-100 text-sm">
+                            <i class="fas fa-clock mr-2"></i>
+                            Campus Visits: Monday - Saturday, 8:00 AM - 2:00 PM
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Content - Features -->
+                <div class="p-8 lg:p-12">
+                    <h3 class="font-serif text-2xl font-bold text-primary mb-6">Why Choose Our Prayagraj Campus?</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-6 hover-lift transition-all duration-300">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2c1.657 0 3 1.343 3 3 0 1.657-1.343 3-3 3s-3-1.343-3-3c0-1.657 1.343-3 3-3zM6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" />
+</svg>                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Spiritual Atmosphere</h4>
+                            <p class="text-gray-600 text-sm">Immerse in the divine energy of Prayagraj while pursuing academic excellence.</p>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-purple-50 to-violet-100 rounded-xl p-6 hover-lift transition-all duration-300">
+                            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-graduation-cap text-white text-lg"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Quality Education</h4>
+                            <p class="text-gray-600 text-sm">CBSE curriculum combined with Vedic wisdom for holistic development.</p>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-orange-50 to-amber-100 rounded-xl p-6 hover-lift transition-all duration-300">
+                            <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-home text-white text-lg"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Hostel Facilities</h4>
+                            <p class="text-gray-600 text-sm">Safe and comfortable residential facilities with modern amenities.</p>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-red-50 to-pink-100 rounded-xl p-6 hover-lift transition-all duration-300">
+                            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-heart text-white text-lg"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Cultural Heritage</h4>
+                            <p class="text-gray-600 text-sm">Connect with India's rich cultural heritage in the land of spirituality.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <a href="<?php echo $base_url; ?>/contact.php" 
+                           class="inline-flex items-center px-6 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-calendar-check mr-2"></i>
+                            Schedule Campus Visit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Progress Steps - Fixed Layout -->
 <section class="bg-white border-b border-gray-200 py-8">
     <div class="max-w-4xl mx-auto px-4">
-        <div class="flex justify-between items-center">
+        <!-- Desktop - Single Line -->
+        <div class="hidden md:flex items-center justify-between relative">
             <?php
             $steps = [
                 ['icon' => 'fas fa-user-edit', 'label' => 'Application', 'active' => true],
@@ -176,26 +321,55 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 ['icon' => 'fas fa-file-alt', 'label' => 'Documentation', 'active' => false],
                 ['icon' => 'fas fa-check-circle', 'label' => 'Confirmation', 'active' => false]
             ];
-
-            foreach ($steps as $index => $step):
             ?>
-                <div class="flex flex-col items-center flex-1">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3 
-                    <?php echo $step['active'] ? 'bg-accent text-white shadow-lg' : 'bg-gray-200 text-gray-500'; ?> 
-                    transition-all duration-300">
+            
+            <!-- Progress Line -->
+            <div class="absolute top-6 left-0 right-0 h-1 bg-gray-200 -z-10">
+                <div class="h-full bg-accent transition-all duration-500" style="width: 25%"></div>
+            </div>
+
+            <?php foreach ($steps as $index => $step): ?>
+                <div class="flex flex-col items-center relative z-10">
+                    <div class="<?php echo $step['active']
+                        ? 'bg-accent text-white shadow-lg scale-110 border-2 border-white'
+                        : 'bg-gray-200 text-gray-400 border-2 border-white'; ?>
+                        w-12 h-12 rounded-full flex items-center justify-center mb-3 text-lg
+                        transition-all duration-300 transform hover:scale-105">
                         <i class="<?php echo $step['icon']; ?>"></i>
                     </div>
-                    <span class="text-sm font-medium <?php echo $step['active'] ? 'text-accent' : 'text-gray-500'; ?>">
+                    <span class="text-sm font-semibold <?php echo $step['active'] ? 'text-accent' : 'text-gray-500'; ?> text-center whitespace-nowrap">
                         <?php echo $step['label']; ?>
                     </span>
-                    <?php if ($index < count($steps) - 1): ?>
-                        <div class="hidden md:block w-full h-1 bg-gray-200 -mt-6 relative z-0">
-                            <div class="h-1 bg-accent transition-all duration-500"
-                                style="width: <?php echo $step['active'] ? '0%' : '0%'; ?>"></div>
-                        </div>
+                    <?php if ($step['active']): ?>
+                        <div class="absolute -bottom-2 w-3 h-3 bg-accent rounded-full"></div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
+        </div>
+
+        <!-- Mobile - Grid Layout -->
+        <div class="md:hidden">
+            <div class="grid grid-cols-2 gap-6">
+                <?php foreach ($steps as $index => $step): ?>
+                    <div class="flex flex-col items-center">
+                        <div class="<?php echo $step['active']
+                            ? 'bg-accent text-white shadow-lg scale-105'
+                            : 'bg-gray-200 text-gray-400'; ?>
+                            w-12 h-12 rounded-full flex items-center justify-center mb-2 text-lg
+                            border-2 border-white transition-all duration-300">
+                            <i class="<?php echo $step['icon']; ?>"></i>
+                        </div>
+                        <span class="text-xs font-semibold <?php echo $step['active'] ? 'text-accent' : 'text-gray-500'; ?> text-center px-2">
+                            <?php echo $step['label']; ?>
+                        </span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Mobile Progress Bar -->
+            <div class="mt-6 bg-gray-200 rounded-full h-2">
+                <div class="bg-accent h-2 rounded-full transition-all duration-500" style="width: 25%"></div>
+            </div>
         </div>
     </div>
 </section>
@@ -291,10 +465,10 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     <option value="Grade 6" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 6') ? 'selected' : ''; ?>>Grade 6</option>
                                     <option value="Grade 7" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 7') ? 'selected' : ''; ?>>Grade 7</option>
                                     <option value="Grade 8" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 8') ? 'selected' : ''; ?>>Grade 8</option>
-                                    <option value="Grade 9" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 9') ? 'selected' : ''; ?>>Grade 9</option>
-                                    <option value="Grade 10" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 10') ? 'selected' : ''; ?>>Grade 10</option>
-                                    <option value="Grade 11" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 11') ? 'selected' : ''; ?>>Grade 11</option>
-                                    <option value="Grade 12" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 12') ? 'selected' : ''; ?>>Grade 12</option>
+                                    <!--<option value="Grade 9" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 9') ? 'selected' : ''; ?>>Grade 9</option>-->
+                                    <!--<option value="Grade 10" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 10') ? 'selected' : ''; ?>>Grade 10</option>-->
+                                    <!--<option value="Grade 11" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 11') ? 'selected' : ''; ?>>Grade 11</option>-->
+                                    <!--<option value="Grade 12" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 12') ? 'selected' : ''; ?>>Grade 12</option>-->
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-graduation-cap"></i>
@@ -409,9 +583,9 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 form-select appearance-none bg-white">
                                     <option value="">Select Program</option>
                                     <option value="CBSE" <?php echo (isset($_POST['program']) && $_POST['program'] == 'CBSE') || $selected_program == 'CBSE' ? 'selected' : ''; ?>>CBSE</option>
-                                    <option value="Vedic Studies" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Vedic Studies') || $selected_program == 'Vedic Studies' ? 'selected' : ''; ?>>Vedic Studies</option>
-                                    <option value="Integrated Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Integrated Program') || $selected_program == 'Integrated Program' ? 'selected' : ''; ?>>Integrated Program</option>
-                                    <option value="Residential Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Residential Program') || $selected_program == 'Residential Program' ? 'selected' : ''; ?>>Residential Program</option>
+                                    <!--<option value="Vedic Studies" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Vedic Studies') || $selected_program == 'Vedic Studies' ? 'selected' : ''; ?>>Vedic Studies</option>-->
+                                    <!--<option value="Integrated Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Integrated Program') || $selected_program == 'Integrated Program' ? 'selected' : ''; ?>>Integrated Program</option>-->
+                                    <!--<option value="Residential Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Residential Program') || $selected_program == 'Residential Program' ? 'selected' : ''; ?>>Residential Program</option>-->
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-book-open"></i>
@@ -594,8 +768,9 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 </div>
                 <h3 class="font-semibold text-gray-800 mb-2">Email Us</h3>
                 <p class="text-gray-600 mb-4 text-sm">Get detailed information</p>
-                <a href="mailto:admissions@bhaktivedantagurukul.edu" class="text-green-600 hover:text-green-700 font-semibold text-sm inline-flex items-center">
-                    admissions@gurukul.edu
+                <a href="mailto:info@ourgurukul.org" class="text-green-600 hover:text-green-700 font-semibold text-sm inline-flex items-center">
+                    info@ourgurukul.org
+
                 </a>
             </div>
 

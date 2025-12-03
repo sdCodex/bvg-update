@@ -43,61 +43,90 @@ if ($_POST) {
     $featured_image = $post['featured_image']; // Keep existing image by default
 
     if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] == 0) {
-        $upload_dir = '../../../uploads/blog/';
+        $upload_dir = '../../uploads/blog/';
+        
+        // Create upload directory if it doesn't exist
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
+            if (!mkdir($upload_dir, 0755, true)) {
+                $error = "Failed to create upload directory. Please check permissions.";
+            } else {
+                // Create .htaccess for security
+                file_put_contents($upload_dir . '.htaccess', "Options -Indexes\nDeny from all");
+            }
         }
 
-        // Delete old image if exists
-        if ($post['featured_image'] && file_exists('../../..' . $post['featured_image'])) {
-            unlink('../../..' . $post['featured_image']);
-        }
+        // Only proceed if directory exists or was created successfully
+        if (is_dir($upload_dir)) {
+            // Validate file type
+            $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            $file_type = $_FILES['featured_image']['type'];
+            
+            if (!in_array($file_type, $allowed_types)) {
+                $error = "Invalid file type. Only JPG, JPEG, PNG, GIF, and WEBP images are allowed.";
+            } else {
+                // Validate file size (5MB limit)
+                $max_size = 5 * 1024 * 1024; // 5MB in bytes
+                if ($_FILES['featured_image']['size'] > $max_size) {
+                    $error = "File size too large. Maximum size allowed is 5MB.";
+                } else {
+                    // Delete old image if exists
+                    if ($post['featured_image'] && file_exists('../..' . $post['featured_image'])) {
+                        unlink('../..' . $post['featured_image']);
+                    }
 
-        $file_extension = pathinfo($_FILES['featured_image']['name'], PATHINFO_EXTENSION);
-        $filename = $slug . '-' . time() . '.' . $file_extension;
-        $file_path = $upload_dir . $filename;
+                    $file_extension = pathinfo($_FILES['featured_image']['name'], PATHINFO_EXTENSION);
+                    $filename = $slug . '-' . time() . '.' . strtolower($file_extension);
+                    $file_path = $upload_dir . $filename;
 
-        if (move_uploaded_file($_FILES['featured_image']['tmp_name'], $file_path)) {
-            $featured_image = '/uploads/blog/' . $filename;
+                    if (move_uploaded_file($_FILES['featured_image']['tmp_name'], $file_path)) {
+                        $featured_image = '/uploads/blog/' . $filename;
+                    } else {
+                        $error = "Failed to upload image. Please try again.";
+                    }
+                }
+            }
         }
     }
 
     // Handle image removal
     if (isset($_POST['remove_image']) && $_POST['remove_image'] == 1) {
-        if ($post['featured_image'] && file_exists('../../..' . $post['featured_image'])) {
-            unlink('../../..' . $post['featured_image']);
+        if ($post['featured_image'] && file_exists('../..' . $post['featured_image'])) {
+            unlink('../..' . $post['featured_image']);
         }
         $featured_image = '';
     }
 
-    try {
-        $stmt = $pdo->prepare("
-            UPDATE blog_posts 
-            SET title = ?, slug = ?, excerpt = ?, content = ?, featured_image = ?, 
-                category_id = ?, is_published = ?, is_featured = ?, published_at = ?, updated_at = NOW()
-            WHERE id = ?
-        ");
+    // Only proceed with database update if no errors
+    if (!isset($error)) {
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE blog_posts 
+                SET title = ?, slug = ?, excerpt = ?, content = ?, featured_image = ?, 
+                    category_id = ?, is_published = ?, is_featured = ?, published_at = ?, updated_at = NOW()
+                WHERE id = ?
+            ");
 
-        $published_at = $is_published ? ($post['published_at'] ?: date('Y-m-d H:i:s')) : null;
+            $published_at = $is_published ? ($post['published_at'] ?: date('Y-m-d H:i:s')) : null;
 
-        $stmt->execute([
-            $title,
-            $slug,
-            $excerpt,
-            $content,
-            $featured_image,
-            $category_id,
-            $is_published,
-            $is_featured,
-            $published_at,
-            $id
-        ]);
+            $stmt->execute([
+                $title,
+                $slug,
+                $excerpt,
+                $content,
+                $featured_image,
+                $category_id,
+                $is_published,
+                $is_featured,
+                $published_at,
+                $id
+            ]);
 
-        $_SESSION['success'] = "Post updated successfully!";
-        header("Location: manage-posts.php");
-        exit;
-    } catch (PDOException $e) {
-        $error = "Error updating post: " . $e->getMessage();
+            $_SESSION['success'] = "Post updated successfully!";
+            header("Location: manage-posts.php");
+            exit;
+        } catch (PDOException $e) {
+            $error = "Error updating post: " . $e->getMessage();
+        }
     }
 }
 
@@ -129,7 +158,6 @@ function createSlug($text)
     <!-- Include CKEditor -->
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <link rel="icon" type="image/x-icon" href="../../images/bvgLogo.png">
-
 
     <style>
         .ck-editor__editable {
@@ -172,6 +200,26 @@ function createSlug($text)
         .form-input:focus {
             box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
             border-color: #800000;
+        }
+
+        .drag-over {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border-color: #800000;
+        }
+
+        .upload-progress {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #800000, #a00000);
+            transition: width 0.3s ease;
+            width: 0%;
         }
     </style>
 </head>
@@ -241,6 +289,16 @@ function createSlug($text)
                 </div>
             <?php endif; ?>
 
+            <!-- Success Message -->
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-4 rounded-xl flex items-center">
+                    <i class="fas fa-check-circle mr-3 text-green-500"></i>
+                    <div>
+                        <strong class="font-semibold">Success:</strong> <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <!-- Post Info Card -->
             <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm">
@@ -302,7 +360,7 @@ function createSlug($text)
                             </div>
                         </div>
 
-                        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                        <form method="POST" enctype="multipart/form-data" class="space-y-8" id="postForm">
                             <!-- Title and Category Row -->
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div>
@@ -342,29 +400,41 @@ function createSlug($text)
                                 </label>
 
                                 <!-- Current Image Preview -->
-                                <?php if ($post['featured_image']): ?>
-                                    <div class="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                <?php if ($post['featured_image'] && file_exists('../../..' . $post['featured_image'])): ?>
+                                    <div class="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200" id="current-image-container">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center">
-                                                <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                                                <div class="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden mr-4 border">
                                                     <img src="<?php echo $base_url . $post['featured_image']; ?>"
                                                         alt="Current featured image"
-                                                        class="w-full h-full object-cover">
+                                                        class="w-full h-full object-cover"
+                                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                    <div class="w-full h-full flex items-center justify-center bg-gray-100 hidden">
+                                                        <i class="fas fa-image text-gray-400 text-2xl"></i>
+                                                    </div>
                                                 </div>
                                                 <div>
                                                     <p class="font-semibold text-gray-900">Current Image</p>
                                                     <p class="text-sm text-gray-600"><?php echo basename($post['featured_image']); ?></p>
+                                                    <p class="text-xs text-gray-500">
+                                                        <?php 
+                                                        $file_size = file_exists('../../..' . $post['featured_image']) ? 
+                                                            round(filesize('../../..' . $post['featured_image']) / 1024) : 
+                                                            'Unknown';
+                                                        echo $file_size . ' KB';
+                                                        ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="flex gap-2">
                                                 <button type="button"
                                                     onclick="document.getElementById('file_upload').click()"
-                                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300 text-sm">
+                                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300 text-sm flex items-center">
                                                     <i class="fas fa-sync mr-1"></i> Replace
                                                 </button>
                                                 <button type="button"
                                                     onclick="removeCurrentImage()"
-                                                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm">
+                                                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm flex items-center">
                                                     <i class="fas fa-trash mr-1"></i> Remove
                                                 </button>
                                             </div>
@@ -374,7 +444,8 @@ function createSlug($text)
                                 <?php endif; ?>
 
                                 <!-- File Upload Area -->
-                                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-red-400 transition-all duration-300 bg-gray-50">
+                                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-red-400 transition-all duration-300 bg-gray-50"
+                                    id="upload-area">
                                     <input type="file"
                                         id="file_upload"
                                         name="featured_image"
@@ -382,10 +453,10 @@ function createSlug($text)
                                         class="hidden"
                                         onchange="previewImage(this)">
                                     <div id="image-preview" class="text-center">
-                                        <?php if (!$post['featured_image']): ?>
+                                        <?php if (!$post['featured_image'] || !file_exists('../../..' . $post['featured_image'])): ?>
                                             <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
                                             <p class="text-gray-600 mb-2 font-medium">Drag & drop or click to upload featured image</p>
-                                            <p class="text-sm text-gray-500">PNG, JPG, JPEG up to 5MB</p>
+                                            <p class="text-sm text-gray-500">PNG, JPG, JPEG, GIF, WEBP up to 5MB</p>
                                         <?php else: ?>
                                             <p class="text-gray-600 mb-2 font-medium">Upload a new image to replace the current one</p>
                                             <p class="text-sm text-gray-500">Or use the buttons above to manage current image</p>
@@ -396,6 +467,17 @@ function createSlug($text)
                                         class="mt-6 px-6 py-3 btn-primary text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
                                         <i class="fas fa-upload mr-2"></i> Choose Image
                                     </button>
+                                </div>
+
+                                <!-- Image Requirements -->
+                                <div class="mt-3 text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
+                                    <p class="font-semibold text-blue-800 mb-1">Image Requirements:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Recommended size: 1200x800 pixels</li>
+                                        <li>Supported formats: JPG, PNG, GIF, WEBP</li>
+                                        <li>Maximum file size: 5MB</li>
+                                        <li>Images will be stored in: /uploads/blog/</li>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -409,6 +491,7 @@ function createSlug($text)
                                     rows="4"
                                     class="w-full px-4 py-4 border border-gray-300 rounded-xl form-input focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 text-gray-800 placeholder-gray-500"
                                     placeholder="Brief description of the post (appears in blog listing)"><?php echo htmlspecialchars($post['excerpt']); ?></textarea>
+                                <p class="text-xs text-gray-500 mt-2">Keep it short and engaging (150-200 characters recommended)</p>
                             </div>
 
                             <!-- Content -->
@@ -461,14 +544,15 @@ function createSlug($text)
                             <!-- Form Actions -->
                             <div class="flex flex-wrap gap-4 pt-8 border-t border-gray-200">
                                 <button type="submit"
-                                    class="inline-flex items-center px-8 py-4 btn-primary text-white rounded-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+                                    class="inline-flex items-center px-8 py-4 btn-primary text-white rounded-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
+                                    id="submitBtn">
                                     <i class="fas fa-save mr-3"></i> Update Post
                                 </button>
                                 <a href="manage-posts.php"
                                     class="inline-flex items-center px-8 py-4 bg-gray-600 text-white rounded-xl font-bold hover:bg-gray-700 transition-all duration-300 shadow-md">
                                     <i class="fas fa-times mr-3"></i> Cancel
                                 </a>
-                                <a href="?action=delete&id=<?php echo $post['id']; ?>"
+                                <a href="delete-post.php?id=<?php echo $post['id']; ?>"
                                     class="inline-flex items-center px-8 py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all duration-300 shadow-md"
                                     onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
                                     <i class="fas fa-trash mr-3"></i> Delete Post
@@ -619,6 +703,21 @@ function createSlug($text)
             const file = input.files[0];
 
             if (file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Invalid file type. Please select an image file (JPG, PNG, GIF, WEBP).');
+                    input.value = '';
+                    return;
+                }
+
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size too large. Maximum size allowed is 5MB.');
+                    input.value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     preview.innerHTML = `
@@ -629,6 +728,7 @@ function createSlug($text)
                             </button>
                         </div>
                         <p class="mt-2 text-sm text-gray-600 font-medium">${file.name}</p>
+                        <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>
                     `;
                 }
                 reader.readAsDataURL(file);
@@ -645,11 +745,14 @@ function createSlug($text)
 
         function removeCurrentImage() {
             document.getElementById('remove_image').value = '1';
-            document.querySelector('.bg-gray-50').style.display = 'none';
+            const currentImageContainer = document.getElementById('current-image-container');
+            if (currentImageContainer) {
+                currentImageContainer.style.display = 'none';
+            }
             document.getElementById('image-preview').innerHTML = `
                 <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
                 <p class="text-gray-600 mb-2 font-medium">Drag & drop or click to upload featured image</p>
-                <p class="text-sm text-gray-500">PNG, JPG, JPEG up to 5MB</p>
+                <p class="text-sm text-gray-500">PNG, JPG, JPEG, GIF, WEBP up to 5MB</p>
             `;
         }
 
@@ -676,10 +779,94 @@ function createSlug($text)
             }
         }
 
-        // Auto-generate slug from title
-        document.getElementById('title').addEventListener('input', function() {
-            // You can add slug generation logic here if needed
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file_upload');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
         });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('drag-over');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('drag-over');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            previewImage(fileInput);
+        }
+
+        // Form validation
+        document.getElementById('postForm').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const content = CKEDITOR.instances.content.getData().trim();
+            
+            if (!title) {
+                e.preventDefault();
+                alert('Please enter a post title.');
+                document.getElementById('title').focus();
+                return;
+            }
+            
+            if (!content) {
+                e.preventDefault();
+                alert('Please enter post content.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i> Updating...';
+            submitBtn.disabled = true;
+        });
+
+        // Character counter for excerpt
+        const excerptTextarea = document.getElementById('excerpt');
+        if (excerptTextarea) {
+            excerptTextarea.addEventListener('input', function() {
+                const charCount = this.value.length;
+                const counter = document.getElementById('excerpt-counter') || createCounter();
+                counter.textContent = `${charCount} characters`;
+                
+                if (charCount > 200) {
+                    counter.classList.add('text-red-500');
+                } else {
+                    counter.classList.remove('text-red-500');
+                }
+            });
+            
+            function createCounter() {
+                const counter = document.createElement('p');
+                counter.id = 'excerpt-counter';
+                counter.className = 'text-xs text-gray-500 mt-1';
+                excerptTextarea.parentNode.appendChild(counter);
+                return counter;
+            }
+            
+            // Initialize counter
+            excerptTextarea.dispatchEvent(new Event('input'));
+        }
     </script>
 </body>
 

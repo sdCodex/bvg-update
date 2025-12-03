@@ -35,6 +35,65 @@ $posts_stmt->bindValue(1, $limit, PDO::PARAM_INT);
 $posts_stmt->bindValue(2, $offset, PDO::PARAM_INT);
 $posts_stmt->execute();
 $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle newsletter subscription
+$subscription_message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subscribe_email'])) {
+    $email = filter_var($_POST['subscribe_email'], FILTER_VALIDATE_EMAIL);
+    
+    if ($email) {
+        // Check if email already exists
+        $check_stmt = $pdo->prepare("SELECT id, is_verified FROM blog_subscribers WHERE email = ?");
+        $check_stmt->execute([$email]);
+        $existing = $check_stmt->fetch();
+        
+        if ($existing) {
+            if ($existing['is_verified']) {
+                $subscription_message = '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">You are already subscribed to our newsletter!</div>';
+            } else {
+                $subscription_message = '<div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">Please check your email to verify your subscription.</div>';
+            }
+        } else {
+            // Generate verification token
+            $token = bin2hex(random_bytes(32));
+            
+            // Insert new subscriber
+            $insert_stmt = $pdo->prepare("INSERT INTO blog_subscribers (email, verification_token) VALUES (?, ?)");
+            if ($insert_stmt->execute([$email, $token])) {
+                // Send verification email
+                $verification_link = $base_url . "/pages/blog/verify.php?email=" . urlencode($email) . "&token=" . $token;
+                $subject = "Verify your subscription to Bhaktivedanta Gurukul Blog";
+                $message = "
+                <html>
+                <head>
+                    <title>Verify Your Subscription</title>
+                </head>
+                <body>
+                    <h2>Welcome to Bhaktivedanta Gurukul Blog!</h2>
+                    <p>Please click the link below to verify your email address and start receiving updates:</p>
+                    <p><a href='$verification_link' style='background: #800000; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Verify Email</a></p>
+                    <p>If you didn't request this subscription, please ignore this email.</p>
+                </body>
+                </html>
+                ";
+                
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $headers .= "From: no-reply@bhaktivedantagurukul.edu" . "\r\n";
+                
+                if (mail($email, $subject, $message, $headers)) {
+                    $subscription_message = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">Thank you! Please check your email to verify your subscription.</div>';
+                } else {
+                    $subscription_message = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">Sorry, there was an error sending the verification email. Please try again.</div>';
+                }
+            } else {
+                $subscription_message = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">Sorry, there was an error processing your subscription. Please try again.</div>';
+            }
+        }
+    } else {
+        $subscription_message = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">Please enter a valid email address.</div>';
+    }
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <!DOCTYPE html>
@@ -43,6 +102,43 @@ $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Latest News & Updates | Bhaktivedanta Gurukul</title>
+    <!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -105,6 +201,10 @@ $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
         .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
         .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
         .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+        
+        .image-placeholder {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -135,19 +235,19 @@ $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto stagger-animation">
                 <?php foreach($featured_posts as $post): ?>
                 <article class="featured-post group">
-                    <?php if($post['featured_image']): ?>
+                    <?php if($post['featured_image'] && file_exists($_SERVER['DOCUMENT_ROOT'] . $base_url . $post['featured_image'])): ?>
                     <div class="post-image overflow-hidden">
                         <img 
                             src="<?php echo $base_url . $post['featured_image']; ?>" 
                             alt="<?php echo htmlspecialchars($post['title']); ?>"
                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                         >
                     </div>
-                    <?php else: ?>
-                    <div class="post-image bg-gradient-to-br from-primary/10 to-accent/10 h-48 flex items-center justify-center">
+                    <?php endif; ?>
+                    <div class="post-image image-placeholder h-48 flex items-center justify-center <?php echo ($post['featured_image']) ? 'hidden' : ''; ?>">
                         <i class="fas fa-newspaper text-4xl text-primary/40"></i>
                     </div>
-                    <?php endif; ?>
                     
                     <div class="post-content p-6">
                         <span class="category-tag inline-block px-3 py-1 text-xs font-semibold rounded-full mb-4">
@@ -194,19 +294,19 @@ $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto stagger-animation">
                 <?php foreach($posts as $post): ?>
                 <article class="post-card group">
-                    <?php if($post['featured_image']): ?>
+                    <?php if($post['featured_image'] && file_exists($_SERVER['DOCUMENT_ROOT'] . $base_url . $post['featured_image'])): ?>
                     <div class="post-image overflow-hidden rounded-t-lg">
                         <img 
                             src="<?php echo $base_url . $post['featured_image']; ?>" 
                             alt="<?php echo htmlspecialchars($post['title']); ?>"
                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                         >
                     </div>
-                    <?php else: ?>
-                    <div class="post-image bg-gradient-to-br from-primary/10 to-accent/10 h-48 rounded-t-lg flex items-center justify-center">
+                    <?php endif; ?>
+                    <div class="post-image image-placeholder h-48 rounded-t-lg flex items-center justify-center <?php echo ($post['featured_image']) ? 'hidden' : ''; ?>">
                         <i class="fas fa-file-alt text-4xl text-primary/40"></i>
                     </div>
-                    <?php endif; ?>
                     
                     <div class="post-content p-6">
                         <span class="category-tag inline-block px-3 py-1 text-xs font-semibold rounded-full mb-4">
@@ -278,16 +378,24 @@ $posts = $posts_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p class="text-xl opacity-90 mb-8 leading-relaxed">
                     Subscribe to our newsletter to receive the latest updates and news directly in your inbox
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                
+                <?php if($subscription_message): ?>
+                    <?php echo $subscription_message; ?>
+                <?php endif; ?>
+                
+                <form method="POST" class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                     <input 
                         type="email" 
+                        name="subscribe_email"
                         placeholder="Enter your email address" 
                         class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent"
+                        required
                     >
-                    <button class="bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-300">
+                    <button type="submit" class="bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-300">
                         Subscribe
                     </button>
-                </div>
+                </form>
+                <p class="text-sm opacity-80 mt-4">We'll send you email notifications for new blog posts</p>
             </div>
         </div>
     </section>

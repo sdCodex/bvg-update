@@ -342,8 +342,8 @@ function getProgramIcon($programTitle) {
                         <div class="text-gray-300 text-sm">Programs</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-yellow-300">5+</div>
-                        <div class="text-gray-300 text-sm">Years Experience</div>
+                        <div class="text-3xl font-bold text-yellow-300">8+</div>
+                        <div class="text-gray-300 text-sm">Years Teaching Experience</div>
                     </div>
                     <div class="text-center">
                         <div class="text-3xl font-bold text-yellow-300">50+</div>
@@ -558,7 +558,7 @@ function getProgramIcon($programTitle) {
                                 <div class="rounded-xl overflow-hidden shadow-lg">
                                     <img src="<?php echo $image; ?>" 
                                          alt="<?php echo htmlspecialchars($program['title']); ?>" 
-                                         class="w-full h-48 object-cover">
+                                         class="w-full h-56 object-cover">
                                 </div>
                                 
                                 <!-- Program Summary -->
@@ -609,7 +609,7 @@ function getProgramIcon($programTitle) {
                     Join Bhaktivedanta Gurukul for holistic education
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button onclick="openEnrollmentModal('Campus Visit')" 
+                    <a href="<?php echo $base_url ?>/contact.php" 
                            class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300 inline-flex items-center justify-center">
                         <i class="fas fa-calendar-alt mr-3"></i> Schedule Visit
                     </button>

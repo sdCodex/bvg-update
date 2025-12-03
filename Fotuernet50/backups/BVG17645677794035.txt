@@ -1,0 +1,46 @@
+=============================================
+Fortunate 51 SCHOLARSHIP - REGISTRATION CONFIRMATION
+=============================================
+
+REGISTRATION DETAILS:
+=====================
+Registration ID: BVG17645677794035
+Transaction ID: OM2512011113021380893129V
+Name: Arun Kumar Bind
+Father's Name: db payent test last 
+Mother's Name: db payent test last 
+Date of Birth: 2012-05-04
+Gender: Male
+Aadhaar: 987987654654
+
+CONTACT INFORMATION:
+====================
+Phone: 9876543210
+Alternate Phone: 9878654321
+Email: dbpayenttestlast@test.com
+
+ACADEMIC DETAILS:
+=================
+Class: 6
+School: Bhaktivedanta Gurukul
+
+ADDRESS:
+========
+Address: Mailauna, , Jangiganj
+City: Bhadohi
+District: jhkbjn
+State: Uttar Pradesh
+Pincode: 221310
+Landmark: jhkn
+
+PAYMENT DETAILS:
+================
+Transaction ID: OM2512011113021380893129V
+Amount: ₹1
+Payment Method: UPI_QR
+Payment Status: success
+Payment Date: 2025-12-01 12:30:07
+
+=============================================
+Generated on: 01/12/2025 12:30 PM
+=============================================

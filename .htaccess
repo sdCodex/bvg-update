@@ -1,0 +1,14 @@
+Options -Indexes
+RewriteEngine On
+
+# Agar requested path index.php ya kisi php file ke baad extra path ho toh bhi 404
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} ^(.+\.php)/.+$
+RewriteRule .* /404.php [L]
+
+# Agar koi file ya folder exist nahi karta toh 404
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* /404.php [L]
+
+ErrorDocument 404 /404.php

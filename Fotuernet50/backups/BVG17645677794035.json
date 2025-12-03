@@ -1,0 +1,78 @@
+{
+    "registration_id": "BVG17645677794035",
+    "transaction_id": "OM2512011113021380893129V",
+    "name": "Arun Kumar Bind",
+    "father_name": "db payent test last ",
+    "mother_name": "db payent test last ",
+    "gender": "Male",
+    "dob": "2012-05-04",
+    "phone": "9876543210",
+    "alt_contact": "9878654321",
+    "email": "dbpayenttestlast@test.com",
+    "aadhaar": "987987654654",
+    "class": "6",
+    "school_name": "Bhaktivedanta Gurukul",
+    "city": "Bhadohi",
+    "district": "jhkbjn",
+    "state": "Uttar Pradesh",
+    "pincode": "221310",
+    "address": "Mailauna, , Jangiganj",
+    "landmark": "jhkn",
+    "amount": 1,
+    "payment_method": "UPI_QR",
+    "payment_status": "success",
+    "payment_response": {
+        "orderId": "OMO2512011113011904569757V",
+        "state": "COMPLETED",
+        "currency": "INR",
+        "amount": 100,
+        "payableCurrency": "INR",
+        "payableAmount": 100,
+        "feeCurrency": "INR",
+        "feeAmount": 0,
+        "expireAt": 1764568681190,
+        "paymentDetails": [
+            {
+                "transactionId": "OM2512011113021380893129V",
+                "paymentMode": "UPI_QR",
+                "timestamp": 1764567782207,
+                "currency": "INR",
+                "amount": 100,
+                "payableCurrency": "INR",
+                "payableAmount": 100,
+                "feeCurrency": "INR",
+                "feeAmount": 0,
+                "state": "COMPLETED",
+                "instrument": {
+                    "type": "ACCOUNT",
+                    "ifsc": "UBIN0548791",
+                    "accountType": "SAVINGS"
+                },
+                "rail": {
+                    "type": "UPI",
+                    "utr": "114947215561",
+                    "upiTransactionId": "HDF8ff9dd0c968448a980344fa0bd562124",
+                    "vpa": "arXXXXXXXXXXXX54@okhdfcbank"
+                },
+                "splitInstruments": [
+                    {
+                        "instrument": {
+                            "type": "ACCOUNT",
+                            "ifsc": "UBIN0548791",
+                            "accountType": "SAVINGS"
+                        },
+                        "rail": {
+                            "type": "UPI",
+                            "utr": "114947215561",
+                            "upiTransactionId": "HDF8ff9dd0c968448a980344fa0bd562124",
+                            "vpa": "arXXXXXXXXXXXX54@okhdfcbank"
+                        },
+                        "currency": "INR",
+                        "amount": 100
+                    }
+                ]
+            }
+        ]
+    },
+    "timestamp": "2025-12-01 12:30:07"
+}

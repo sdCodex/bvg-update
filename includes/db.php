@@ -16,7 +16,7 @@
 <?php
 // Database configuration
 $host = 'localhost';
-$dbname = 'bhaktivedanta_gurukul'; // Replace with your actual database name
+$dbname = 'gurukul_website'; // Replace with your actual database name
 $username = 'root';    // Replace with your actual username
 $password = '';    // Replace with your actual password
 

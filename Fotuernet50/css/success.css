@@ -1,0 +1,76 @@
+  .maroon-bg {
+      background-color: #800000;
+  }
+
+  .maroon-text {
+      color: #800000;
+  }
+
+  .gold-bg {
+      background-color: #FFD700;
+  }
+
+  .receipt-section {
+      border: 2px solid #800000;
+      border-radius: 10px;
+      background: white;
+  }
+
+  .form-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .form-table td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+  }
+
+  .form-table .label {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      width: 30%;
+  }
+
+  @media print {
+      .no-print {
+          display: none !important;
+      }
+
+      body {
+          -webkit-print-color-adjust: exact;
+          background: white !important;
+          margin: 0;
+          padding: 0;
+      }
+
+      .receipt-section {
+          border: 2px solid #000 !important;
+          box-shadow: none !important;
+          margin: 0;
+      }
+
+      .container {
+          max-width: none !important;
+      }
+  }
+
+  .photo-frame,
+  .signature-frame {
+      border: 2px dashed #ccc;
+      background: #f9f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  /* Hide elements from PDF */
+  .no-pdf {
+      display: block;
+  }
+
+  @media print {
+      .no-pdf {
+          display: none !important;
+      }
+  }

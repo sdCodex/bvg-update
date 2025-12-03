@@ -28,6 +28,42 @@ try {
 }
 ?>
 
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
+
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-primary via-primary to-accent text-white overflow-hidden min-h-[80vh] flex items-center">
     <!-- Background Pattern -->
@@ -47,7 +83,7 @@ try {
             </nav>
         </div>
         
-        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        <h1 class="font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             Admissions <span class="text-yellow-300">2026-27</span>
         </h1>
         <p class="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
@@ -71,11 +107,11 @@ try {
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
             <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">500+</div>
+                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">50+</div>
                 <div class="text-gray-300 text-sm">Students Enrolled</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">15:1</div>
+                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">20:1</div>
                 <div class="text-gray-300 text-sm">Student-Teacher Ratio</div>
             </div>
             <div class="text-center">
@@ -83,7 +119,7 @@ try {
                 <div class="text-gray-300 text-sm">Success Rate</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">50+</div>
+                <div class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">20+</div>
                 <div class="text-gray-300 text-sm">Expert Faculty</div>
             </div>
         </div>
@@ -224,48 +260,60 @@ try {
                 </div>
 
                 <div class="space-y-6">
-                    <?php foreach($requirements as $req): 
-                        $documents = json_decode($req['required_documents'], true);
-                    ?>
-                    <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover-lift transition-all duration-300">
-                        <h3 class="font-serif text-xl font-bold text-primary mb-4 flex items-center">
-                            <i class="fas fa-graduation-cap text-accent mr-3"></i> 
-                            <?php echo htmlspecialchars($req['grade_level']); ?>
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-semibold text-primary mb-3 flex items-center">
-                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                    Requirements
-                                </h4>
-                                <ul class="space-y-2 text-gray-600">
-                                    <li class="flex items-start">
-                                        <i class="fas fa-child text-blue-500 mr-2 mt-1"></i>
-                                        <span>Minimum Age: <strong><?php echo $req['min_age_years']; ?> years</strong></span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-book text-blue-500 mr-2 mt-1"></i>
-                                        <span><?php echo htmlspecialchars($req['academic_requirements']); ?></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-primary mb-3 flex items-center">
-                                    <i class="fas fa-file text-purple-500 mr-2"></i>
-                                    Required Documents
-                                </h4>
-                                <ul class="space-y-2 text-gray-600">
-                                    <?php foreach($documents as $doc): ?>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-file-pdf text-red-500 mr-2 mt-1"></i>
-                                        <span><?php echo ucwords(str_replace('_', ' ', $doc)); ?></span>
-                                    </li>
-                                    <?php endforeach; ?>
-                                </ul>
+                    <?php if(!empty($requirements)): ?>
+                        <?php foreach($requirements as $req): 
+                            $documents = json_decode($req['required_documents'], true);
+                        ?>
+                        <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover-lift transition-all duration-300">
+                            <h3 class="font-serif text-xl font-bold text-primary mb-4 flex items-center">
+                                <i class="fas fa-graduation-cap text-accent mr-3"></i> 
+                                <?php echo htmlspecialchars($req['grade_level']); ?>
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                        Requirements
+                                    </h4>
+                                    <ul class="space-y-2 text-gray-600">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-child text-blue-500 mr-2 mt-1"></i>
+                                            <span>Minimum Age: <strong><?php echo $req['min_age_years']; ?> years</strong></span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-book text-blue-500 mr-2 mt-1"></i>
+                                            <span><?php echo htmlspecialchars($req['academic_requirements']); ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                                        <i class="fas fa-file text-purple-500 mr-2"></i>
+                                        Required Documents
+                                    </h4>
+                                    <ul class="space-y-2 text-gray-600">
+                                        <?php if(is_array($documents)): ?>
+                                            <?php foreach($documents as $doc): ?>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-file-pdf text-red-500 mr-2 mt-1"></i>
+                                                <span><?php echo ucwords(str_replace('_', ' ', $doc)); ?></span>
+                                            </li>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <li class="text-gray-500">No specific documents listed</li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="bg-white rounded-2xl p-8 text-center">
+                            <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-600 mb-2">Admission Requirements</h3>
+                            <p class="text-gray-500">Detailed requirements will be available soon. Please contact our admissions office for more information.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -284,7 +332,7 @@ try {
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-star mt-1 mr-3 text-yellow-300"></i>
-                            <span>Priority given to applications before March 31st</span>
+                            <span>Priority given to applications before April 19st</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-award mt-1 mr-3 text-yellow-300"></i>
@@ -351,64 +399,59 @@ try {
 
         <!-- Fee Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <?php foreach($fee_structure as $index => $fee): ?>
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover-lift transition-all duration-300 group">
-                <div class="bg-gradient-to-r from-primary to-accent text-white rounded-t-2xl py-6 text-center relative overflow-hidden">
-                    <div class="absolute inset-0 opacity-10">
-                        <div class="absolute top-2 left-2 w-8 h-8 bg-white rounded-full"></div>
-                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-white rounded-full"></div>
+            <?php if(!empty($fee_structure)): ?>
+                <?php foreach($fee_structure as $index => $fee): ?>
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover-lift transition-all duration-300 group">
+                    <div class="bg-gradient-to-r from-primary to-accent text-white rounded-t-2xl py-6 text-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10">
+                            <div class="absolute top-2 left-2 w-8 h-8 bg-white rounded-full"></div>
+                            <div class="absolute bottom-2 right-2 w-12 h-12 bg-white rounded-full"></div>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold relative z-10"><?php echo htmlspecialchars($fee['grade_level']); ?></h3>
+                        <div class="text-sm opacity-90 mt-1 relative z-10">Annual Fee</div>
                     </div>
-                    <h3 class="font-serif text-xl font-bold relative z-10"><?php echo htmlspecialchars($fee['grade_level']); ?></h3>
-                    <div class="text-sm opacity-90 mt-1 relative z-10">Annual Fee</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-center mb-6">
-                        <span class="text-3xl font-bold text-primary">₹<?php echo number_format($fee['total_fee']); ?></span>
-                        <span class="text-gray-600 text-lg">/ year</span>
+                    <div class="p-6">
+                        <div class="text-center mb-6">
+                            <span class="text-3xl font-bold text-primary">₹<?php echo number_format($fee['total_fee']); ?></span>
+                            <span class="text-gray-600 text-lg">/ year</span>
+                        </div>
+                        <ul class="space-y-3 text-gray-600 mb-6">
+                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="flex items-center">
+                                    <i class="fas fa-file-signature text-green-500 mr-2"></i>
+                                    Admission Fee (one time)
+                                </span>
+                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['admission_fee']); ?></span>
+                            </li>
+                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="flex items-center">
+                                    <i class="fas fa-book text-blue-500 mr-2"></i>
+                                    Quarterly
+                                </span>
+                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['tuition_fee']); ?></span>
+                            </li>
+                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="flex items-center">
+                                    <i class="fas fa-building text-purple-500 mr-2"></i>
+                                    Annual Fee
+                                </span>
+                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['development_fee']); ?></span>
+                            </li>
+                        </ul>
+                        <a href="apply.php?grade=<?php echo urlencode($fee['grade_level']); ?>" 
+                           class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full text-center block transform group-hover:scale-105 shadow-lg">
+                            Apply for <?php echo htmlspecialchars($fee['grade_level']); ?>
+                        </a>
                     </div>
-                    <ul class="space-y-3 text-gray-600 mb-6">
-
-                      <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span class="flex items-center">
-                                <i class="fas fa-file-signature text-green-500 mr-2"></i>
-                                Admission Fee (one time)
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($fee['admission_fee']); ?></span>
-                        </li>
-
-                        <!-- Quarterly Fee -->
-                        <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span class="flex items-center">
-                                <i class="fas fa-book text-blue-500 mr-2"></i>
-                                Quarterly
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($fee['tuition_fee']); ?></span>
-                        </li>
-                      
-                        <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span class="flex items-center">
-                                <i class="fas fa-building text-purple-500 mr-2"></i>
-                                Annual Fee
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($fee['development_fee']); ?></span>
-                        </li>
-                        <?php if($fee['other_charges'] > 0): ?>
-                        <!-- <li class="flex justify-between items-center py-2">
-                            <span class="flex items-center">
-                                <i class="fas fa-cogs text-orange-500 mr-2"></i>
-                                Other Charges
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($fee['other_charges']); ?></span>
-                        </li> -->
-                        <?php endif; ?>
-                    </ul>
-                    <a href="apply.php?grade=<?php echo urlencode($fee['grade_level']); ?>" 
-                       class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full text-center block transform group-hover:scale-105 shadow-lg">
-                        Apply for <?php echo htmlspecialchars($fee['grade_level']); ?>
-                    </a>
                 </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-span-3 bg-white rounded-2xl p-8 text-center">
+                    <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-600 mb-2">Fee Structure</h3>
+                    <p class="text-gray-500">Detailed fee structure will be available soon. Please contact our admissions office for more information.</p>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- Hostel Fees -->
@@ -488,32 +531,40 @@ try {
         <div class="max-w-4xl mx-auto">
             <!-- Timeline -->
             <div class="space-y-8">
-                <?php foreach($timeline as $index => $event): 
-                    $event_date = new DateTime($event['event_date']);
-                    $is_past = $event_date < new DateTime();
-                ?>
-                <div class="flex items-start group">
-                    <div class="bg-<?php echo $is_past ? 'gray-400' : 'accent'; ?> text-white rounded-xl px-5 py-3 min-w-32 text-center mr-6 shadow-lg transform group-hover:scale-105 transition-all duration-300">
-                        <div class="font-bold text-lg"><?php echo $event_date->format('M j'); ?></div>
-                        <div class="text-sm opacity-90"><?php echo $event_date->format('Y'); ?></div>
-                    </div>
-                    <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex-1 hover-lift transition-all duration-300">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-primary text-lg"><?php echo htmlspecialchars($event['event_name']); ?></h3>
-                            <?php if(!$is_past): ?>
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                                Upcoming
-                            </span>
-                            <?php else: ?>
-                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
-                                Completed
-                            </span>
-                            <?php endif; ?>
+                <?php if(!empty($timeline)): ?>
+                    <?php foreach($timeline as $index => $event): 
+                        $event_date = new DateTime($event['event_date']);
+                        $is_past = $event_date < new DateTime();
+                    ?>
+                    <div class="flex items-start group">
+                        <div class="bg-<?php echo $is_past ? 'gray-400' : 'accent'; ?> text-white rounded-xl px-5 py-3 min-w-32 text-center mr-6 shadow-lg transform group-hover:scale-105 transition-all duration-300">
+                            <div class="font-bold text-lg"><?php echo $event_date->format('M j'); ?></div>
+                            <div class="text-sm opacity-90"><?php echo $event_date->format('Y'); ?></div>
                         </div>
-                        <p class="text-gray-600 leading-relaxed"><?php echo htmlspecialchars($event['description']); ?></p>
+                        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex-1 hover-lift transition-all duration-300">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-bold text-primary text-lg"><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                                <?php if(!$is_past): ?>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                                    Upcoming
+                                </span>
+                                <?php else: ?>
+                                <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
+                                    Completed
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed"><?php echo htmlspecialchars($event['description']); ?></p>
+                        </div>
                     </div>
-                </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="bg-white rounded-2xl p-8 text-center">
+                        <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">Admission Timeline</h3>
+                        <p class="text-gray-500">Important dates for the academic year 2026-27 will be announced soon. Please check back later or contact our admissions office.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -547,7 +598,7 @@ try {
                 ],
                 [
                     'question' => 'What is the student-teacher ratio?',
-                    'answer' => 'We maintain an excellent student-teacher ratio of 15:1 to ensure personalized attention and quality education for every student.'
+                    'answer' => 'We maintain an excellent student-teacher ratio of 20:1 to ensure personalized attention and quality education for every student.'
                 ],
                 [
                     'question' => 'Are scholarships available?',
@@ -613,7 +664,7 @@ try {
             </a>
         </div>
         <p class="text-white/70 text-sm mt-8">
-            Limited seats available for Academic Year 2024-25. Apply early to secure your spot.
+            Limited seats available for Academic Year 2026-27. Apply early to secure your spot.
         </p>
     </div>
 </section>
@@ -653,6 +704,19 @@ html {
     top: 0;
     z-index: 40;
     backdrop-filter: blur(10px);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .flex.items-start.group {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .flex.items-start.group > div:first-child {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
 }
 </style>
 

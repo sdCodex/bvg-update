@@ -61,11 +61,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<title>Bhaktivedanta Gurukul - School of Excellence</title>
+
+<!-- 🧩 SEO Optimization -->
+<meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
+<meta name="keywords" content="Bhaktivedanta Gurukul, Gurukul School, Vedic Education, Spiritual Learning, Best School in India, Holistic Development, Education with Values">
+<meta name="author" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
+<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
+<link rel="canonical" href="https://bhaktivedantagurukul.com/">
+
+<!-- 🧠 Open Graph for Social Media -->
+<meta property="og:title" content="Bhaktivedanta Gurukul School of Excellence | Modern & Vedic Education">
+<meta property="og:description" content="Empowering students through modern education combined with ancient Vedic wisdom.">
+<!--<meta property="og:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">-->
+<meta property="og:url" content="https://bhaktivedantagurukul.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhaktivedanta Gurukul">
+
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bhaktivedanta Gurukul School of Excellence">
+<meta name="twitter:description" content="A unique blend of modern academics and spiritual learning.">
+<!--<meta name="twitter:image" content="<?php echo $base_url; ?>/images/bvgBanner.jpg">-->
+
+<!-- 🎨 Theme Color (Mobile Tab Color) -->
+<meta name="theme-color" content="#DC143C">
+
+<!-- ⚡ PERFORMANCE OPTIMIZATION -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<!-- 🖼️ Favicon -->
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
 
 <?php include './includes/header.php'; ?>
 
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
+<section class="relative bg-gradient-to-br from-[#800000] via-[#1E3A5F] to-[#3E2723] text-white overflow-hidden">
     <!-- Background Elements -->
     <div class="absolute inset-0 opacity-10">
         <div class="absolute top-20 left-20 w-32 h-32 bg-white rounded-full animate-pulse"></div>
@@ -92,20 +130,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-xl mx-auto">
-            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
                 <div class="text-2xl font-bold text-yellow-300 mb-2">24hrs</div>
                 <div class="text-gray-300 text-sm font-medium">Response Time</div>
             </div>
-            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                <div class="text-2xl font-bold text-yellow-300 mb-2">100%</div>
+            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div class="text-2xl font-bold text-[#FFD700] mb-2">100%</div>
                 <div class="text-gray-300 text-sm font-medium">Secure</div>
             </div>
-            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                <div class="text-2xl font-bold text-yellow-300 mb-2">3</div>
+            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div class="text-2xl font-bold text-[#87CEEB] mb-2">3</div>
                 <div class="text-gray-300 text-sm font-medium">Ways to Contact</div>
             </div>
-            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                <div class="text-2xl font-bold text-yellow-300 mb-2">Free</div>
+            <div class="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div class="text-2xl font-bold text-[#90EE90] mb-2">Free</div>
                 <div class="text-gray-300 text-sm font-medium">Consultation</div>
             </div>
         </div>
@@ -113,13 +151,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <!-- Contact Information & Form -->
-<section class="py-16 bg-white">
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Contact Information -->
             <div class="lg:col-span-1 space-y-6">
                 <div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm mb-3">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#800000]/10 text-[#800000] font-semibold text-sm mb-3">
                         <i class="fas fa-info-circle mr-2"></i> Contact Info
                     </span>
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">How to Reach Us</h2>
@@ -131,9 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Contact Cards -->
                 <div class="space-y-4">
                     <!-- Address -->
-                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all duration-300">
+                    <div class="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-[#1E3A5F]">
                         <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-[#800000] to-[#1E3A5F] rounded-lg flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-map-marker-alt text-white text-sm"></i>
                             </div>
                             <div class="flex-1">
@@ -145,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     Uttar Pradesh - 211003
                                 </p>
                                 <a href="https://maps.app.goo.gl/vsJxdLrZ6XBZ2PLM8" 
-                                   class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mt-2 text-xs">
+                                   class="inline-flex items-center text-[#1E3A5F] hover:text-[#800000] font-medium mt-2 text-xs transition-colors">
                                     <i class="fas fa-directions mr-1"></i> Get Directions
                                 </a>
                             </div>
@@ -153,18 +191,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <!-- Phone -->
-                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all duration-300">
+                    <div class="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-[#3E2723]">
                         <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-[#3E2723] to-[#800000] rounded-lg flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-phone text-white text-sm"></i>
                             </div>
                             <div class="flex-1">
                                 <h3 class="font-semibold text-gray-900 mb-2">Call Us</h3>
                                 <div class="space-y-1">
-                                    <a href="tel:+917618040040" class="block text-green-600 hover:text-green-700 font-semibold text-sm">
+                                    <a href="tel:+917618040040" class="block text-[#3E2723] hover:text-[#800000] font-semibold text-sm transition-colors">
                                         +91 7618040040
                                     </a>
-                                    <a href="tel:+915912591091" class="block text-green-600 hover:text-green-700 font-semibold text-sm">
+                                    <a href="tel:+915912591091" class="block text-[#3E2723] hover:text-[#800000] font-semibold text-sm transition-colors">
                                         +91 91295 91091
                                     </a>
                                 </div>
@@ -173,18 +211,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <!-- Email -->
-                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all duration-300">
+                    <div class="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-[#1E3A5F]">
                         <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-[#1E3A5F] to-[#3E2723] rounded-lg flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-envelope text-white text-sm"></i>
                             </div>
                             <div class="flex-1">
                                 <h3 class="font-semibold text-gray-900 mb-2">Email Us</h3>
                                 <div class="space-y-1">
-                                    <a href="mailto:info@ourgurukul.org" class="block text-purple-600 hover:text-purple-700 font-semibold text-xs">
+                                    <a href="mailto:info@ourgurukul.org" class="block text-[#1E3A5F] hover:text-[#800000] font-semibold text-xs transition-colors">
                                         info@ourgurukul.org
                                     </a>
-                                    <a href="mailto:principal@ourgurukul.org" class="block text-purple-600 hover:text-purple-700 font-semibold text-xs">
+                                    <a href="mailto:principal@ourgurukul.org" class="block text-[#1E3A5F] hover:text-[#800000] font-semibold text-xs transition-colors">
                                         principal@ourgurukul.org
                                     </a>
                                 </div>
@@ -193,9 +231,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <!-- Hours -->
-                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all duration-300">
+                    <div class="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-[#800000]">
                         <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-[#800000] to-[#3E2723] rounded-lg flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-clock text-white text-sm"></i>
                             </div>
                             <div class="flex-1">
@@ -203,11 +241,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="space-y-1 text-gray-600 text-sm">
                                     <div class="flex justify-between">
                                         <span>Mon - Sat:</span>
-                                        <span class="font-semibold">8:00 AM - 2:00 PM</span>
+                                        <span class="font-semibold text-[#800000]">8:00 AM - 2:00 PM</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span>Sunday:</span>
-                                        <span class="font-semibold">9:00 AM - 1:00 PM</span>
+                                        <span class="font-semibold text-[#1E3A5F]">9:00 AM - 1:00 PM</span>
                                     </div>
                                 </div>
                             </div>
@@ -218,15 +256,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <!-- Contact Form -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
                     <!-- Form Header -->
-                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+                    <div class="bg-gradient-to-r from-[#800000] via-[#1E3A5F] to-[#3E2723] text-white p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-2xl font-bold mb-2">
                                     Send Us a Message
                                 </h2>
-                                <p class="text-blue-100 text-sm">
+                                <p class="text-[#FFD700] text-sm">
                                     Fill out the form below and we'll get back to you soon
                                 </p>
                             </div>
@@ -241,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Form Content -->
                     <div class="p-6">
                         <?php if ($success_message): ?>
-                        <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 mb-6">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                                     <i class="fas fa-check text-green-600"></i>
@@ -255,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
 
                         <?php if ($error_message): ?>
-                        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+                        <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4 mb-6">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
                                     <i class="fas fa-exclamation-triangle text-red-600"></i>
@@ -278,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="relative">
                                         <input type="text" id="name" name="name" required 
                                             value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>"
-                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-[#800000] transition-all duration-200"
                                             placeholder="Enter your full name">
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                             <i class="fas fa-user"></i>
@@ -294,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="relative">
                                         <input type="email" id="email" name="email" required 
                                             value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F] focus:border-[#1E3A5F] transition-all duration-200"
                                             placeholder="Enter your email">
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                             <i class="fas fa-envelope"></i>
@@ -305,15 +343,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <!-- Phone Field -->
+                                <!-- Phone Field -->
                                 <div class="form-group">
-                                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
-                                        Phone Number
+                                    <label for="phone" required class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Phone Number<span class="text-red-500">*</span>
                                     </label>
                                     <div class="relative">
                                         <input type="tel" id="phone" name="phone" 
                                             value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>"
-                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                            placeholder="Optional">
+                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3E2723] focus:border-[#3E2723] transition-all duration-200"
+                                            placeholder="Enter your phone number">
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                             <i class="fas fa-phone"></i>
                                         </div>
@@ -327,7 +366,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </label>
                                     <div class="relative">
                                         <select id="subject" name="subject" required 
-                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none bg-white">
+                                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-[#800000] transition-all duration-200 appearance-none bg-white">
                                             <option value="">Select a subject</option>
                                             <option value="Admission Inquiry" <?php echo (isset($_POST['subject']) && $_POST['subject'] == 'Admission Inquiry') ? 'selected' : ''; ?>>Admission Inquiry</option>
                                             <option value="Scholarship Information" <?php echo (isset($_POST['subject']) && $_POST['subject'] == 'Scholarship Information') ? 'selected' : ''; ?>>Scholarship Information</option>
@@ -353,7 +392,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                                 <div class="relative">
                                     <textarea id="message" name="message" required rows="5"
-                                        class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                                        class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F] focus:border-[#1E3A5F] transition-all duration-200 resize-none"
                                         placeholder="Tell us about your inquiry..."><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
                                     <div class="absolute left-3 top-3 transform text-gray-400">
                                         <i class="fas fa-comment"></i>
@@ -364,7 +403,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Submit Button -->
                             <div class="pt-4">
                                 <button type="submit" 
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center justify-center submit-button">
+                                        class="w-full bg-gradient-to-r from-[#800000] via-[#1E3A5F] to-[#3E2723] hover:from-[#600000] hover:via-[#152A47] hover:to-[#2D1B1A] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center justify-center submit-button">
                                     <i class="fas fa-paper-plane mr-2"></i> 
                                     <span class="submit-text">Send Message</span>
                                     <i class="fas fa-spinner fa-spin ml-2 hidden loading-icon"></i>
@@ -387,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <!-- Simple FAQ Section -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-white">
     <div class="max-w-4xl mx-auto px-4">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Common Questions</h2>
@@ -413,13 +452,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             foreach ($faqs as $index => $faq):
             ?>
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-[#7E0001] transition-all duration-300">
                 <button class="faq-question w-full text-left flex justify-between items-center group">
                     <h3 class="font-semibold text-gray-900 text-lg"><?php echo $faq['question']; ?></h3>
-                    <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300 group-hover:rotate-180"></i>
+                    <i class="fas fa-chevron-down text-[#7E0001] transition-transform duration-300 group-hover:rotate-180"></i>
                 </button>
                 <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
-                    <div class="pt-3 text-gray-600 leading-relaxed border-t border-gray-100 mt-3">
+                    <div class="pt-3 text-gray-600 leading-relaxed border-t border-gray-200 mt-3">
                         <?php echo $faq['answer']; ?>
                     </div>
                 </div>
@@ -430,19 +469,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <!-- Final CTA -->
-<section class="py-16 bg-blue-600 text-white">
+<section class="py-16 bg-gradient-to-r from-[#023264] to-[#7E0001] text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-        <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+        <p class="text-[#FFD700] text-lg mb-8 max-w-2xl mx-auto">
             Contact us today to begin your educational journey at Bhaktivedanta Gurukul
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="tel:+917618040040" 
-               class="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition-all duration-200 inline-flex items-center">
+               class="bg-white text-[#7E0001] hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition-all duration-200 inline-flex items-center hover:scale-105">
                 <i class="fas fa-phone mr-2"></i> Call Now
             </a>
             <a href="mailto:info@ourgurukul.org" 
-               class="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold py-3 px-6 rounded-lg transition-all duration-200 inline-flex items-center">
+               class="border-2 border-white text-white hover:bg-white hover:text-[#023264] font-semibold py-3 px-6 rounded-lg transition-all duration-200 inline-flex items-center hover:scale-105">
                 <i class="fas fa-envelope mr-2"></i> Send Email
             </a>
         </div>
@@ -453,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <style>
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
 }
 
 .submit-button:disabled {
@@ -477,6 +516,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     background-repeat: no-repeat;
     background-size: 1em 1em;
     padding-right: 2.5rem;
+}
+
+/* Custom scrollbar for textarea */
+textarea::-webkit-scrollbar {
+    width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #800000, #1E3A5F);
+    border-radius: 3px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #600000, #152A47);
+}
+
+/* Smooth transitions */
+* {
+    transition-property: color, background-color, border-color, transform, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>
 

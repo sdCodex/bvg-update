@@ -7,6 +7,7 @@
     <title>Bhaktivedanta Gurukul - Footer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="../images/bvgLogo.png" type="image/x-icon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -69,6 +70,7 @@
 
 <body class="bg-gray-100">
 
+    <?php include "visitors.php"; ?>
 
     <!-- Footer -->
     <footer class="bg-primary text-white">
@@ -108,8 +110,8 @@
                             <a href="https://www.facebook.com/share/1Bd7wGt7PP/" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
-                            <a href="#" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
-                                <i class="fab fa-twitter"></i>
+                            <a href="https://x.com/BVGurukulOffice" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
+                                <i class="fab fa-x"></i>
                             </a>
 
                             <a href="https://www.youtube.com/@BhaktivedantaGurukul" class="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-accent transition-all duration-300">
@@ -131,9 +133,9 @@
                         <ul class="space-y-3">
                             <li><a href="<?php echo $base_url; ?>/index.php" class="footer-link text-gray-300 hover:text-white block">Home</a></li>
                             <li><a href="<?php echo $base_url; ?>/about.php" class="footer-link text-gray-300 hover:text-white block">About Us</a></li>
-                            <li><a href="<?php echo $base_url; ?>/pages/admissions/index.php" class="footer-link text-gray-300 hover:text-white block">Admissions</a></li>
+                            <li><a href="<?php echo $base_url; ?>/apply-now.php" class="footer-link text-gray-300 hover:text-white block">Admissions</a></li>
                             <li><a href="<?php echo $base_url; ?>/programs/index.php" class="footer-link text-gray-300 hover:text-white block">Programs</a></li>
-                            <li><a href="<?php echo $base_url; ?>/pages/scholarship/index.php" class="footer-link text-gray-300 hover:text-white block">Scholarship</a></li>
+                            <!--<li><a href="<?php echo $base_url; ?>/apply-now" class="footer-link text-gray-300 hover:text-white block">Scholarship</a></li> -->
                             <li><a href="<?php echo $base_url; ?>/contact.php" class="footer-link text-gray-300 hover:text-white block">Contact</a></li>
                         </ul>
                     </div>
@@ -182,7 +184,16 @@
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3603.4065403354293!2d81.83626877605948!3d25.424668522448314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39853530acb4005f%3A0x5e240b741f40b60a!2sISKCON%20Prayagraj%20-%20Shri%20Shri%20Radha%20Venimadhava%20Mandir!5e0!3m2!1sen!2sin!4v1761634042246!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
+                    <div class="bg-secondary p-4 rounded-lg text-center lg:col-span-5 mt-8">
+                        <h3 class=" bg-secondary text-yellow-400">👁 TOTAL VISITORS:</h3>
+                        <h2><?= formatIndian($total) ?></h2>
+
+                        <!--<h3 class="text-yellow-400">👁 TODAY'S VISITORS:</h3>-->
+                        <!--<h2><?= formatIndian($todayCount) ?></h2>-->
+                    </div>
                 </div>
+
+
             </div>
 
             <!-- Footer Bottom -->
@@ -192,13 +203,18 @@
                         <p class="text-gray-300">&copy; 2025 Bhaktivedanta Gurukul School of Excellence. All rights reserved.</p>
                     </div>
                     <div class="flex space-x-6 text-sm">
-                        <a href="" class="text-gray-300 hover:text-white transition-colors">Privacy Policy</a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">Terms of Service</a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">Sitemap</a>
+                        <a href="Privacy-Policy.php" class="text-gray-300 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="Return-Policy.php" class="text-gray-300 hover:text-white transition-colors">Return Policy</a>
+                        <a href="Terms-Conditions.php" class="text-gray-300 hover:text-white transition-colors">Terms & Conditions</a>
                     </div>
                 </div>
-                <div class="text-center mt-4">
-                    <p class="text-sm text-gray-400">Designed with <i class="fas fa-heart text-red-500"></i> for quality education</p>
+                <div class="flex flex-col md:flex-row justify-between items-center pt-4">
+                    <div class="text-center md:text-left mb-4 md:mb-0 md:w-1/2">
+                        <p class="text-sm text-gray-400">Designed with <i class="fas fa-heart text-red-500"></i> for quality education</p>
+                    </div>
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        <p class="text-sm text-gray-400"><i class="fas fa-hand-holding-heart text-red-500"></i> Managed by Shri Bhagavat Seva Trust</p>
+                    </div>
                 </div>
             </div>
         </div>

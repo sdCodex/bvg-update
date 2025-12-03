@@ -11,3 +11,10 @@
 .env
 .env.local
 
+vendor/
+uploads/
+pages/uploads/
+*.pdf
+*.docx
+sitemap.xml
+*.zip

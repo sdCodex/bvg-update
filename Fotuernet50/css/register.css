@@ -1,0 +1,31 @@
+  .maroon-bg {
+            background-color: #800000;
+        }
+
+        .maroon-text {
+            color: #800000;
+        }
+
+        .brown-text {
+            color: #3e2723;
+        }
+
+        .blue-text {
+            color: #003366;
+        }
+
+        .maroon-border {
+            border-color: #800000;
+        }
+
+        .gold-bg {
+            background-color: #FFD700;
+        }
+
+        .form-section {
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-2px);
+        }
