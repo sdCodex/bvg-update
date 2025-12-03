@@ -18,3 +18,10 @@ pages/uploads/
 *.docx
 sitemap.xml
 *.zip
+
+
+/uploads
+/pages/uploads
+/vendor
+/node_modules
+/Fotuernet50/backups
