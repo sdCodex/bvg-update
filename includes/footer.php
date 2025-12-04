@@ -184,12 +184,8 @@
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3603.4065403354293!2d81.83626877605948!3d25.424668522448314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39853530acb4005f%3A0x5e240b741f40b60a!2sISKCON%20Prayagraj%20-%20Shri%20Shri%20Radha%20Venimadhava%20Mandir!5e0!3m2!1sen!2sin!4v1761634042246!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
-                    <div class="bg-secondary p-4 rounded-lg text-center lg:col-span-5 mt-8">
-                        <h3 class=" bg-secondary text-yellow-400">👁 TOTAL VISITORS:</h3>
-                        <h2><?= formatIndian($total) ?></h2>
-
-                        <!--<h3 class="text-yellow-400">👁 TODAY'S VISITORS:</h3>-->
-                        <!--<h2><?= formatIndian($todayCount) ?></h2>-->
+                    <div class="bg-secondary p-4 rounded-lg text-center lg:col-span-5 mt-8 text-yellow-400">
+                        👁 Total Viewers: <?= formatIndian($total) ?>
                     </div>
                 </div>
 

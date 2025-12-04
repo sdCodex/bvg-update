@@ -1,40 +1,28 @@
 <?php
-// send_email.php
-require_once 'config.php'; // आपका मूल configuration file
-require_once 'mail_config.php'; // PHPMailer configuration
+// send-mail.php (Root में)
+require_once 'includes/config.php';
+require_once 'includes/mail_config.php';
 
-// Email भेजने का example
-$to = "recipient@example.com";
+// Test email
+$to = "arunkumarbind150720@gmail.com"; // अपना email डालें
 $subject = "Test Email from Gurukul Website";
-$htmlContent = "
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; }
-        .content { padding: 20px; }
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            <h1>Gurukul Website</h1>
-        </div>
-        <div class='content'>
-            <h2>Hello User,</h2>
-            <p>This is a test email from Gurukul Website.</p>
-            <p>Sent at: " . date('Y-m-d H:i:s') . "</p>
-        </div>
-    </div>
-</body>
-</html>";
+$body = "
+<h1>Test Email</h1>
+<p>This is a test email sent at: " . date('Y-m-d H:i:s') . "</p>
+<p>If you received this, your email setup is working correctly!</p>
+";
 
-// Send email
-if(sendEmail($to, $subject, $htmlContent)) {
-    echo "Email sent successfully!";
+if (sendEmail($to, $subject, $body)) {
+    echo "<h2 style='color: green;'>✓ Email sent successfully!</h2>";
+    echo "<p>Check your inbox (and spam folder).</p>";
 } else {
-    echo "Failed to send email. Check error logs.";
+    echo "<h2 style='color: red;'>✗ Failed to send email</h2>";
+    echo "<p>Check error logs for details.</p>";
 }
+
+echo "<hr>";
+echo "<h3>Debug Info:</h3>";
+echo "<p>SMTP Host: " . SMTP_HOST . "</p>";
+echo "<p>SMTP Port: " . SMTP_PORT . "</p>";
+echo "<p>From Email: " . SMTP_FROM_EMAIL . "</p>";
 ?>

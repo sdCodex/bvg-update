@@ -27,8 +27,8 @@ if (!$db_connected) {
     die("Database connection failed. Please check the includes path.");
 }
 
-// ✅ PHP MAILER FUNCTIONS START
-function processSingleEmailAndCSV($student_data, $transaction_id, $amount, $payment_method) {
+// ✅ CSV PROCESSING FUNCTIONS START
+function saveBackupAndCSV($student_data, $transaction_id, $amount, $payment_method, $response) {
     $backup_dir = __DIR__ . '/../backups/';
     
     // ✅ PEHLE CHECK KARO KI PEHLE SE PROCESS TO NAHI HUA
@@ -43,44 +43,156 @@ function processSingleEmailAndCSV($student_data, $transaction_id, $amount, $paym
     if (file_exists($tracker_file)) {
         $processed_ids = file($tracker_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if (in_array($student_data['unique_id'], $processed_ids)) {
-            error_log("📧 EMAIL & CSV ALREADY PROCESSED - SKIPPING: " . $student_data['unique_id']);
+            error_log("📄 ALREADY PROCESSED - SKIPPING: " . $student_data['unique_id']);
             return true;
         }
     }
     
     // ✅ SESSION TRACKING CHECK
-    if (isset($_SESSION['processed_' . $student_data['unique_id']]) && 
-        $_SESSION['processed_' . $student_data['unique_id']] === true) {
-        error_log("📧 ALREADY PROCESSED (SESSION) - SKIPPING: " . $student_data['unique_id']);
+    if (isset($_SESSION['backup_processed_' . $student_data['unique_id']]) && 
+        $_SESSION['backup_processed_' . $student_data['unique_id']] === true) {
+        error_log("📄 ALREADY PROCESSED (SESSION) - SKIPPING: " . $student_data['unique_id']);
         return true;
     }
 
     $success = true;
     
-    // ✅ 1. PEHLE CSV ENTRY KARO
+    // ✅ 1. PEHLE JSON BACKUP
+    if (!saveJsonBackup($student_data, $response, $transaction_id, $amount, $payment_method, $backup_dir)) {
+        $success = false;
+        error_log("❌ JSON BACKUP FAILED");
+    }
+    
+    // ✅ 2. PHIR TXT BACKUP
+    if (!saveTxtBackup($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
+        $success = false;
+        error_log("❌ TXT BACKUP FAILED");
+    }
+    
+    // ✅ 3. PHIR CSV ENTRIES
     if (!saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
         error_log("❌ CSV ENTRY FAILED");
     }
     
-    // ✅ 2. PHIR EMAIL SEND KARO
-    if (!sendSingleConfirmationEmail($student_data, $transaction_id, $amount, $payment_method)) {
+    // ✅ 4. COMPREHENSIVE CSV
+    if (!saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
-        error_log("❌ EMAIL SENDING FAILED");
+        error_log("❌ COMPREHENSIVE CSV FAILED");
     }
     
-    // ✅ 3. AGAR DONO SUCCESS TO TRACK MARK KARO
+    // ✅ AGAR SAB SUCCESS TO TRACK MARK KARO
     if ($success) {
         // FILE TRACKING
         file_put_contents($tracker_file, $student_data['unique_id'] . PHP_EOL, FILE_APPEND | LOCK_EX);
         
         // SESSION TRACKING
-        $_SESSION['processed_' . $student_data['unique_id']] = true;
+        $_SESSION['backup_processed_' . $student_data['unique_id']] = true;
         
-        error_log("🎊 EMAIL & CSV BOTH PROCESSED SUCCESSFULLY: " . $student_data['unique_id']);
+        error_log("🎊 ALL BACKUPS & CSV PROCESSED SUCCESSFULLY: " . $student_data['unique_id']);
     }
     
     return $success;
+}
+
+function saveJsonBackup($student_data, $response, $transaction_id, $amount, $payment_method, $backup_dir) {
+    error_log("💾 STARTING JSON BACKUP...");
+
+    $backup_data = [
+        'registration_id' => $student_data['unique_id'],
+        'transaction_id' => $transaction_id,
+        'name' => $student_data['name'],
+        'father_name' => $student_data['father_name'],
+        'mother_name' => $student_data['mother_name'],
+        'gender' => $student_data['gender'],
+        'dob' => $student_data['dob'],
+        'phone' => $student_data['phone'],
+        'alt_contact' => $student_data['alt_contact'],
+        'email' => $student_data['email'],
+        'aadhaar' => $student_data['aadhaar'],
+        'class' => $student_data['class'],
+        'school_name' => $student_data['school_name'],
+        'city' => $student_data['city'],
+        'district' => $student_data['district'],
+        'state' => $student_data['state'],
+        'pincode' => $student_data['pincode'],
+        'address' => $student_data['address'],
+        'landmark' => $student_data['landmark'],
+        'amount' => $amount,
+        'payment_method' => $payment_method,
+        'payment_status' => 'success',
+        'payment_response' => $response,
+        'timestamp' => date('Y-m-d H:i:s')
+    ];
+
+    // JSON file mein save karo
+    $filename = $backup_dir . $student_data['unique_id'] . '.json';
+    if (file_put_contents($filename, json_encode($backup_data, JSON_PRETTY_PRINT))) {
+        error_log("✅ JSON BACKUP SAVED: " . $filename);
+        return true;
+    } else {
+        error_log("❌ JSON BACKUP FAILED");
+        return false;
+    }
+}
+
+function saveTxtBackup($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
+    $txt_file = $backup_dir . $student_data['unique_id'] . '.txt';
+
+    $content = "=============================================\n";
+    $content .= "Fortunate 51 SCHOLARSHIP - REGISTRATION CONFIRMATION\n";
+    $content .= "=============================================\n\n";
+
+    $content .= "REGISTRATION DETAILS:\n";
+    $content .= "=====================\n";
+    $content .= "Registration ID: " . $student_data['unique_id'] . "\n";
+    $content .= "Transaction ID: " . $transaction_id . "\n";
+    $content .= "Name: " . $student_data['name'] . "\n";
+    $content .= "Father's Name: " . $student_data['father_name'] . "\n";
+    $content .= "Mother's Name: " . $student_data['mother_name'] . "\n";
+    $content .= "Date of Birth: " . $student_data['dob'] . "\n";
+    $content .= "Gender: " . $student_data['gender'] . "\n";
+    $content .= "Aadhaar: " . $student_data['aadhaar'] . "\n\n";
+
+    $content .= "CONTACT INFORMATION:\n";
+    $content .= "====================\n";
+    $content .= "Phone: " . $student_data['phone'] . "\n";
+    $content .= "Alternate Phone: " . $student_data['alt_contact'] . "\n";
+    $content .= "Email: " . $student_data['email'] . "\n\n";
+
+    $content .= "ACADEMIC DETAILS:\n";
+    $content .= "=================\n";
+    $content .= "Class: " . $student_data['class'] . "\n";
+    $content .= "School: " . $student_data['school_name'] . "\n\n";
+
+    $content .= "ADDRESS:\n";
+    $content .= "========\n";
+    $content .= "Address: " . $student_data['address'] . "\n";
+    $content .= "City: " . $student_data['city'] . "\n";
+    $content .= "District: " . $student_data['district'] . "\n";
+    $content .= "State: " . $student_data['state'] . "\n";
+    $content .= "Pincode: " . $student_data['pincode'] . "\n";
+    $content .= "Landmark: " . $student_data['landmark'] . "\n\n";
+
+    $content .= "PAYMENT DETAILS:\n";
+    $content .= "================\n";
+    $content .= "Transaction ID: " . $transaction_id . "\n";
+    $content .= "Amount: ₹" . $amount . "\n";
+    $content .= "Payment Method: " . $payment_method . "\n";
+    $content .= "Payment Status: success\n";
+    $content .= "Payment Date: " . date('Y-m-d H:i:s') . "\n\n";
+
+    $content .= "=============================================\n";
+    $content .= "Generated on: " . date('d/m/Y h:i A') . "\n";
+    $content .= "=============================================\n";
+
+    if (file_put_contents($txt_file, $content)) {
+        error_log("📝 TXT BACKUP SAVED: " . $txt_file);
+        return true;
+    } else {
+        error_log("❌ TXT BACKUP FAILED");
+        return false;
+    }
 }
 
 function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
@@ -110,13 +222,15 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
         'Amount', 
         'Payment Method',
         'Payment Date',
-        'Email Sent'
+        'Timestamp'
     ];
 
     // Agar file nahi hai to headers add karo
     if (!file_exists($csv_file)) {
         $fp = fopen($csv_file, 'w');
         if ($fp) {
+            // UTF-8 BOM add karo for Excel compatibility
+            fwrite($fp, "\xEF\xBB\xBF");
             fputcsv($fp, $csv_headers);
             fclose($fp);
             error_log("📄 CSV FILE CREATED WITH HEADERS");
@@ -143,8 +257,8 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
             $student_data['state'],
             $amount,
             $payment_method,
-            date('Y-m-d H:i:s'),
-            'Yes'
+            date('Y-m-d'),
+            date('Y-m-d H:i:s')
         ];
         
         fputcsv($fp, $csv_data);
@@ -157,198 +271,85 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
     }
 }
 
-function sendSingleConfirmationEmail($student_data, $transaction_id, $amount, $payment_method) {
-    error_log("🚀 STARTING EMAIL SEND FUNCTION...");
+// ✅ COMPREHENSIVE CSV BACKUP
+function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
+    $csv_file = $backup_dir . 'complete_registrations.csv';
     
-    // ✅ PHPMailer PATHS - APNE STRUCTURE KE HISAB SE
-    $phpmailer_paths = [
-        __DIR__ . '/../vendor/phpmailer/phpmailer/src/Exception.php',
-        __DIR__ . '/../vendor/phpmailer/phpmailer/src/PHPMailer.php',
-        __DIR__ . '/../vendor/phpmailer/phpmailer/src/SMTP.php',
-        __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php',
-        __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php',
-        __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php'
+    $csv_headers = [
+        'Registration_ID',
+        'Transaction_ID',
+        'Student_Name',
+        'Father_Name',
+        'Mother_Name',
+        'Gender',
+        'DOB',
+        'Email',
+        'Phone',
+        'Alternate_Phone',
+        'Aadhaar_Number',
+        'Class',
+        'School_Name',
+        'Address',
+        'City',
+        'District',
+        'State',
+        'Pincode',
+        'Landmark',
+        'Amount',
+        'Payment_Method',
+        'Payment_Status',
+        'Payment_Date',
+        'Registration_Date'
     ];
 
-    $phpmailer_loaded = false;
-    foreach ($phpmailer_paths as $path) {
-        if (file_exists($path)) {
-            require_once $path;
-            $phpmailer_loaded = true;
-            error_log("✅ PHPMailer loaded from: " . $path);
-            break;
-        }
-    }
-
-    if (!$phpmailer_loaded) {
-        error_log("❌ PHPMailer files not found in any path");
-        
-        // ✅ ALTERNATIVE: Autoloader try karo
-        $autoload_path = __DIR__ . '/../vendor/autoload.php';
-        if (file_exists($autoload_path)) {
-            require_once $autoload_path;
-            $phpmailer_loaded = true;
-            error_log("✅ Autoloader loaded PHPMailer");
-        } else {
-            error_log("❌ Autoloader also not found");
-            return false;
-        }
-    }
-
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-
-    try {
-        // ✅ SMTP Configuration - SIMPLIFIED
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'cmd@ourgurukul.org';
-        $mail->Password   = 'swdrepfqffddfjuk';
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port       = 465;
-        $mail->Timeout    = 30;
-        $mail->CharSet    = 'UTF-8';
-        
-        // ✅ DEBUGGING - DISABLE FOR PRODUCTION
-        $mail->SMTPDebug = 0; // Disable debug output for production
-        // $mail->Debugoutput = function($str, $level) {
-        //     error_log("📧 SMTP DEBUG: $str");
-        // };
-
-        // ✅ CORRECT Email recipients
-        $mail->setFrom('cmd@ourgurukul.org', 'Fortunate 51 Scholarship');
-        $mail->addAddress('info@ourgurukul.org', 'Fortunate 51 Admin');
-        
-        // ✅ STUDENT KO BHI BCC KARO
-        if (!empty($student_data['email'])) {
-            $mail->addBCC($student_data['email'], $student_data['name']);
-            error_log("📧 STUDENT BCC ADDED: " . $student_data['email']);
+    // Check if file exists
+    $file_exists = file_exists($csv_file);
+    
+    $fp = fopen($csv_file, 'a');
+    if ($fp) {
+        // Add headers if file is new
+        if (!$file_exists) {
+            fwrite($fp, "\xEF\xBB\xBF");
+            fputcsv($fp, $csv_headers);
         }
         
-        $mail->isHTML(true);
-        $mail->Subject = 'Fortunate 51 Scholarship Application - ' . $student_data['unique_id'];
+        $csv_data = [
+            $student_data['unique_id'],
+            $transaction_id,
+            $student_data['name'],
+            $student_data['father_name'],
+            $student_data['mother_name'] ?? 'N/A',
+            $student_data['gender'] ?? 'N/A',
+            $student_data['dob'] ?? 'N/A',
+            $student_data['email'],
+            $student_data['phone'],
+            $student_data['alt_contact'] ?? 'N/A',
+            $student_data['aadhaar'] ?? 'N/A',
+            $student_data['class'],
+            $student_data['school_name'],
+            $student_data['address'] ?? 'N/A',
+            $student_data['city'],
+            $student_data['district'] ?? 'N/A',
+            $student_data['state'],
+            $student_data['pincode'] ?? 'N/A',
+            $student_data['landmark'] ?? 'N/A',
+            $amount,
+            $payment_method,
+            'success',
+            date('Y-m-d H:i:s'),
+            date('Y-m-d H:i:s', strtotime($student_data['created_at'] ?? 'now'))
+        ];
         
-        $mail->Body = createEmailTemplate($student_data, $transaction_id, $amount, $payment_method);
-        $mail->AltBody = createPlainTextEmail($student_data, $transaction_id, $amount, $payment_method);
-
-        // Send email
-        error_log("📧 ATTEMPTING TO SEND EMAIL...");
-        if ($mail->send()) {
-            error_log("✅ CONFIRMATION EMAIL SENT SUCCESSFULLY");
-            return true;
-        } else {
-            error_log("❌ EMAIL SEND FAILED: " . $mail->ErrorInfo);
-            return false;
-        }
-        
-    } catch (Exception $e) {
-        error_log("💥 EMAIL EXCEPTION: " . $e->getMessage());
+        fputcsv($fp, $csv_data);
+        fclose($fp);
+        error_log("📄 COMPREHENSIVE CSV ENTRY ADDED: " . $student_data['unique_id']);
+        return true;
+    } else {
+        error_log("❌ COMPREHENSIVE CSV FILE OPEN FAILED");
         return false;
     }
 }
-
-function createEmailTemplate($student_data, $transaction_id, $amount, $payment_method) {
-    $payment_date = date('d/m/Y h:i A');
-    
-    return "
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset='UTF-8'>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #ddd; }
-            .header { background: #7a0f0f; color: white; padding: 20px; text-align: center; }
-            .content { padding: 25px; background: #f9f9f9; }
-            .details { background: white; padding: 20px; margin: 20px 0; border-radius: 5px; }
-            table { width: 100%; border-collapse: collapse; }
-            table td { padding: 8px 12px; border-bottom: 1px solid #eee; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h1>BHAKTIVEDANTA GURUKUL</h1>
-                <h2>FORTUNATE 51 - Scholarship Registration</h2>
-            </div>
-            
-            <div class='content'>
-                <h3>✅ PAYMENT SUCCESSFUL</h3>
-                <p>Dear Admin,</p>
-                <p>A new scholarship application has been successfully registered and payment has been received.</p>
-                
-                <div class='details'>
-                    <h3>Application Details:</h3>
-                    <table>
-                        <tr>
-                            <td><strong>Application No:</strong></td>
-                            <td>{$student_data['unique_id']}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Student Name:</strong></td>
-                            <td>{$student_data['name']}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Father's Name:</strong></td>
-                            <td>{$student_data['father_name']}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Class:</strong></td>
-                            <td>{$student_data['class']}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>School:</strong></td>
-                            <td>{$student_data['school_name']}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Transaction ID:</strong></td>
-                            <td>{$transaction_id}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amount:</strong></td>
-                            <td>₹{$amount}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Payment Method:</strong></td>
-                            <td>{$payment_method}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Payment Date:</strong></td>
-                            <td>{$payment_date}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <p><em>This is an automated email. Please do not reply.</em></p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
-}
-
-function createPlainTextEmail($student_data, $transaction_id, $amount, $payment_method) {
-    $payment_date = date('d/m/Y h:i A');
-    
-    return "
-Fortunate 51 SCHOLARSHIP - REGISTRATION CONFIRMATION
-==============================================
-
-PAYMENT SUCCESSFUL
-Application No: {$student_data['unique_id']}
-Student Name: {$student_data['name']}
-Father's Name: {$student_data['father_name']}
-Class: {$student_data['class']}
-School: {$student_data['school_name']}
-Transaction ID: {$transaction_id}
-Amount: ₹{$amount}
-Payment Method: {$payment_method}
-Payment Date: {$payment_date}
-
-This is an automated email. Please do not reply.
-    ";
-}
-// ✅ PHP MAILER FUNCTIONS END
+// ✅ CSV PROCESSING FUNCTIONS END
 
 // ✅ DEBUG: Check what order_id we received
 $order_id = $_GET['order_id'] ?? '';
@@ -397,7 +398,7 @@ try {
 
     // ✅ IMPROVED PAYMENT STATUS CHECK
     if (($response['state'] ?? '') === 'COMPLETED') {
-        error_log("✅ PAYMENT COMPLETED - UPDATING DATABASE");
+        error_log("✅ PAYMENT COMPLETED - PROCESSING STARTED");
 
         // ✅ EXTRACT PAYMENT DETAILS CORRECTLY
         $transaction_id = $response['transactionId'] ?? $response['paymentDetails'][0]['transactionId'] ?? $response['orderId'] ?? $order_id;
@@ -406,15 +407,31 @@ try {
         $merchant_id = $response['merchantId'] ?? '';
         $transaction_code = $response['transactionCode'] ?? $transaction_id;
 
-        error_log("💾 UPDATE DATA:");
+        error_log("💾 PAYMENT DETAILS:");
         error_log("   - Transaction ID: " . $transaction_id);
         error_log("   - Amount: " . $amount);
         error_log("   - Payment Method: " . $payment_method);
 
-        // ✅ PEHLE BACKUP SAVE KARO - DATABASE UPDATE SE PEHLE
-        saveBackupImmediately($student_data, $response, $transaction_id, $amount, $payment_method);
-
-        // ✅ COMPLETE DATABASE UPDATE WITH ALL FIELDS
+        // ✅ ✅ ✅ PEHLE SAB BACKUP & CSV FILES ✅ ✅ ✅
+        error_log("🚀 STARTING ALL BACKUPS & CSV (BEFORE DATABASE)...");
+        
+        $backup_result = saveBackupAndCSV(
+            $student_data, 
+            $transaction_id, 
+            $amount, 
+            $payment_method,
+            $response
+        );
+        
+        if ($backup_result) {
+            error_log("🎊 ALL BACKUPS & CSV FILES CREATED SUCCESSFULLY!");
+        } else {
+            error_log("⚠️ SOME BACKUP/CSV FILES FAILED");
+        }
+        
+        // ✅ ✅ ✅ AB DATABASE UPDATE KARO ✅ ✅ ✅
+        error_log("💾 STARTING DATABASE UPDATE...");
+        
         try {
             $update_sql = "UPDATE fotuernet50_students SET 
                           payment_status = 'success',
@@ -448,29 +465,14 @@ try {
                 $student_data['amount'] = $amount;
                 $student_data['payment_method'] = $payment_method;
 
-                // ✅ ✅ ✅ YAHAN SINGLE EMAIL & CSV PROCESSING ✅ ✅ ✅
-                if ($payment_success) {
-                    error_log("🚀 ATTEMPTING SINGLE EMAIL & CSV PROCESSING...");
-                    
-                    $processing_result = processSingleEmailAndCSV(
-                        $student_data, 
-                        $transaction_id, 
-                        $amount, 
-                        $payment_method
-                    );
-                    
-                    if ($processing_result) {
-                        error_log("🎊 EMAIL & CSV BOTH PROCESSED SUCCESSFULLY!");
-                        $_SESSION['processing_success'] = "Registration completed successfully! Confirmation email sent.";
-                    } else {
-                        error_log("⚠️ EMAIL OR CSV PROCESSING FAILED");
-                        $_SESSION['processing_warning'] = "Registration successful but email notification failed. Please contact support.";
-                    }
+                // ✅ SESSION MESSAGE (Optional)
+                if ($payment_success && $backup_result) {
+                    error_log("✅ COMPLETE PROCESS SUCCESSFUL!");
+                    // $_SESSION['processing_success'] = "Registration completed successfully!";
                 }
-                // ✅ ✅ ✅ PROCESSING COMPLETE ✅ ✅ ✅
                 
             } else {
-                error_log("❌ UPDATE FAILED - No rows affected");
+                error_log("❌ DATABASE UPDATE FAILED - No rows affected");
 
                 // ✅ FALLBACK: Only update payment status
                 try {
@@ -493,6 +495,7 @@ try {
             }
         } catch (PDOException $e) {
             error_log("💥 DATABASE ERROR: " . $e->getMessage());
+            // Database fail hone par bhi backups already saved hain
         }
     } else {
         error_log("❌ PAYMENT NOT COMPLETED - State: " . ($response['state'] ?? 'UNKNOWN'));
@@ -515,120 +518,9 @@ try {
     die("Error: " . $e->getMessage());
 }
 
-// ✅ IMMEDIATE BACKUP FUNCTION (Database update se PEHLE)
-function saveBackupImmediately($student_data, $response, $transaction_id, $amount, $payment_method)
-{
-    error_log("💾 STARTING IMMEDIATE BACKUP...");
-
-    $backup_data = [
-        'registration_id' => $student_data['unique_id'],
-        'transaction_id' => $transaction_id,
-        'name' => $student_data['name'],
-        'father_name' => $student_data['father_name'],
-        'mother_name' => $student_data['mother_name'],
-        'gender' => $student_data['gender'],
-        'dob' => $student_data['dob'],
-        'phone' => $student_data['phone'],
-        'alt_contact' => $student_data['alt_contact'],
-        'email' => $student_data['email'],
-        'aadhaar' => $student_data['aadhaar'],
-        'class' => $student_data['class'],
-        'school_name' => $student_data['school_name'],
-        'city' => $student_data['city'],
-        'district' => $student_data['district'],
-        'state' => $student_data['state'],
-        'pincode' => $student_data['pincode'],
-        'address' => $student_data['address'],
-        'landmark' => $student_data['landmark'],
-        'amount' => $amount,
-        'payment_method' => $payment_method,
-        'payment_status' => 'success',
-        'payment_response' => $response,
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-
-    // Backup folder create karo
-    $backup_dir = __DIR__ . '/../backups/';
-    if (!is_dir($backup_dir)) {
-        mkdir($backup_dir, 0777, true);
-    }
-
-    // JSON file mein save karo
-    $filename = $backup_dir . $student_data['unique_id'] . '.json';
-    if (file_put_contents($filename, json_encode($backup_data, JSON_PRETTY_PRINT))) {
-        error_log("✅ IMMEDIATE BACKUP SAVED: " . $filename);
-
-        // ✅ TXT FILE BHI BANAO - READABLE FORMAT MEIN
-        saveToReadableTxt($backup_data, $backup_dir, $student_data['unique_id'], $transaction_id);
-    } else {
-        error_log("❌ IMMEDIATE BACKUP FAILED");
-    }
-}
-
-// ✅ READABLE TXT BACKUP FUNCTION WITH TRANSACTION ID
-function saveToReadableTxt($data, $backup_dir, $unique_id, $transaction_id)
-{
-    $txt_file = $backup_dir . $unique_id . '.txt';
-
-    $content = "=============================================\n";
-    $content .= "Fortunate 51 SCHOLARSHIP - REGISTRATION CONFIRMATION\n";
-    $content .= "=============================================\n\n";
-
-    $content .= "REGISTRATION DETAILS:\n";
-    $content .= "=====================\n";
-    $content .= "Registration ID: " . $data['registration_id'] . "\n";
-    $content .= "Transaction ID: " . $transaction_id . "\n";
-    $content .= "Name: " . $data['name'] . "\n";
-    $content .= "Father's Name: " . $data['father_name'] . "\n";
-    $content .= "Mother's Name: " . $data['mother_name'] . "\n";
-    $content .= "Date of Birth: " . $data['dob'] . "\n";
-    $content .= "Gender: " . $data['gender'] . "\n";
-    $content .= "Aadhaar: " . $data['aadhaar'] . "\n\n";
-
-    $content .= "CONTACT INFORMATION:\n";
-    $content .= "====================\n";
-    $content .= "Phone: " . $data['phone'] . "\n";
-    $content .= "Alternate Phone: " . $data['alt_contact'] . "\n";
-    $content .= "Email: " . $data['email'] . "\n\n";
-
-    $content .= "ACADEMIC DETAILS:\n";
-    $content .= "=================\n";
-    $content .= "Class: " . $data['class'] . "\n";
-    $content .= "School: " . $data['school_name'] . "\n\n";
-
-    $content .= "ADDRESS:\n";
-    $content .= "========\n";
-    $content .= "Address: " . $data['address'] . "\n";
-    $content .= "City: " . $data['city'] . "\n";
-    $content .= "District: " . $data['district'] . "\n";
-    $content .= "State: " . $data['state'] . "\n";
-    $content .= "Pincode: " . $data['pincode'] . "\n";
-    $content .= "Landmark: " . $data['landmark'] . "\n\n";
-
-    $content .= "PAYMENT DETAILS:\n";
-    $content .= "================\n";
-    $content .= "Transaction ID: " . $transaction_id . "\n";
-    $content .= "Amount: ₹" . $data['amount'] . "\n";
-    $content .= "Payment Method: " . $data['payment_method'] . "\n";
-    $content .= "Payment Status: " . $data['payment_status'] . "\n";
-    $content .= "Payment Date: " . $data['timestamp'] . "\n\n";
-
-    $content .= "=============================================\n";
-    $content .= "Generated on: " . date('d/m/Y h:i A') . "\n";
-    $content .= "=============================================\n";
-
-    if (file_put_contents($txt_file, $content)) {
-        error_log("📝 READABLE TXT BACKUP SAVED: " . $txt_file);
-    } else {
-        error_log("❌ TXT BACKUP FAILED");
-    }
-}
-
 // UPLOADS PATH
 $uploads_base_path = '../../uploads/';
 ?>
-
-
 
 
 

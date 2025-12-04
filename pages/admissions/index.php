@@ -16,8 +16,8 @@ try {
     $timeline = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Hostel fees
-    $stmt = $pdo->query("SELECT * FROM hostel_fees WHERE academic_year = '2026-27' AND active = TRUE");
-    $hostel_fees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // $stmt = $pdo->query("SELECT * FROM hostel_fees WHERE academic_year = '2026-27' AND active = TRUE");
+    // $hostel_fees = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
 } catch(PDOException $e) {
     // Error handling
@@ -387,7 +387,7 @@ try {
     <div class="max-w-7xl mx-auto px-4">
         <div class="text-center mb-16">
             <span class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
-                <i class="fas fa-rupee-sign mr-2"></i> Fee Structure
+                Fee Structure
             </span>
             <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-4">
                 Transparent <span class="text-accent">Fee Structure</span>
@@ -455,7 +455,7 @@ try {
         </div>
 
         <!-- Hostel Fees -->
-        <?php if(!empty($hostel_fees)): ?>
+        <!-- <?php if(!empty($hostel_fees)): ?>
         <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border border-gray-200">
             <h3 class="font-serif text-2xl font-bold text-primary mb-6 text-center flex items-center justify-center">
                 <i class="fas fa-home text-accent mr-3"></i>
@@ -509,7 +509,7 @@ try {
                 </div>
             </div>
         </div>
-        <?php endif; ?>
+        <?php endif; ?> -->
     </div>
 </section>
 

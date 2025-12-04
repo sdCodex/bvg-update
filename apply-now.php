@@ -1,9 +1,11 @@
-<?php 
-$base_url = '/Gurkul_Project';
+<?php
+$base_url = ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1') ? '/Gurukul_website' : '';
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,30 +39,31 @@ $base_url = '/Gurkul_Project';
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
         }
-        
+
         @media (max-width: 640px) {
             .card-container {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
         }
-        
+
         .feature-card {
             transition: all 0.3s ease;
             height: fit-content;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .stat-item {
             flex: 1 1 0px;
             min-width: 120px;
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <?php include './includes/header.php'; ?>
 
@@ -76,7 +79,7 @@ $base_url = '/Gurkul_Project';
 
                 <!-- Main Heading -->
                 <h1 class="text-3xl xs:text-4xl sm:text-5xl font-bold leading-tight mb-4 md:mb-6">
-                    Scholarship & Admission 
+                    Scholarship & Admission
                     <span class="block text-yellow-300 mt-2">Opportunities</span>
                 </h1>
 
@@ -87,7 +90,7 @@ $base_url = '/Gurkul_Project';
 
                 <!-- Stats -->
                 <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-8">
-                      <div class="stat-item bg-white/20 rounded-lg px-3 py-2 text-center">
+                    <div class="stat-item bg-white/20 rounded-lg px-3 py-2 text-center">
                         <div class="text-xl font-bold">IITians</div>
                         <div class="text-sm opacity-90">initiative</div>
                     </div>
@@ -99,7 +102,7 @@ $base_url = '/Gurkul_Project';
                         <div class="text-xl font-bold">95%</div>
                         <div class="text-sm opacity-90">Success Rate</div>
                     </div>
-                  
+
                 </div>
 
                 <!-- CTA Buttons -->
@@ -108,10 +111,7 @@ $base_url = '/Gurkul_Project';
                         Explore Programs
                         <i class="fas fa-arrow-down ml-1"></i>
                     </a>
-                    <!-- <a href="#contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold px-6 py-3 rounded-lg hover:bg-white/10 transition-all duration-300">
-                        Contact Us
-                        <i class="fas fa-phone ml-1"></i>
-                    </a> -->
+
                 </div>
             </div>
         </div>
@@ -119,21 +119,19 @@ $base_url = '/Gurkul_Project';
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
-        
+
         <!-- Programs Section -->
         <section id="programs" class="mb-16 md:mb-20 lg:mb-24">
             <div class="text-center mb-10 md:mb-12 lg:mb-16">
                 <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-accent mb-4">
                     Choose Your Educational Path
                 </h2>
-                <!--<p class="text-gray-600 text-lg max-w-3xl mx-auto">-->
-                <!--    Select from our flagship scholarship program or premium admission centers at Prayagraj and Khargone-->
-                <!--</p>-->
+
             </div>
 
             <!-- Cards Container -->
             <div class="card-container">
-                
+
                 <!-- Card 1: Fortunate 51 -->
                 <div class="feature-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                     <!-- Card Header -->
@@ -144,7 +142,7 @@ $base_url = '/Gurkul_Project';
                         <h3 class="text-xl sm:text-2xl font-bold mb-2">Fortunate 51</h3>
                         <p class="text-blue-200 text-sm sm:text-base">100% Scholarship with Residential Facilities</p>
                     </div>
-                    
+
                     <!-- Card Body -->
                     <div class="p-5 sm:p-6">
                         <!-- Features -->
@@ -158,7 +156,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Complete tuition fee waiver for selected students</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-home text-accent text-lg"></i>
@@ -168,7 +166,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Safe hostel accommodation with meals</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-award text-accent text-lg"></i>
@@ -179,7 +177,7 @@ $base_url = '/Gurkul_Project';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Program Details -->
                         <div class="bg-blue-50 rounded-lg p-4 mb-6">
                             <h5 class="font-semibold text-accent text-sm mb-2">PROGRAM DETAILS:</h5>
@@ -202,15 +200,15 @@ $base_url = '/Gurkul_Project';
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <!-- Action Button -->
-                        <a href="<?php echo $base_url; ?>/Fotuernet50/register.php" 
-                           class="block w-full bg-accent hover:bg-blue-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
+                        <a href="<?php echo $base_url; ?>/Fotuernet50/register.php"
+                            class="block w-full bg-accent hover:bg-blue-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
                             Apply for Fortunate 51
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- Card 2: Prayagraj Admission -->
                 <div class="feature-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                     <!-- Card Header -->
@@ -218,7 +216,7 @@ $base_url = '/Gurkul_Project';
                         <h3 class="text-xl sm:text-2xl font-bold mb-2">Prayagraj Center</h3>
                         <p class="text-red-200 text-sm sm:text-base">Holistic Education with Modern Facilities</p>
                     </div>
-                    
+
                     <!-- Card Body -->
                     <div class="p-5 sm:p-6">
                         <!-- Features -->
@@ -232,7 +230,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Heart of educational hub in Prayagraj</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-red-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-users text-primary text-lg"></i>
@@ -242,7 +240,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Experienced teachers and mentors</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-red-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-flask text-primary text-lg"></i>
@@ -253,7 +251,7 @@ $base_url = '/Gurkul_Project';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Program Details -->
                         <div class="bg-red-50 rounded-lg p-4 mb-6">
                             <h5 class="font-semibold text-primary text-sm mb-2">PROGRAM HIGHLIGHTS:</h5>
@@ -272,18 +270,21 @@ $base_url = '/Gurkul_Project';
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <!-- Action Buttons -->
-                        <a href="<?php echo $base_url; ?>/pages/admissions/index.php" 
-                           class="block w-full bg-primary hover:bg-red-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
+                        <a href="<?php echo $base_url; ?>/pages/admissions/index.php"
+                            class="block w-full bg-primary hover:bg-red-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
                             Apply for Prayagraj
                         </a>
-                        <button class="w-full border border-primary text-primary hover:bg-red-50 font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
-                            Download Brochure
-                        </button>
+                        <a href="<?php echo $base_url; ?>/download.php">
+                            <button class="w-full border border-primary text-primary hover:bg-red-50 font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
+                                Download Brochure
+                            </button>
+                        </a>
+
                     </div>
                 </div>
-                
+
                 <!-- Card 3: Khargone Admission -->
                 <div class="feature-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                     <!-- Card Header -->
@@ -291,7 +292,7 @@ $base_url = '/Gurkul_Project';
                         <h3 class="text-xl sm:text-2xl font-bold mb-2">Khargone Center</h3>
                         <p class="text-amber-200 text-sm sm:text-base">Quality Education in Indore Division</p>
                     </div>
-                    
+
                     <!-- Card Body -->
                     <div class="p-5 sm:p-6">
                         <!-- Features -->
@@ -305,7 +306,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Easy access from Indore division</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-amber-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-book text-secondary text-lg"></i>
@@ -315,7 +316,7 @@ $base_url = '/Gurkul_Project';
                                     <p class="text-gray-600 text-sm">Well-structured academic programs</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start gap-4">
                                 <div class="bg-amber-100 p-2 rounded-lg flex-shrink-0 mt-1">
                                     <i class="fas fa-chart-line text-secondary text-lg"></i>
@@ -326,7 +327,7 @@ $base_url = '/Gurkul_Project';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Program Details -->
                         <div class="bg-amber-50 rounded-lg p-4 mb-6">
                             <h5 class="font-semibold text-secondary text-sm mb-2">SPECIAL FEATURES:</h5>
@@ -345,10 +346,10 @@ $base_url = '/Gurkul_Project';
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <!-- Action Buttons -->
-                        <a href="<?php echo $base_url; ?>/khargone-admission.php" 
-                           class="block w-full bg-secondary hover:bg-amber-900 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
+                        <a href="<?php echo $base_url; ?>/khargone-admission.php"
+                            class="block w-full bg-secondary hover:bg-amber-900 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
                             Apply for Khargone
                         </a>
                         <button class="w-full border border-secondary text-secondary hover:bg-amber-50 font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
@@ -369,7 +370,7 @@ $base_url = '/Gurkul_Project';
                     We provide holistic education combining academic excellence with character building and spiritual values
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 <div class="text-center p-4 sm:p-6">
                     <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110">
@@ -380,7 +381,7 @@ $base_url = '/Gurkul_Project';
                         Outstanding academic results with consistent board performance and Olympiad achievements
                     </p>
                 </div>
-                
+
                 <div class="text-center p-4 sm:p-6">
                     <div class="bg-red-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110">
                         <i class="fas fa-user-graduate text-primary text-2xl sm:text-3xl"></i>
@@ -390,7 +391,7 @@ $base_url = '/Gurkul_Project';
                         Personalized attention with small batches, mentoring, and regular doubt-solving sessions
                     </p>
                 </div>
-                
+
                 <div class="text-center p-4 sm:p-6">
                     <div class="bg-amber-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110">
                         <i class="fas fa-hand-holding-heart text-secondary text-2xl sm:text-3xl"></i>
@@ -408,7 +409,7 @@ $base_url = '/Gurkul_Project';
             <h2 class="text-2xl sm:text-3xl font-bold text-center text-accent mb-8 md:mb-12">
                 Admission Process & Support
             </h2>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-gray-50 rounded-xl p-5 sm:p-6">
                     <h3 class="font-semibold text-lg flex items-center gap-3 text-accent mb-4">
@@ -429,7 +430,7 @@ $base_url = '/Gurkul_Project';
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="bg-gray-50 rounded-xl p-5 sm:p-6">
                     <h3 class="font-semibold text-lg flex items-center gap-3 text-primary mb-4">
                         <i class="fas fa-route"></i> Admission Process
@@ -449,7 +450,7 @@ $base_url = '/Gurkul_Project';
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="bg-gray-50 rounded-xl p-5 sm:p-6">
                     <h3 class="font-semibold text-lg flex items-center gap-3 text-secondary mb-4">
                         <i class="fas fa-headset"></i> Need Help?
@@ -477,4 +478,5 @@ $base_url = '/Gurkul_Project';
 
     <?php include './includes/footer.php'; ?>
 </body>
+
 </html>

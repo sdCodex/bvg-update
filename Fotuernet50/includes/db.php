@@ -4,9 +4,9 @@
  * Simple mysqli connection. Update credentials as per your environment.
  */
 $DB_HOST = "localhost";
-$DB_USER = "u259074831_ourgurukulname";
-$DB_PASS = "OurgurukulDb!password1008";
-$DB_NAME = "u259074831_ourgurukuldb";
+$DB_USER = "root";
+$DB_PASS = "";
+$DB_NAME = "gurukul_website";
 
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 if ($conn->connect_error) {

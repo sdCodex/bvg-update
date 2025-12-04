@@ -1,7 +1,5 @@
 <?php
 
-
-
 $dbPaths = [
     __DIR__ . "/db.php",
     __DIR__ . "/../db.php",
@@ -19,7 +17,6 @@ foreach ($dbPaths as $path) {
 if (!isset($pdo)) {
     die("❌ Database connection not found. Please check db.php path.");
 }
-
 
 // Get Visitor IP & Today's Date
 $ip = $_SERVER['REMOTE_ADDR'];
@@ -39,6 +36,9 @@ if (!$exists) {
 $totalResult = $pdo->query("SELECT COUNT(*) AS total FROM visitors");
 $total = $totalResult->fetch()['total'];
 
+// Artificially increase total (without affecting today's count)
+$total += 500; // yahan 100 jitna bhi extra dikhana ho add kar sakte ho
+
 // Fetch Today's Visitors
 $todayQuery = $pdo->prepare("SELECT COUNT(*) AS today FROM visitors WHERE visit_date=?");
 $todayQuery->execute([$today]);
@@ -49,6 +49,3 @@ function formatIndian($num) {
     return number_format($num, 0, '', ',');
 }
 ?>
-
-<!-- Visitor UI Box -->
-
