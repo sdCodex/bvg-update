@@ -7,15 +7,12 @@ error_reporting(E_ALL);
 // Base URL
 define('APP_URL', "https://localhost/Gurukul_website/Fotuernet50");
 
-// Email Configuration - अपने credentials से बदलें
+// config.php में यह जोड़ें
 define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USER', 'your-email@gmail.com');
+define('SMTP_PASS', 'your-app-password');
 define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'arunkumarbind150720@gmail.com');
-define('SMTP_PASSWORD', 'xfstffaxxmyazmjl'); // Google App Password
-define('SMTP_FROM_EMAIL', 'arunkumarbind150720@gmail.com');
-define('SMTP_FROM_NAME', 'Gurukul Website');
-define('SMTP_SECURE', 'tls'); // tls or ssl
-define('SMTP_DEBUG', 0); // Debug mode (0 = off)
+define('ADMIN_EMAIL', 'admin@fortunate51.edu.in');
 
 date_default_timezone_set('Asia/Kolkata');
 ?>

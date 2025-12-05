@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/PhonePeHelper.php';
+require_once __DIR__ . '/../includes/mailer.php';
 
 // DATABASE CONNECTION
 $db_attempts = [
@@ -28,17 +29,18 @@ if (!$db_connected) {
 }
 
 // ✅ CSV PROCESSING FUNCTIONS START
-function saveBackupAndCSV($student_data, $transaction_id, $amount, $payment_method, $response) {
+function saveBackupAndCSV($student_data, $transaction_id, $amount, $payment_method, $response)
+{
     $backup_dir = __DIR__ . '/../backups/';
-    
+
     // ✅ PEHLE CHECK KARO KI PEHLE SE PROCESS TO NAHI HUA
     $tracker_file = $backup_dir . 'processed_registrations.txt';
-    
+
     // Backup folder create karo
     if (!is_dir($backup_dir)) {
         mkdir($backup_dir, 0777, true);
     }
-    
+
     // ✅ FILE TRACKING CHECK
     if (file_exists($tracker_file)) {
         $processed_ids = file($tracker_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -47,55 +49,58 @@ function saveBackupAndCSV($student_data, $transaction_id, $amount, $payment_meth
             return true;
         }
     }
-    
+
     // ✅ SESSION TRACKING CHECK
-    if (isset($_SESSION['backup_processed_' . $student_data['unique_id']]) && 
-        $_SESSION['backup_processed_' . $student_data['unique_id']] === true) {
+    if (
+        isset($_SESSION['backup_processed_' . $student_data['unique_id']]) &&
+        $_SESSION['backup_processed_' . $student_data['unique_id']] === true
+    ) {
         error_log("📄 ALREADY PROCESSED (SESSION) - SKIPPING: " . $student_data['unique_id']);
         return true;
     }
 
     $success = true;
-    
+
     // ✅ 1. PEHLE JSON BACKUP
     if (!saveJsonBackup($student_data, $response, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
         error_log("❌ JSON BACKUP FAILED");
     }
-    
+
     // ✅ 2. PHIR TXT BACKUP
     if (!saveTxtBackup($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
         error_log("❌ TXT BACKUP FAILED");
     }
-    
+
     // ✅ 3. PHIR CSV ENTRIES
     if (!saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
         error_log("❌ CSV ENTRY FAILED");
     }
-    
+
     // ✅ 4. COMPREHENSIVE CSV
     if (!saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_method, $backup_dir)) {
         $success = false;
         error_log("❌ COMPREHENSIVE CSV FAILED");
     }
-    
+
     // ✅ AGAR SAB SUCCESS TO TRACK MARK KARO
     if ($success) {
         // FILE TRACKING
         file_put_contents($tracker_file, $student_data['unique_id'] . PHP_EOL, FILE_APPEND | LOCK_EX);
-        
+
         // SESSION TRACKING
         $_SESSION['backup_processed_' . $student_data['unique_id']] = true;
-        
+
         error_log("🎊 ALL BACKUPS & CSV PROCESSED SUCCESSFULLY: " . $student_data['unique_id']);
     }
-    
+
     return $success;
 }
 
-function saveJsonBackup($student_data, $response, $transaction_id, $amount, $payment_method, $backup_dir) {
+function saveJsonBackup($student_data, $response, $transaction_id, $amount, $payment_method, $backup_dir)
+{
     error_log("💾 STARTING JSON BACKUP...");
 
     $backup_data = [
@@ -136,7 +141,8 @@ function saveJsonBackup($student_data, $response, $transaction_id, $amount, $pay
     }
 }
 
-function saveTxtBackup($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
+function saveTxtBackup($student_data, $transaction_id, $amount, $payment_method, $backup_dir)
+{
     $txt_file = $backup_dir . $student_data['unique_id'] . '.txt';
 
     $content = "=============================================\n";
@@ -195,9 +201,10 @@ function saveTxtBackup($student_data, $transaction_id, $amount, $payment_method,
     }
 }
 
-function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
+function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_method, $backup_dir)
+{
     $csv_file = $backup_dir . 'all_registrations.csv';
-    
+
     // ✅ PEHLE CHECK KARO KI ENTRY PEHLE SE TO NAHI HAI
     if (file_exists($csv_file)) {
         $file_content = file_get_contents($csv_file);
@@ -206,20 +213,20 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
             return true;
         }
     }
-    
+
     $csv_headers = [
-        'Registration ID', 
-        'Transaction ID', 
-        'Name', 
-        'Father Name', 
+        'Registration ID',
+        'Transaction ID',
+        'Name',
+        'Father Name',
         'Mother Name',
-        'Email', 
-        'Phone', 
-        'Class', 
+        'Email',
+        'Phone',
+        'Class',
         'School Name',
         'City',
         'State',
-        'Amount', 
+        'Amount',
         'Payment Method',
         'Payment Date',
         'Timestamp'
@@ -260,7 +267,7 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
             date('Y-m-d'),
             date('Y-m-d H:i:s')
         ];
-        
+
         fputcsv($fp, $csv_data);
         fclose($fp);
         error_log("📄 SINGLE CSV ENTRY ADDED: " . $student_data['unique_id']);
@@ -272,9 +279,10 @@ function saveSingleCSVEntry($student_data, $transaction_id, $amount, $payment_me
 }
 
 // ✅ COMPREHENSIVE CSV BACKUP
-function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_method, $backup_dir) {
+function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_method, $backup_dir)
+{
     $csv_file = $backup_dir . 'complete_registrations.csv';
-    
+
     $csv_headers = [
         'Registration_ID',
         'Transaction_ID',
@@ -304,7 +312,7 @@ function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_
 
     // Check if file exists
     $file_exists = file_exists($csv_file);
-    
+
     $fp = fopen($csv_file, 'a');
     if ($fp) {
         // Add headers if file is new
@@ -312,7 +320,7 @@ function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_
             fwrite($fp, "\xEF\xBB\xBF");
             fputcsv($fp, $csv_headers);
         }
-        
+
         $csv_data = [
             $student_data['unique_id'],
             $transaction_id,
@@ -339,7 +347,7 @@ function saveComprehensiveCSV($student_data, $transaction_id, $amount, $payment_
             date('Y-m-d H:i:s'),
             date('Y-m-d H:i:s', strtotime($student_data['created_at'] ?? 'now'))
         ];
-        
+
         fputcsv($fp, $csv_data);
         fclose($fp);
         error_log("📄 COMPREHENSIVE CSV ENTRY ADDED: " . $student_data['unique_id']);
@@ -414,24 +422,25 @@ try {
 
         // ✅ ✅ ✅ PEHLE SAB BACKUP & CSV FILES ✅ ✅ ✅
         error_log("🚀 STARTING ALL BACKUPS & CSV (BEFORE DATABASE)...");
-        
+
         $backup_result = saveBackupAndCSV(
-            $student_data, 
-            $transaction_id, 
-            $amount, 
+            $student_data,
+            $transaction_id,
+            $amount,
             $payment_method,
             $response
         );
-        
+
         if ($backup_result) {
             error_log("🎊 ALL BACKUPS & CSV FILES CREATED SUCCESSFULLY!");
         } else {
             error_log("⚠️ SOME BACKUP/CSV FILES FAILED");
         }
-        
+        $mailer = new SimpleMailer();
+        $mailer->sendBackupToAdmin($student_data, $transaction_id, $amount, $backup_dir);
         // ✅ ✅ ✅ AB DATABASE UPDATE KARO ✅ ✅ ✅
         error_log("💾 STARTING DATABASE UPDATE...");
-        
+
         try {
             $update_sql = "UPDATE fotuernet50_students SET 
                           payment_status = 'success',
@@ -470,7 +479,6 @@ try {
                     error_log("✅ COMPLETE PROCESS SUCCESSFUL!");
                     // $_SESSION['processing_success'] = "Registration completed successfully!";
                 }
-                
             } else {
                 error_log("❌ DATABASE UPDATE FAILED - No rows affected");
 
@@ -527,6 +535,7 @@ $uploads_base_path = '../../uploads/';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -544,8 +553,9 @@ $uploads_base_path = '../../uploads/';
                 padding: 0 !important;
                 box-sizing: border-box !important;
             }
-            
-            body, html {
+
+            body,
+            html {
                 background: white !important;
                 width: 210mm !important;
                 height: 297mm !important;
@@ -555,7 +565,7 @@ $uploads_base_path = '../../uploads/';
                 line-height: 1.3 !important;
                 font-family: "Arial", "Helvetica", sans-serif !important;
             }
-            
+
             .confirmation-container {
                 width: 200mm !important;
                 height: 287mm !important;
@@ -568,11 +578,11 @@ $uploads_base_path = '../../uploads/';
                 overflow: hidden !important;
                 position: relative !important;
             }
-            
-            .no-print { 
-                display: none !important; 
+
+            .no-print {
+                display: none !important;
             }
-            
+
             /* HEADER OPTIMIZATION */
             .header-bg {
                 background: #7a0f0f !important;
@@ -585,7 +595,7 @@ $uploads_base_path = '../../uploads/';
                 align-items: center !important;
                 justify-content: center !important;
             }
-            
+
             .glass-header {
                 width: 95% !important;
                 display: flex !important;
@@ -596,7 +606,7 @@ $uploads_base_path = '../../uploads/';
                 border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
                 border-radius: 12px !important;
             }
-            
+
             .logo {
                 width: 70px !important;
                 height: 70px !important;
@@ -606,7 +616,7 @@ $uploads_base_path = '../../uploads/';
                 background: white !important;
                 flex-shrink: 0 !important;
             }
-            
+
             .header-text h1 {
                 font-size: 18px !important;
                 font-weight: bold !important;
@@ -615,28 +625,28 @@ $uploads_base_path = '../../uploads/';
                 line-height: 1.3 !important;
                 letter-spacing: 0.5px !important;
             }
-            
+
             .header-text h3 {
                 font-size: 16px !important;
                 font-weight: bold !important;
                 margin: 2px 0 0 0 !important;
                 line-height: 1.3 !important;
             }
-            
+
             .header-text h2 {
                 font-size: 14px !important;
                 font-weight: 600 !important;
                 margin: 3px 0 0 0 !important;
                 line-height: 1.3 !important;
             }
-            
+
             /* CONTENT AREA */
             .p-4 {
                 padding: 8mm !important;
                 height: calc(287mm - 28mm) !important;
                 overflow: hidden !important;
             }
-            
+
             /* ALERT BOXES */
             .warning-box {
                 background: #fff3cd !important;
@@ -650,7 +660,7 @@ $uploads_base_path = '../../uploads/';
                 align-items: center !important;
                 border-radius: 4px !important;
             }
-            
+
             .info-box {
                 background: #e8f4f8 !important;
                 border: 1.5px solid #bee5eb !important;
@@ -661,7 +671,7 @@ $uploads_base_path = '../../uploads/';
                 text-align: center !important;
                 border-radius: 4px !important;
             }
-            
+
             /* SECTION HEADERS */
             .section-header {
                 background: #800000 !important;
@@ -673,7 +683,7 @@ $uploads_base_path = '../../uploads/';
                 border-left: 5px solid #003366 !important;
                 border-radius: 3px !important;
             }
-            
+
             /* TABLES - BETTER READABILITY */
             .compact-table {
                 width: 100% !important;
@@ -682,7 +692,7 @@ $uploads_base_path = '../../uploads/';
                 font-size: 11px !important;
                 table-layout: fixed !important;
             }
-            
+
             .compact-table td {
                 padding: 5px 6px !important;
                 border: 1px solid #cccccc !important;
@@ -693,14 +703,14 @@ $uploads_base_path = '../../uploads/';
                 overflow: hidden !important;
                 word-wrap: break-word !important;
             }
-            
+
             .compact-table .label {
                 background: #f8f9fa !important;
                 font-weight: bold !important;
                 width: 28% !important;
                 color: #3e2723 !important;
             }
-            
+
             /* PHOTO SECTION */
             .photo-container {
                 display: flex !important;
@@ -708,13 +718,13 @@ $uploads_base_path = '../../uploads/';
                 margin: 8px 0 6px 0 !important;
                 padding: 0 20px !important;
             }
-            
+
             .photo-box {
                 text-align: center !important;
                 flex: 1 !important;
                 max-width: 100px !important;
             }
-            
+
             .photo-placeholder {
                 width: 85px !important;
                 height: 100px !important;
@@ -726,14 +736,14 @@ $uploads_base_path = '../../uploads/';
                 margin-bottom: 4px !important;
                 border-radius: 3px !important;
             }
-            
+
             .photo-box p {
                 font-size: 11px !important;
                 color: #3e2723 !important;
                 font-weight: bold !important;
                 margin: 0 !important;
             }
-            
+
             /* DECLARATION */
             .declaration-text {
                 text-align: justify !important;
@@ -748,17 +758,17 @@ $uploads_base_path = '../../uploads/';
                 overflow: hidden !important;
                 border-radius: 3px !important;
             }
-            
+
             .declaration-text ul {
                 margin-left: 16px !important;
                 margin-top: 4px !important;
             }
-            
+
             .declaration-text li {
                 margin-bottom: 2px !important;
                 line-height: 1.3 !important;
             }
-            
+
             /* FOOTER */
             .footer-section {
                 border-top: 1.5px solid #3e2723 !important;
@@ -772,28 +782,28 @@ $uploads_base_path = '../../uploads/';
                 right: 8mm !important;
                 border-radius: 3px !important;
             }
-            
+
             .footer-section p {
                 margin: 2px 0 !important;
                 line-height: 1.3 !important;
             }
-            
+
             /* SPECIFIC TEXT STYLING FOR BETTER READABILITY */
             .text-brown-800 {
                 color: #5a3828 !important;
                 font-weight: bold !important;
             }
-            
+
             .text-blue-700 {
                 color: #1e40af !important;
                 font-weight: bold !important;
             }
-            
+
             .text-red-600 {
                 color: #dc2626 !important;
                 font-weight: bold !important;
             }
-            
+
             .text-blue-900 {
                 color: #1e3a8a !important;
                 font-weight: bold !important;
@@ -806,6 +816,7 @@ $uploads_base_path = '../../uploads/';
                 background: #f0f0f0;
                 padding: 20px;
             }
+
             .confirmation-container {
                 max-width: 210mm;
                 margin: 0 auto;
@@ -814,11 +825,13 @@ $uploads_base_path = '../../uploads/';
                 font-family: Arial, sans-serif;
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             }
+
             .compact-table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 8px;
             }
+
             .compact-table td {
                 padding: 6px 8px;
                 border: 1px solid #ddd;
@@ -826,12 +839,14 @@ $uploads_base_path = '../../uploads/';
                 font-size: 13px;
                 height: 24px;
             }
+
             .compact-table .label {
                 background: #f8f9fa;
                 font-weight: bold;
                 width: 28%;
                 color: #3e2723;
             }
+
             .header-bg {
                 background: #7a0f0f;
                 color: white;
@@ -839,6 +854,7 @@ $uploads_base_path = '../../uploads/';
                 text-align: center;
                 border-bottom: 3px solid #800000;
             }
+
             .glass-header {
                 width: 95%;
                 display: flex;
@@ -852,6 +868,7 @@ $uploads_base_path = '../../uploads/';
                 border: 1.5px solid rgba(255, 255, 255, 0.3);
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
             }
+
             .section-header {
                 background: #800000;
                 color: white;
@@ -860,6 +877,7 @@ $uploads_base_path = '../../uploads/';
                 margin: 10px 0 5px 0;
                 border-left: 4px solid #003366;
             }
+
             .warning-box {
                 background: #fff3cd;
                 border: 2px solid #ffeaa7;
@@ -868,6 +886,7 @@ $uploads_base_path = '../../uploads/';
                 border-radius: 4px;
                 border-left: 4px solid #ffc107;
             }
+
             .info-box {
                 background: #e8f4f8;
                 border: 2px solid #bee5eb;
@@ -876,6 +895,7 @@ $uploads_base_path = '../../uploads/';
                 border-radius: 4px;
                 border-left: 4px solid #003366;
             }
+
             .photo-container {
                 display: flex;
                 justify-content: space-between;
@@ -883,11 +903,13 @@ $uploads_base_path = '../../uploads/';
                 margin: 12px 0;
                 padding: 0 50px;
             }
+
             .photo-box {
                 text-align: center;
                 flex: 1;
                 max-width: 120px;
             }
+
             .photo-placeholder {
                 width: 100px;
                 height: 120px;
@@ -899,6 +921,7 @@ $uploads_base_path = '../../uploads/';
                 margin-bottom: 5px;
                 border-radius: 4px;
             }
+
             .declaration-text {
                 text-align: justify;
                 font-size: 11px;
@@ -910,6 +933,7 @@ $uploads_base_path = '../../uploads/';
                 border-radius: 4px;
                 border-left: 4px solid #800000;
             }
+
             .footer-section {
                 border-top: 2px solid #3e2723;
                 padding: 10px;
@@ -917,6 +941,7 @@ $uploads_base_path = '../../uploads/';
                 background: #f5f5f5;
                 border-radius: 0 0 4px 4px;
             }
+
             .logo {
                 width: 83px;
                 height: 83px;
@@ -925,39 +950,43 @@ $uploads_base_path = '../../uploads/';
                 padding: 3px;
                 background: white;
             }
-            
+
             .header-text h1 {
                 font-size: 18px;
                 font-weight: bold;
                 text-transform: uppercase;
             }
+
             .header-text h3 {
                 font-size: 16px;
                 font-weight: bold;
             }
+
             .header-text h2 {
                 font-size: 14px;
                 font-weight: 600;
                 margin-top: 4px;
             }
         }
-        
+
         .header-bg {
             background-color: #7a0f0f;
             display: flex;
             justify-content: center;
         }
 
-        @media (max-width: 768px){
+        @media (max-width: 768px) {
             .logo {
                 width: 50px;
                 height: 50px;
             }
+
             .glass-header {
                 padding: 10px;
                 flex-wrap: wrap;
                 text-align: center;
             }
+
             .photo-container {
                 padding: 0 20px !important;
             }
@@ -996,7 +1025,7 @@ $uploads_base_path = '../../uploads/';
                     DO NOT SEND THIS PAGE TO BHAKTIVEDANTA GURUKUL.
                 </div>
             </div>
-            
+
             <div class="info-box">
                 <p class="text-blue-900">CANDIDATE IS REQUESTED TO RETAIN THE PRINTOUT OF CONFIRMATION PAGE FOR FUTURE REFERENCE.</p>
             </div>
@@ -1162,11 +1191,12 @@ $uploads_base_path = '../../uploads/';
             // Print dialog open karega
             window.print();
         }
-        
+
         // Page load par check karega ki print ho raha hai ya nahi
         window.addEventListener('afterprint', function() {
             console.log('Print completed or cancelled');
         });
     </script>
 </body>
+
 </html>
