@@ -348,7 +348,7 @@ $base_url = ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =
                         </div>
 
                         <!-- Action Buttons -->
-                        <a href="<?php echo $base_url; ?>/khargone-admission.php"
+                        <a href="<?php echo $base_url; ?>/pages/admissions/khargone/khargone.php"
                             class="block w-full bg-secondary hover:bg-amber-900 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
                             Apply for Khargone
                         </a>
