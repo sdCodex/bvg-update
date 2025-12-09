@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 session_start();
 
 // Database connection and base URL setup
-$base_url = '/Gurkul_website';
+$base_url = 'https://bhaktivedantagurukul.com/';
 
 // Include database connection
 include_once '../../../includes/db.php';
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("Email: " . $email);
         error_log("Phone: " . $phone);
 
-        // Validate required fields (campus_type removed)
+        // Validate required fields
         $required_fields = ['student_name', 'father_name', 'email', 'phone', 'dob', 'gender', 'grade', 'academic_year'];
         $missing_fields = [];
         
@@ -73,13 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Fixed campus type for Khargone
             $campus_type = 'Khargone Campus';
             
+            // Generate order ID before insertion
+            $timestamp = time();
+            $random = rand(1000, 9999);
+            $order_id = 'KHARG-' . date('Ymd', $timestamp) . '-' . $random;
+            
             $stmt = $pdo->prepare("
                 INSERT INTO khargone_admissions 
-                (student_name, father_name, mother_name, email, phone, dob, gender, grade, program, campus_type, academic_year, address, city, state, pincode, previous_school, message, status, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+                (student_name, father_name, mother_name, email, phone, dob, gender, grade, program, campus_type, academic_year, address, city, state, pincode, previous_school, message, status, order_id, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ");
-
-            // Execute the statement
+        
             $result = $stmt->execute([
                 $student_name,
                 $father_name,
@@ -97,13 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $state,
                 $pincode,
                 $previous_school,
-                $message
+                $message,
+                'pending', // status
+                $order_id  // order_id
             ]);
 
             // Check if insertion was successful
             if ($result) {
                 $last_id = $pdo->lastInsertId();
                 error_log("Database insertion successful. Last insert ID: " . $last_id);
+                error_log("Order ID generated: " . $order_id);
                 
                 $success_message = "Thank you! Your admission inquiry has been submitted successfully. Please proceed with the ₹500 application fee payment.";
 
@@ -111,13 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['form_success'] = $success_message;
                 $_SESSION['admission_id'] = $last_id;
                 $_SESSION['campus_type'] = $campus_type;
+                $_SESSION['order_id'] = $order_id;
                 
                 // Clear POST data
                 $_POST = array();
                 
-                // ✅ Direct redirect to payment page
-                header("Location: " . $base_url . "/pages/admissions/khargone/request.php");
-                exit();
+                // ✅ Direct redirect to payment page with order_id
+                header("Location: request.php?order_id=" . urlencode($order_id));
+                exit();                
             } else {
                 $error_message = "Failed to save your application. Please try again.";
                 error_log("Database insertion failed");
@@ -632,13 +640,6 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     <option value="Grade 5" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 5') ? 'selected' : ''; ?>>Grade 5</option>
                                     <option value="Grade 6" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 6') ? 'selected' : ''; ?>>Grade 6</option>
                                     <option value="Grade 7" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 7') ? 'selected' : ''; ?>>Grade 7</option>
-                                    <option value="Grade 8" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 8') ? 'selected' : ''; ?>>Grade 8</option>
-                                    <option value="Grade 9" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 9') ? 'selected' : ''; ?>>Grade 9</option>
-                                    <option value="Grade 10" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 10') ? 'selected' : ''; ?>>Grade 10</option>
-                                    <option value="Grade 11" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 11') ? 'selected' : ''; ?>>Grade 11 (Science)</option>
-                                    <option value="Grade 11 Commerce" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 11 Commerce') ? 'selected' : ''; ?>>Grade 11 (Commerce)</option>
-                                    <option value="Grade 12" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 12') ? 'selected' : ''; ?>>Grade 12 (Science)</option>
-                                    <option value="Grade 12 Commerce" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 12 Commerce') ? 'selected' : ''; ?>>Grade 12 (Commerce)</option>
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-graduation-cap"></i>
