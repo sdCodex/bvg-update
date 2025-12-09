@@ -1,420 +1,655 @@
 <?php
-// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 session_start();
 
-// Load configuration
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/PhonePeHelper.php';
-
 // Database connection
-require_once __DIR__ . '/../../../includes/db.php';
+$base_url = 'https://bhaktivedantagurukul.com/';
+include_once '../../../includes/db.php';
 
-$payment_status = '';
-$payment_data = [];
-$error_message = '';
-$success_message = '';
-$redirect_url = '';
-$admission_id = $_SESSION['admission_id'] ?? '';
+// Get parameters
+$order_id = isset($_GET['order_id']) ? $_GET['order_id'] : '';
+$admission_id = isset($_GET['admission_id']) ? $_GET['admission_id'] : '';
+
+// If admission_id is not in GET, try to get it from order_id
+if (empty($admission_id) && !empty($order_id)) {
+    try {
+        $stmt = $pdo->prepare("SELECT id FROM khargone_admissions WHERE order_id = ?");
+        $stmt->execute([$order_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            $admission_id = $result['id'];
+        }
+    } catch (PDOException $e) {
+        // Continue without admission_id
+    }
+}
+
+if (empty($admission_id)) {
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Error - Admission ID Not Found</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Admission ID Not Found</h2>
+            <p class="text-gray-600 mb-4">Unable to locate your admission record.</p>
+            <div class="space-x-4">
+                <a href="/khargone.php" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Go Back to Form</a>
+                <a href="/" class="inline-block bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition">Go to Home</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
 
 try {
-    // VALIDATE order_id
-    if (empty($_GET['order_id'])) {
-        throw new Exception("No Transaction ID found in URL. Please complete your payment.");
+    // Get admission details
+    $stmt = $pdo->prepare("SELECT * FROM khargone_admissions WHERE id = ?");
+    $stmt->execute([$admission_id]);
+    $admission_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$admission_data) {
+        die("Admission record not found");
+    }
+
+    // Set default values
+    $payment_success = false;
+    $payment_status = 'pending'; // 'pending' or 'success'
+    $transaction_id = $order_id ?: 'N/A';
+    
+    // Check payment status from database
+    if (!empty($admission_data['status'])) {
+        if ($admission_data['status'] == 'payment_completed' || $admission_data['status'] == 'completed') {
+            $payment_success = true;
+            $payment_status = 'success';
+        } elseif ($admission_data['status'] == 'pending') {
+            $payment_success = false;
+            $payment_status = 'pending';
+        }
     }
     
-    $order_id = $_GET['order_id'];
-    
-    // Initialize PhonePe Helper
-    $phonePeHelper = new PhonePeHelper(CLIENT_ID, CLIENT_SECRET, CLIENT_VERSION, ENV);
-    
-    // Check payment status
-    $response = $phonePeHelper->checkPaymentStatus($order_id);
-    
-    // Extract payment details
-    $payment_data = $response;
-    $payment_state = $response['state'] ?? 'UNKNOWN';
-    $payment_amount = isset($response['amount']) ? ($response['amount'] / 100) : 0; // Convert paise to rupees
-    
-    // Check if payment is completed
-    if ($payment_state === 'COMPLETED') {
+    // Check if this is a callback from PhonePe (check for transaction status parameters)
+    if (isset($_GET['transactionStatus']) && $_GET['transactionStatus'] == 'SUCCESS') {
+        $payment_success = true;
         $payment_status = 'success';
+        $transaction_id = $_GET['transactionId'] ?? $order_id;
         
         // Update database with payment success
-        $update_sql = "UPDATE khargone_admissions 
-                      SET payment_status = 'completed', 
-                          payment_id = :payment_id,
-                          payment_amount = :amount,
-                          payment_date = NOW(),
-                          status = 'payment_completed'
-                      WHERE id = :admission_id 
-                      AND (payment_id IS NULL OR payment_id = :payment_id2)";
-        
-        $stmt = $pdo->prepare($update_sql);
-        $stmt->execute([
-            ':payment_id' => $order_id,
-            ':amount' => $payment_amount,
-            ':admission_id' => $admission_id,
-            ':payment_id2' => $order_id
-        ]);
-        
-        if ($stmt->rowCount() > 0) {
-            $success_message = "Payment of ₹{$payment_amount} completed successfully!";
-            
-            // Store in session
-            $_SESSION['payment_success'] = true;
-            $_SESSION['payment_details'] = [
-                'order_id' => $order_id,
-                'amount' => $payment_amount,
-                'status' => 'completed',
-                'timestamp' => date('Y-m-d H:i:s')
-            ];
-            
-            // Prepare success email or notification
-            // You can add email sending logic here
-            
-        } else {
-            // Payment already recorded
-            $success_message = "Payment already recorded. Thank you!";
-        }
-        
-    } elseif (in_array($payment_state, ['PENDING', 'FAILED', 'CANCELLED'])) {
-        $payment_status = 'failed';
-        
-        // Prepare for retry
-        $amount_in_paise = 50000; // ₹500 in paise
-        $response_path = RESPONSE_PATH . "?order_id=" . urlencode($order_id);
-        
-        // Generate new order ID for retry
-        $new_order_id = 'BVG_RETRY_' . $order_id . '_' . time();
-        
-        $retry_response = $phonePeHelper->createPayment($new_order_id, $amount_in_paise, $response_path);
-        $redirect_url = $retry_response['redirectUrl'] ?? '';
-        
-        $error_message = "Payment is {$payment_state}. Please try again.";
-        
-        // Update database with failed status
-        $update_sql = "UPDATE khargone_admissions 
-                      SET payment_status = :status, 
-                          payment_note = :note
-                      WHERE id = :admission_id";
-        
-        $stmt = $pdo->prepare($update_sql);
-        $stmt->execute([
-            ':status' => $payment_state,
-            ':note' => 'Payment failed, retry initiated',
-            ':admission_id' => $admission_id
-        ]);
-        
-    } else {
-        $payment_status = 'unknown';
-        $error_message = "Payment status is {$payment_state}. Please contact support.";
+        $update_sql = "UPDATE khargone_admissions SET 
+                       status = 'payment_completed',
+                       payment_date = NOW(),
+                       transaction_id = ?,
+                       updated_at = NOW()
+                       WHERE id = ?";
+        $update_stmt = $pdo->prepare($update_sql);
+        $update_stmt->execute([$transaction_id, $admission_id]);
     }
     
-} catch (Exception $e) {
-    $payment_status = 'error';
-    $error_message = "Error: " . htmlspecialchars($e->getMessage());
-    
-    // Log error
-    error_log("Payment Response Error: " . $e->getMessage() . " | Order ID: " . ($_GET['order_id'] ?? 'N/A'));
+    // Also check session for payment status (if coming from redirect)
+    if (isset($_SESSION['payment_success']) && $_SESSION['payment_success'] === true) {
+        $payment_success = true;
+        $payment_status = 'success';
+        $transaction_id = $_SESSION['transaction_id'] ?? $order_id;
+    }
+
+} catch (PDOException $e) {
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Database Error</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Database Error</h2>
+            <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($e->getMessage()); ?></p>
+            <a href="/khargone.php" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Go Back</a>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
 }
 ?>
+<?php include_once '../../../includes/header.php' ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Status - Khargone Campus Admission</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #003366;
-            --secondary-color: #D4AF37;
-            --accent-color: #800000;
-            --success-color: #10b981;
-            --error-color: #ef4444;
+<style>
+    :root {
+        --primary-color: #003366;
+        --secondary-color: #D4AF37;
+        --accent-color: #800000;
+        --neutral-color: #f7f7f7;
+        --text-dark: #1f2937;
+    }
+    
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .success-badge {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pending-badge {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .print-button {
+        background: linear-gradient(135deg, #003366, #004080);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .print-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+    }
+
+    @media print {
+        .no-print {
+            display: none !important;
         }
         
-        body { 
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-            font-family: 'Inter', sans-serif;
+        body {
+            background: white !important;
+            color: black !important;
         }
         
-        .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .receipt-container {
+            box-shadow: none !important;
+            border: 2px solid #000 !important;
+            margin: 0 !important;
+            padding: 20px !important;
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .status-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            font-size: 32px;
-        }
-        
-        .status-success {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: var(--success-color);
-        }
-        
-        .status-pending {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #f59e0b;
-        }
-        
-        .status-failed {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            color: var(--error-color);
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
-</head>
-<body class="antialiased">
-    <div class="min-h-screen flex flex-col justify-center items-center p-4">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="flex items-center justify-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#003366] to-[#800000] rounded-xl flex items-center justify-center mr-3">
-                    <i class="fas fa-graduation-cap text-white text-xl"></i>
-                </div>
-                <h1 class="text-3xl font-bold text-gray-800">Khargone Campus Admission</h1>
-            </div>
-            <p class="text-gray-600">Payment Status</p>
-        </div>
-        
-        <!-- Main Card -->
-        <div class="w-full max-w-2xl card rounded-2xl overflow-hidden transition-all duration-500">
-            <!-- Status Header -->
-            <div class="bg-gradient-to-r from-[#003366] to-[#004080] p-6 text-white text-center">
-                <div class="relative">
-                    <?php if ($payment_status === 'success'): ?>
-                        <div class="status-icon status-success mb-4">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold">Payment Successful!</h2>
-                        <p class="text-blue-100 mt-2">Your admission application fee has been paid</p>
-                        
-                    <?php elseif ($payment_status === 'failed'): ?>
-                        <div class="status-icon status-failed mb-4">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold">Payment Failed</h2>
-                        <p class="text-blue-100 mt-2">We couldn't process your payment</p>
-                        
-                    <?php elseif ($payment_status === 'unknown'): ?>
-                        <div class="status-icon status-pending mb-4">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold">Payment Status Unknown</h2>
-                        <p class="text-blue-100 mt-2">Please verify your payment status</p>
-                        
-                    <?php else: ?>
-                        <div class="animate-pulse">
-                            <div class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4"></div>
-                        </div>
-                        <h2 class="text-2xl font-bold">Processing Payment...</h2>
-                        <p class="text-blue-100 mt-2">Please wait while we verify your payment</p>
-                    <?php endif; ?>
+    }
+</style>
+
+<section class="py-16 bg-[#f7f7f7]">
+    <div class="max-w-4xl mx-auto px-4">
+        <?php if ($payment_status == 'success'): ?>
+            <!-- SUCCESS MESSAGE -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl shadow-xl overflow-hidden border border-green-200 mb-8">
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check text-white text-3xl"></i>
+                    </div>
+                    <h1 class="font-serif text-3xl font-bold text-gray-800 mb-4">
+                        Payment Successful! 🎉
+                    </h1>
+                    <p class="text-gray-600 text-lg mb-6">
+                        Thank you for submitting your admission application to Khargone Campus.
+                    </p>
+                    <div class="success-badge mx-auto mb-6">
+                        <i class="fas fa-check-circle"></i>
+                        Application Submitted Successfully
+                    </div>
                 </div>
             </div>
-            
-            <!-- Content -->
-            <div class="p-6 md:p-8">
-                <!-- Messages -->
-                <?php if ($success_message): ?>
-                    <div class="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 animate-fade-in">
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-green-800 font-semibold"><?php echo $success_message; ?></p>
-                                <p class="text-green-600 text-sm mt-1">Your admission application is now complete.</p>
-                            </div>
-                        </div>
+        <?php else: ?>
+            <!-- PENDING MESSAGE -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl shadow-xl overflow-hidden border border-amber-200 mb-8">
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-clock text-white text-3xl"></i>
                     </div>
-                <?php endif; ?>
-                
-                <?php if ($error_message): ?>
-                    <div class="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4 animate-fade-in">
-                        <div class="flex items-center">
-                            <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-red-800 font-semibold"><?php echo $error_message; ?></p>
-                                <p class="text-red-600 text-sm mt-1">Please try the payment again or contact support.</p>
-                            </div>
-                        </div>
+                    <h1 class="font-serif text-3xl font-bold text-gray-800 mb-4">
+                        Payment Processing ⏳
+                    </h1>
+                    <p class="text-gray-600 text-lg mb-6">
+                        Your payment is being processed. Please check back in a few minutes.
+                    </p>
+                    <div class="pending-badge mx-auto mb-6">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Payment Under Process
                     </div>
-                <?php endif; ?>
-                
-                <!-- Payment Details -->
-                <div class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-receipt mr-2 text-[#003366]"></i>
-                        Payment Details
-                    </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Order Details -->
-                        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-100">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Order ID</div>
-                            <div class="font-mono text-gray-800 font-semibold break-all"><?php echo htmlspecialchars($order_id ?? 'N/A'); ?></div>
-                        </div>
-                        
-                        <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-4 border border-purple-100">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Status</div>
-                            <div class="font-semibold text-gray-800 flex items-center">
-                                <?php if ($payment_state === 'COMPLETED'): ?>
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">Completed</span>
-                                <?php elseif ($payment_state === 'PENDING'): ?>
-                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">Pending</span>
-                                <?php elseif ($payment_state === 'FAILED'): ?>
-                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-sm">Failed</span>
-                                <?php else: ?>
-                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm"><?php echo htmlspecialchars($payment_state); ?></span>
-                                <?php endif; ?>
+                    <!-- Auto-refresh for pending payments -->
+                    <div class="mt-6">
+                        <p class="text-sm text-gray-500 mb-2">This page will auto-refresh in <span id="countdown">30</span> seconds</p>
+                        <button onclick="location.reload()" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200">
+                            <i class="fas fa-redo mr-2"></i> Refresh Now
+                        </button>
+                    </div>
+                    
+                    <script>
+                        let seconds = 30;
+                        const countdownElement = document.getElementById('countdown');
+                        const countdown = setInterval(function() {
+                            seconds--;
+                            countdownElement.textContent = seconds;
+                            if (seconds <= 0) {
+                                clearInterval(countdown);
+                                location.reload();
+                            }
+                        }, 1000);
+                    </script>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- RECEIPT CONTAINER -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 receipt-container">
+            <!-- Receipt Header -->
+            <div class="bg-gradient-to-r from-[#003366] to-[#800000] text-white p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-6 md:mb-0">
+                        <h2 class="font-serif text-2xl md:text-3xl font-bold mb-2">
+                            Khargone Campus Admission Receipt
+                        </h2>
+                        <p class="text-blue-100">
+                            Application Fee Payment Confirmation
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold">₹500</div>
+                        <div class="text-blue-100 text-sm">Application Fee</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipt Content -->
+            <div class="p-8 space-y-8">
+                <!-- Payment Status Card -->
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-[#003366] rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-receipt text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif text-xl font-bold text-[#003366]">Payment Details</h3>
+                                <p class="text-gray-600 text-sm">Transaction Summary</p>
                             </div>
                         </div>
-                        
-                        <!-- Amount -->
-                        <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-4 border border-amber-100">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Amount Paid</div>
-                            <div class="text-2xl font-bold text-gray-800">₹<?php echo number_format($payment_amount ?? 0, 2); ?></div>
-                            <div class="text-xs text-gray-500 mt-1">Application Fee</div>
+                        <div class="text-right">
+                            <div class="<?php echo $payment_status == 'success' ? 'success-badge' : 'pending-badge'; ?>">
+                                <?php echo $payment_status == 'success' ? 'PAID' : 'PENDING'; ?>
+                            </div>
                         </div>
-                        
-                        <!-- Admission ID -->
-                        <?php if ($admission_id): ?>
-                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Admission Reference</div>
-                            <div class="font-semibold text-gray-800">KHC-<?php echo str_pad($admission_id, 6, '0', STR_PAD_LEFT); ?></div>
-                            <div class="text-xs text-gray-500 mt-1">Keep this for future reference</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Admission ID:</span>
+                                <span class="font-bold text-[#003366]">#KH-<?php echo str_pad($admission_id, 6, '0', STR_PAD_LEFT); ?></span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Order ID:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($order_id); ?></span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Date:</span>
+                                <span class="font-bold"><?php echo date('d/m/Y'); ?></span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Time:</span>
+                                <span class="font-bold"><?php echo date('h:i A'); ?></span>
+                            </div>
                         </div>
-                        <?php endif; ?>
+                        <div class="space-y-4">
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Amount:</span>
+                                <span class="font-bold text-[#800000]">₹500</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Transaction ID:</span>
+                                <span class="font-bold text-[#003366]"><?php echo htmlspecialchars($transaction_id); ?></span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Payment Method:</span>
+                                <span class="font-bold">PhonePe (Online)</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-3">
+                                <span class="text-gray-600">Application Status:</span>
+                                <span class="font-bold"><?php echo ucfirst($admission_data['status'] ?? 'Pending'); ?></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Additional Information -->
-                <?php if ($payment_state === 'COMPLETED'): ?>
-                    <div class="mb-8 bg-gradient-to-br from-gray-50 to-slate-100 rounded-xl p-6 border border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                            <i class="fas fa-info-circle mr-2 text-[#003366]"></i>
-                            Next Steps
-                        </h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-start">
-                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                                <span>You will receive a confirmation email shortly</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-file-alt text-blue-500 mt-1 mr-3"></i>
-                                <span>Our admissions team will contact you for document verification</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-calendar-check text-purple-500 mt-1 mr-3"></i>
-                                <span>Schedule a campus visit to complete the admission process</span>
-                            </li>
-                        </ul>
+
+                <!-- Student Information -->
+                <div class="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-[#800000] rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-user-graduate text-white"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#003366]">Student Information</h3>
                     </div>
-                <?php endif; ?>
-                
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Student Name:</span>
+                                <span class="font-bold text-[#003366]"><?php echo htmlspecialchars($admission_data['student_name']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Father's Name:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['father_name']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Mother's Name:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['mother_name']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Date of Birth:</span>
+                                <span class="font-bold"><?php echo date('d/m/Y', strtotime($admission_data['dob'])); ?></span>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Gender:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['gender']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Grade Applied:</span>
+                                <span class="font-bold text-[#800000]"><?php echo htmlspecialchars($admission_data['grade']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Academic Year:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['academic_year']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Campus:</span>
+                                <span class="font-bold text-[#003366]">Khargone Campus</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-6 border border-purple-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-[#D4AF37] rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-address-card text-[#003366]"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#003366]">Contact Information</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Email:</span>
+                                <span class="font-bold text-[#003366]"><?php echo htmlspecialchars($admission_data['email']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Phone:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['phone']); ?></span>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">City:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['city']); ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">State:</span>
+                                <span class="font-bold"><?php echo htmlspecialchars($admission_data['state']); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Instructions -->
+                <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 border border-amber-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#003366]">Important Instructions</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Keep this receipt for future reference.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Our admissions team will contact you within 24-48 hours.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Please have the following documents ready for verification:</span>
+                        </div>
+                        
+                        <div class="ml-8 mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt text-amber-600 mr-2 text-sm"></i>
+                                <span class="text-gray-600 text-sm">Birth Certificate</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt text-amber-600 mr-2 text-sm"></i>
+                                <span class="text-gray-600 text-sm">Previous School Report Card</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt text-amber-600 mr-2 text-sm"></i>
+                                <span class="text-gray-600 text-sm">Aadhaar Card (Student & Parents)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt text-amber-600 mr-2 text-sm"></i>
+                                <span class="text-gray-600 text-sm">Passport Size Photographs (4 copies)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-gray-200">
-                    <?php if ($payment_state === 'COMPLETED'): ?>
-                        <a href="<?php echo $base_url; ?>/index.php" 
-                           class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#003366] to-[#004080] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <i class="fas fa-home mr-2"></i>
-                            Go to Homepage
-                        </a>
-                        <a href="<?php echo $base_url; ?>/pages/admissions/index.php" 
-                           class="inline-flex items-center justify-center px-6 py-3 bg-white border border-[#003366] text-[#003366] font-semibold rounded-xl hover:bg-[#003366] hover:text-white transition-all duration-300">
-                            <i class="fas fa-graduation-cap mr-2"></i>
-                            View Admissions
-                        </a>
-                    <?php elseif ($redirect_url): ?>
-                        <a href="<?php echo $redirect_url; ?>" 
-                           class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#800000] to-[#a00000] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                            <i class="fas fa-redo mr-2"></i>
-                            Try Payment Again
-                        </a>
-                        <a href="<?php echo $base_url; ?>/pages/admissions/khargone/khargone-form.php" 
-                           class="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300">
-                            <i class="fas fa-arrow-left mr-2"></i>
-                            Back to Form
-                        </a>
-                    <?php else: ?>
-                        <a href="<?php echo $base_url; ?>/index.php" 
-                           class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#003366] to-[#004080] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300">
-                            <i class="fas fa-home mr-2"></i>
-                            Go to Homepage
-                        </a>
-                    <?php endif; ?>
+                <div class="bg-[#f7f7f7] rounded-2xl p-6 border border-gray-200 no-print">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+                        <div class="text-sm text-gray-600">
+                            <p class="flex items-center">
+                                <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                                This is an official receipt for your records
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="window.print()" class="print-button">
+                                <i class="fas fa-print"></i>
+                                Print Receipt
+                            </button>
+                            
+                            <a href="<?php echo $base_url; ?>pages/admissions/index.php" 
+                               class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 inline-flex items-center">
+                                <i class="fas fa-home mr-2"></i> Back to Admissions
+                            </a>
+                            
+                            <a href="<?php echo $base_url; ?>index.php" 
+                               class="px-6 py-3 bg-[#003366] text-white font-semibold rounded-xl hover:bg-[#002244] transition-all duration-300 inline-flex items-center">
+                                <i class="fas fa-globe mr-2"></i> Homepage
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- Support Info -->
-                <div class="mt-8 pt-6 border-t border-gray-200 text-center">
-                    <p class="text-sm text-gray-600 mb-2">Need help with your payment?</p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="tel:+917618040040" class="inline-flex items-center text-sm text-[#003366] hover:text-[#800000]">
-                            <i class="fas fa-phone mr-2"></i>
-                            +91-7618040040
+
+                <!-- Download Section -->
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-[#003366] rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-download text-white"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#003366]">Download Documents</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <a href="#" class="bg-white p-4 rounded-xl border border-gray-200 hover:border-[#003366] transition-all duration-300 hover-lift">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-pdf text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Admission Form</p>
+                                    <p class="text-gray-500 text-sm">PDF Format</p>
+                                </div>
+                            </div>
                         </a>
-                        <a href="mailto:admissions@khargonecampus.edu" class="inline-flex items-center text-sm text-[#003366] hover:text-[#800000]">
-                            <i class="fas fa-envelope mr-2"></i>
-                            admissions@khargonecampus.edu
+
+                        <a href="#" class="bg-white p-4 rounded-xl border border-gray-200 hover:border-[#003366] transition-all duration-300 hover-lift">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-word text-green-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Document Checklist</p>
+                                    <p class="text-gray-500 text-sm">Word Format</p>
+                                </div>
+                            </div>
                         </a>
+
+                        <a href="#" class="bg-white p-4 rounded-xl border border-gray-200 hover:border-[#003366] transition-all duration-300 hover-lift">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-alt text-amber-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Fee Structure</p>
+                                    <p class="text-gray-500 text-sm">PDF Format</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div class="bg-gradient-to-br from-[#f7f7f7] to-gray-100 rounded-2xl p-6 border border-gray-200">
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl font-bold text-[#003366] mb-4">Need Help?</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-[#003366] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-phone text-white"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800">Call Admissions</p>
+                                <p class="text-gray-600">+91-7618040040</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-[#800000] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-envelope text-white"></i>
+                                </div>
+                                <p class="font-semibold text-gray-800">Email Support</p>
+                                <p class="text-gray-600">admissions@khargonecampus.edu</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Footer Note -->
-        <div class="mt-8 text-center text-gray-500 text-sm">
-            <p>© <?php echo date('Y'); ?> Khargone Campus. All rights reserved.</p>
-            <p class="mt-1">Application Fee: ₹500 (Non-refundable)</p>
+
+        <!-- Next Steps -->
+        <div class="mt-8 text-center">
+            <h3 class="font-serif text-2xl font-bold text-[#003366] mb-6">What Happens Next?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                    <div class="w-10 h-10 bg-[#003366] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <p class="font-semibold text-gray-800 mb-1">Form Verification</p>
+                    <p class="text-gray-600 text-sm">Our team will verify your application</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-100">
+                    <div class="w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-[#003366] font-bold">2</span>
+                    </div>
+                    <p class="font-semibold text-gray-800 mb-1">Document Submission</p>
+                    <p class="text-gray-600 text-sm">Submit required documents</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-100">
+                    <div class="w-10 h-10 bg-[#800000] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <p class="font-semibold text-gray-800 mb-1">Admission Test</p>
+                    <p class="text-gray-600 text-sm">Schedule admission test (if required)</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-100">
+                    <div class="w-10 h-10 bg-[#003366] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">4</span>
+                    </div>
+                    <p class="font-semibold text-gray-800 mb-1">Confirmation</p>
+                    <p class="text-gray-600 text-sm">Receive admission confirmation</p>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <!-- Auto-redirect for retry -->
-    <?php if ($redirect_url && $payment_state === 'PENDING'): ?>
-    <script>
-        setTimeout(function() {
-            window.location.href = "<?php echo $redirect_url; ?>";
-        }, 5000); // Redirect after 5 seconds
-    </script>
-    <?php endif; ?>
-    
-    <!-- Print receipt on success -->
-    <?php if ($payment_state === 'COMPLETED'): ?>
-    <script>
-        window.onload = function() {
-            // Auto-print option (uncomment if needed)
-            // setTimeout(function() { window.print(); }, 2000);
+</section>
+
+<!-- Print Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add watermark for print
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @media print {
+            @page {
+                margin: 20mm;
+            }
+            
+            body::before {
+                content: "Khargone Campus Admission Receipt";
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 60px;
+                color: rgba(0, 51, 102, 0.1);
+                z-index: 9999;
+                pointer-events: none;
+                font-weight: bold;
+            }
+            
+            .receipt-container {
+                break-inside: avoid;
+            }
         }
-    </script>
-    <?php endif; ?>
-</body>
-</html>
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+<?php include_once '../../../includes/footer.php' ?>
