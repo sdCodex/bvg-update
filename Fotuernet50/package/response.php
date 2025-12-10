@@ -509,6 +509,43 @@ try {
         error_log("❌ PAYMENT NOT COMPLETED - State: " . ($response['state'] ?? 'UNKNOWN'));
     }
 
+    // response.php में backup ke baad email send करें:
+    error_log("🚀 STARTING ALL BACKUPS & CSV (BEFORE DATABASE)...");
+
+    $backup_result = saveBackupAndCSV(
+        $student_data,
+        $transaction_id,
+        $amount,
+        $payment_method,
+        $response
+    );
+
+    if ($backup_result) {
+        error_log("🎊 ALL BACKUPS & CSV FILES CREATED SUCCESSFULLY!");
+
+        // ✅ EMAIL TO ADMIN
+        try {
+            $mailer = new SimpleMailer();
+
+            // Admin को backup भेजें
+            $email_sent = $mailer->sendBackupToAdmin($student_data, $transaction_id, $amount, $backup_dir);
+
+            if ($email_sent) {
+                error_log("📧 EMAIL SENT TO ADMIN SUCCESSFULLY");
+
+                // Student को confirmation भेजें (optional)
+                // $mailer->sendConfirmationToStudent($student_data, $transaction_id, $amount);
+            } else {
+                error_log("⚠️ ADMIN EMAIL FAILED - BUT REGISTRATION CONTINUES");
+            }
+        } catch (Exception $e) {
+            error_log("💥 EMAIL ERROR: " . $e->getMessage());
+            // Email fail hone par bhi process continue rahega
+        }
+    }
+
+
+
     // ✅ FINAL VERIFICATION - Get updated data
     $final_stmt = $pdo->prepare("SELECT * FROM fotuernet50_students WHERE unique_id = ?");
     $final_stmt->execute([$order_id]);

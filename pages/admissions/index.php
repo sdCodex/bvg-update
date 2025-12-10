@@ -1,4 +1,4 @@
-<?php include '../../includes/header.php'; 
+<?php include '../../includes/header.php';
 include '../../includes/db.php';
 
 // Database se data fetch karna
@@ -6,20 +6,20 @@ try {
     // Admission requirements
     $stmt = $pdo->query("SELECT * FROM admission_requirements WHERE active = TRUE ORDER BY grade_level");
     $requirements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Fee structure
     $stmt = $pdo->query("SELECT * FROM fee_structure WHERE academic_year = '2026-27' AND active = TRUE ORDER BY grade_level");
     $fee_structure = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Admission timeline
     $stmt = $pdo->query("SELECT * FROM admission_timeline WHERE academic_year = '2026-27' AND active = TRUE ORDER BY event_date");
     $timeline = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Hostel fees
     // $stmt = $pdo->query("SELECT * FROM hostel_fees WHERE academic_year = '2026-27' AND active = TRUE");
     // $hostel_fees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-} catch(PDOException $e) {
+
+} catch (PDOException $e) {
     // Error handling
     $requirements = [];
     $fee_structure = [];
@@ -72,7 +72,7 @@ try {
         <div class="absolute bottom-10 right-10 w-32 h-32 bg-white rounded-full"></div>
         <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-white rounded-full"></div>
     </div>
-    
+
     <div class="max-w-7xl mx-auto px-4 text-center relative z-10 w-full">
         <!-- Breadcrumb -->
         <div class="flex justify-center mb-8">
@@ -82,7 +82,7 @@ try {
                 <span class="text-white font-medium">Admissions</span>
             </nav>
         </div>
-        
+
         <h1 class="font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             Admissions <span class="text-yellow-300">2026-27</span>
         </h1>
@@ -92,10 +92,10 @@ try {
         <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-12">
             Where Ancient Wisdom Meets Modern Education for Holistic Excellence
         </p>
-        
+
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a href="apply.php" class="bg-white text-primary hover:bg-gray-100 font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center group">
-                <i class="fas fa-edit mr-3 group-hover:scale-110 transition-transform"></i> 
+                <i class="fas fa-edit mr-3 group-hover:scale-110 transition-transform"></i>
                 Apply Now
             </a>
             <a href="#process" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center group">
@@ -103,7 +103,7 @@ try {
                 Learn More
             </a>
         </div>
-        
+
         <!-- Quick Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
             <div class="text-center">
@@ -127,389 +127,474 @@ try {
 </section>
 
 <!-- Quick Navigation -->
-<section class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex overflow-x-auto py-4 space-x-8">
-            <a href="#process" class="flex items-center space-x-2 text-gray-600 hover:text-accent transition-colors whitespace-nowrap">
-                <i class="fas fa-list-ol text-sm"></i>
-                <span>Process</span>
-            </a>
-            <a href="#requirements" class="flex items-center space-x-2 text-gray-600 hover:text-accent transition-colors whitespace-nowrap">
-                <i class="fas fa-file-alt text-sm"></i>
-                <span>Requirements</span>
-            </a>
-            <a href="#fees" class="flex items-center space-x-2 text-gray-600 hover:text-accent transition-colors whitespace-nowrap">
-                <i class="fas fa-rupee-sign text-sm"></i>
-                <span>Fee Structure</span>
-            </a>
-            <a href="#dates" class="flex items-center space-x-2 text-gray-600 hover:text-accent transition-colors whitespace-nowrap">
-                <i class="fas fa-calendar-alt text-sm"></i>
-                <span>Important Dates</span>
-            </a>
-            <a href="#faq" class="flex items-center space-x-2 text-gray-600 hover:text-accent transition-colors whitespace-nowrap">
-                <i class="fas fa-question-circle text-sm"></i>
-                <span>FAQ</span>
-            </a>
-        </div>
-    </div>
-</section>
+
 
 <!-- Admissions Process Section -->
-<section id="process" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-16">
-            <span class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
-                <i class="fas fa-list-ol mr-2"></i> Admission Process
-            </span>
-            <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-4">
-                Simple & Transparent <span class="text-accent">Process</span>
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Four easy steps to join our Gurukul family
-            </p>
-        </div>
 
-        <!-- Process Steps with Icons -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <?php
-            $process_steps = [
-                [
-                    'icon' => 'fas fa-file-invoice',
-                    'title' => 'Submit Application',
-                    'description' => 'Complete the online application form with required details',
-                    'color' => 'from-blue-500 to-blue-600'
-                ],
-                [
-                    'icon' => 'fas fa-user-check',
-                    'title' => 'Student Assessment',
-                    'description' => 'Interactive session and academic evaluation',
-                    'color' => 'from-green-500 to-green-600'
-                ],
-                [
-                    'icon' => 'fas fa-file-upload',
-                    'title' => 'Document Submission',
-                    'description' => 'Upload required documents and certificates',
-                    'color' => 'from-purple-500 to-purple-600'
-                ],
-                [
-                    'icon' => 'fas fa-check-circle',
-                    'title' => 'Admission Confirmation',
-                    'description' => 'Fee payment and final admission approval',
-                    'color' => 'from-accent to-red-600'
-                ]
-            ];
-            
-            foreach ($process_steps as $index => $step):
-            ?>
-            <div class="text-center group">
-                <div class="relative mb-6">
-                    <div class="w-20 h-20 bg-gradient-to-br <?php echo $step['color']; ?> rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform group-hover:scale-110 transition-all duration-300">
-                        <i class="<?php echo $step['icon']; ?> text-white text-2xl"></i>
-                    </div>
-                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg">
-                        <?php echo $index + 1; ?>
-                    </div>
-                </div>
-                <h3 class="font-serif text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors">
-                    <?php echo $step['title']; ?>
-                </h3>
-                <p class="text-gray-600 leading-relaxed">
-                    <?php echo $step['description']; ?>
-                </p>
-            </div>
-            <?php endforeach; ?>
-        </div>
+<!-- Process Steps with Icons -->
 
-        <!-- Process CTA -->
-        <div class="text-center">
-            <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border border-gray-200">
-                <h3 class="font-serif text-2xl font-bold text-primary mb-4">Ready to Start Your Journey?</h3>
-                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                    Begin the admission process today and take the first step towards holistic education for your child.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="<?php echo $base_url; ?>/pages/admissions/apply.php" class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center group">
-                        <i class="fas fa-edit mr-3 group-hover:scale-110 transition-transform"></i> 
-                        Start Application
-                    </a>
-                    <a href="<?php echo $base_url; ?>/contact.php" class="border-2 border-accent text-accent hover:bg-accent hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center group">
-                        <i class="fas fa-calendar-alt mr-3 group-hover:scale-110 transition-transform"></i>
-                        Schedule Campus Visit
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- Requirements Section -->
 <section id="requirements" class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div>
-                <div class="mb-8">
-                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
-                        <i class="fas fa-file-alt mr-2"></i> Requirements
-                    </span>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-4">
-                        Admission <span class="text-accent">Requirements</span>
-                    </h2>
-                    <p class="text-lg text-gray-600">
-                        To ensure the best educational experience for your child, we have certain requirements for admission.
-                    </p>
-                </div>
 
-                <div class="space-y-6">
-                    <?php if(!empty($requirements)): ?>
-                        <?php foreach($requirements as $req): 
+        <!-- Header -->
+        <div class="text-center mb-14">
+            <span class="inline-flex items-center px-5 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm">
+                <i class="fas fa-file-alt mr-2"></i> Admission Requirements
+            </span>
+            <h2 class="font-serif text-4xl font-bold text-primary mt-4">
+                Eligibility & <span class="text-accent">Documents</span>
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mt-3">
+                Please review the grade-wise admission requirements before applying.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+            <!-- Cards Section (Now Responsive 2 Per Row) -->
+            <div class="lg:col-span-2">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <?php if (!empty($requirements)): ?>
+                        <?php foreach ($requirements as $req):
                             $documents = json_decode($req['required_documents'], true);
                         ?>
-                        <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover-lift transition-all duration-300">
-                            <h3 class="font-serif text-xl font-bold text-primary mb-4 flex items-center">
-                                <i class="fas fa-graduation-cap text-accent mr-3"></i> 
-                                <?php echo htmlspecialchars($req['grade_level']); ?>
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h4 class="font-semibold text-primary mb-3 flex items-center">
-                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        Requirements
-                                    </h4>
-                                    <ul class="space-y-2 text-gray-600">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-child text-blue-500 mr-2 mt-1"></i>
-                                            <span>Minimum Age: <strong><?php echo $req['min_age_years']; ?> years</strong></span>
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-book text-blue-500 mr-2 mt-1"></i>
-                                            <span><?php echo htmlspecialchars($req['academic_requirements']); ?></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-primary mb-3 flex items-center">
-                                        <i class="fas fa-file text-purple-500 mr-2"></i>
-                                        Required Documents
-                                    </h4>
-                                    <ul class="space-y-2 text-gray-600">
-                                        <?php if(is_array($documents)): ?>
-                                            <?php foreach($documents as $doc): ?>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-file-pdf text-red-500 mr-2 mt-1"></i>
-                                                <span><?php echo ucwords(str_replace('_', ' ', $doc)); ?></span>
+
+                            <!-- Requirement Card -->
+                            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+
+                                <h3 class="font-serif text-xl font-bold text-primary flex items-center mb-5">
+                                    <span class="w-11 h-11 flex items-center justify-center rounded-full bg-accent/10 text-accent mr-3">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </span>
+                                    <?php echo htmlspecialchars($req['grade_level']); ?>
+                                </h3>
+
+                                <div class="border-t pt-4 space-y-5">
+
+                                    <!-- Eligibility -->
+                                    <div>
+                                        <h4 class="font-semibold text-primary mb-2 flex items-center">
+                                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                            Eligibility
+                                        </h4>
+                                        <ul class="space-y-1 text-gray-600 text-sm">
+                                            <li class="flex items-center">
+                                                <i class="fas fa-child text-blue-500 mr-2"></i>
+                                                Minimum Age: <strong class="ml-1"><?php echo $req['min_age_years']; ?> years</strong>
                                             </li>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <li class="text-gray-500">No specific documents listed</li>
-                                        <?php endif; ?>
-                                    </ul>
+                                            <li class="flex items-center">
+                                                <i class="fas fa-book text-blue-500 mr-2"></i>
+                                                <?php echo htmlspecialchars($req['academic_requirements']); ?>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Required Docs -->
+                                    <div>
+                                        <h4 class="font-semibold text-primary mb-2 flex items-center">
+                                            <i class="fas fa-file-alt text-purple-500 mr-2"></i>
+                                            Documents Needed
+                                        </h4>
+
+                                        <ul class="space-y-1 text-gray-600 text-sm">
+                                            <?php if (is_array($documents)): ?>
+                                                <?php foreach ($documents as $doc): ?>
+                                                    <li class="flex items-center">
+                                                        <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                                                        <?php echo ucwords(str_replace('_', ' ', $doc)); ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
+
                         <?php endforeach; ?>
+
                     <?php else: ?>
-                        <div class="bg-white rounded-2xl p-8 text-center">
-                            <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-600 mb-2">Admission Requirements</h3>
-                            <p class="text-gray-500">Detailed requirements will be available soon. Please contact our admissions office for more information.</p>
+                        <div class="bg-white p-10 rounded-xl shadow text-center">
+                            <i class="fas fa-info-circle text-4xl text-gray-400 mb-4"></i>
+                            <h3 class="text-lg font-semibold text-gray-600">Coming Soon</h3>
+                            <p class="text-sm text-gray-500">Admission details will be updated soon.</p>
                         </div>
                     <?php endif; ?>
+
                 </div>
+
             </div>
 
-            <!-- Sidebar Information -->
-            <div class="space-y-6">
-                <!-- Important Notice -->
-                <div class="bg-gradient-to-br from-primary to-accent rounded-2xl p-6 text-white shadow-lg">
-                    <h3 class="font-serif text-xl font-bold mb-4 flex items-center">
-                        <i class="fas fa-exclamation-circle mr-3"></i>
-                        Important Notice
+            <!-- Sidebar -->
+            <div class="space-y-8">
+
+                <!-- Notice Box -->
+                <div class="bg-gradient-to-br from-primary to-accent text-white rounded-2xl p-7 shadow-lg">
+                    <h3 class="font-serif text-xl font-bold mb-5 flex items-center">
+                        <i class="fas fa-exclamation-circle mr-3"></i> Important Notice
                     </h3>
-                    <ul class="space-y-3 text-white/90">
+                    <ul class="space-y-4 text-white/90 text-sm">
                         <li class="flex items-start">
-                            <i class="fas fa-clock mt-1 mr-3 text-yellow-300"></i>
-                            <span>Early applications encouraged - limited seats available</span>
+                            <i class="fas fa-clock text-yellow-300 mr-2 mt-1"></i>
+                            Early applications encouraged — limited seats available
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-star mt-1 mr-3 text-yellow-300"></i>
-                            <span>Priority given to applications before April 19st</span>
+                            <i class="fas fa-star text-yellow-300 mr-2 mt-1"></i>
+                            Priority for applications before <strong>April 19</strong>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-award mt-1 mr-3 text-yellow-300"></i>
-                            <span>Scholarship applications processed separately</span>
+                            <i class="fas fa-award text-yellow-300 mr-2 mt-1"></i>
+                            Scholarships processed separately
                         </li>
                     </ul>
                 </div>
 
-                <!-- Contact Card -->
-                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                    <h3 class="font-serif text-xl font-bold text-primary mb-4 flex items-center">
-                        <i class="fas fa-headset text-accent mr-3"></i>
-                        Admissions Office
+                <!-- Contact -->
+                <div class="bg-white p-7 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="font-serif text-xl font-bold text-primary mb-5 flex items-center">
+                        <i class="fas fa-headset text-accent mr-3"></i> Admissions Office
                     </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center p-3 bg-red-50 rounded-lg">
+
+                    <div class="space-y-4 text-sm">
+                        <div class="p-3 bg-red-50 rounded-xl flex items-center">
                             <i class="fas fa-phone text-accent mr-3"></i>
-                            <div>
-                                <div class="font-semibold text-primary">+91-7618040040</div>
-                                <div class="text-sm text-gray-600">Admissions Helpline</div>
-                            </div>
+                            +91-7618040040
                         </div>
-                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                        <div class="p-3 bg-blue-50 rounded-xl flex items-center">
                             <i class="fas fa-envelope text-accent mr-3"></i>
-                            <div>
-                                <div class="font-semibold text-primary">info@ourgurukul.org</div>
-                                <div class="text-sm text-gray-600">Email Support</div>
-                            </div>
+                            info@ourgurukul.org
                         </div>
-                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                        <div class="p-3 bg-green-50 rounded-xl flex items-center">
                             <i class="fas fa-clock text-accent mr-3"></i>
-                            <div>
-                                <div class="font-semibold text-primary">Mon - Sat: 9:00 AM - 5:00 PM</div>
-                                <div class="text-sm text-gray-600">Office Hours</div>
-                            </div>
+                            Mon - Sat: 9:00 AM - 5:00 PM
                         </div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-gray-200">
-                        <a href="<?php echo $base_url; ?>/contact.php" class="w-full bg-accent hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 inline-flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            Visit Campus
-                        </a>
-                    </div>
+
+                    <a href="<?php echo $base_url; ?>/contact.php" class="mt-6 block text-center bg-accent hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Visit Campus
+                    </a>
                 </div>
+
             </div>
+
         </div>
     </div>
 </section>
 
+
 <!-- Fee Structure Section -->
-<section id="fees" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-16">
-            <span class="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-4">
-                Fee Structure
-            </span>
-            <h2 class="font-serif text-3xl md:text-4xl font-bold text-primary mb-4">
-                Transparent <span class="text-accent">Fee Structure</span>
+<section id="fees" class="py-16 md:py-20 bg-gradient-to-b from-white to-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-12 md:mb-16">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-accent/10 to-accent/5 mb-6">
+                <i class="fas fa-indian-rupee-sign text-accent text-2xl"></i>
+            </div>
+            <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">
+                Transparent & <span class="text-accent">Affordable Fees</span>
             </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Affordable education with multiple payment options and scholarship opportunities
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                Clear pricing with flexible payment options, scholarships, and financial assistance programs available.
             </p>
         </div>
 
-        <!-- Fee Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <?php if(!empty($fee_structure)): ?>
-                <?php foreach($fee_structure as $index => $fee): ?>
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover-lift transition-all duration-300 group">
-                    <div class="bg-gradient-to-r from-primary to-accent text-white rounded-t-2xl py-6 text-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10">
-                            <div class="absolute top-2 left-2 w-8 h-8 bg-white rounded-full"></div>
-                            <div class="absolute bottom-2 right-2 w-12 h-12 bg-white rounded-full"></div>
+        <!-- Fee Cards Grid - 2 per row on desktop -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
+            <?php if (!empty($fee_structure)): ?>
+                <?php
+                $cardColors = [
+                    'from-blue-500 to-blue-600',
+                    'from-emerald-500 to-emerald-600',
+                    'from-purple-500 to-purple-600',
+                    'from-amber-500 to-amber-600'
+                ];
+                $iconColors = ['text-blue-100', 'text-emerald-100', 'text-purple-100', 'text-amber-100'];
+                ?>
+
+                <?php foreach ($fee_structure as $index => $fee):
+                    $colorClass = $cardColors[$index % count($cardColors)];
+                    $iconClass = $iconColors[$index % count($iconColors)];
+                ?>
+                    <div class="group relative">
+                        <!-- Floating Badge -->
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                            <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-lg">
+                                <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                                <span class="text-sm font-semibold text-primary">Admission Open</span>
+                            </span>
                         </div>
-                        <h3 class="font-serif text-xl font-bold relative z-10"><?php echo htmlspecialchars($fee['grade_level']); ?></h3>
-                        <div class="text-sm opacity-90 mt-1 relative z-10">Annual Fee</div>
-                    </div>
-                    <div class="p-6">
-                        <div class="text-center mb-6">
-                            <span class="text-3xl font-bold text-primary">₹<?php echo number_format($fee['total_fee']); ?></span>
-                            <span class="text-gray-600 text-lg">/ year</span>
+
+                        <!-- Fee Card -->
+                        <div class="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 h-full">
+                            <!-- Card Header -->
+                            <div class="bg-gradient-to-r <?php echo $colorClass; ?> text-white p-6 md:p-8 relative overflow-hidden">
+                                <!-- Pattern Background -->
+                                <div class="absolute inset-0 opacity-10">
+                                    <div class="absolute top-4 left-4 w-12 h-12 bg-white rounded-full"></div>
+                                    <div class="absolute bottom-4 right-4 w-16 h-16 bg-white rounded-full"></div>
+                                    <div class="absolute top-1/2 left-1/4 w-8 h-8 bg-white rounded-full"></div>
+                                </div>
+
+                                <div class="relative z-10">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                            <i class="fas fa-graduation-cap text-2xl <?php echo $iconClass; ?>"></i>
+                                        </div>
+                                        <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
+                                            Grade <?php echo $index + 1; ?>
+                                        </span>
+                                    </div>
+
+                                    <h3 class="font-serif text-xl md:text-2xl font-bold mb-2"><?php echo htmlspecialchars($fee['grade_level']); ?></h3>
+                                    <div class="flex items-center text-white/90">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <span>Annual Fee Structure</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="p-6 md:p-8">
+                                <!-- Total Fee Display -->
+                                <div class="text-center mb-6">
+                                    <div class="inline-flex items-baseline bg-gradient-to-r from-gray-50 to-white rounded-2xl p-4 md:p-6 shadow-inner">
+                                        <span class="text-4xl md:text-5xl font-bold text-primary">₹<?php echo number_format($fee['total_fee']); ?></span>
+                                        <span class="text-gray-500 ml-2">/ year</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-2">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        Inclusive of all academic charges
+                                    </p>
+                                </div>
+
+                                <!-- Fee Breakdown -->
+                                <div class="mb-6">
+                                    <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-receipt text-accent mr-2"></i>
+                                        Fee Breakdown
+                                    </h4>
+
+                                    <div class="space-y-3">
+                                        <!-- Admission Fee -->
+                                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                                                    <i class="fas fa-file-signature text-blue-600 text-sm"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-gray-800 text-sm">Admission Fee</div>
+                                                    <div class="text-xs text-gray-500">One-time</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="font-bold text-primary">₹<?php echo number_format($fee['admission_fee']); ?></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tuition Fee -->
+                                        <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center mr-3">
+                                                    <i class="fas fa-book-open text-emerald-600 text-sm"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-gray-800 text-sm">Tuition Fee</div>
+                                                    <div class="text-xs text-gray-500">Quarterly</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="font-bold text-primary">₹<?php echo number_format($fee['tuition_fee']); ?></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Development Fee -->
+                                        <div class="flex items-center justify-between p-3 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mr-3">
+                                                    <i class="fas fa-building text-purple-600 text-sm"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-gray-800 text-sm">Development Fee</div>
+                                                    <div class="text-xs text-gray-500">Annual</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="font-bold text-primary">₹<?php echo number_format($fee['development_fee']); ?></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button -->
+                                <a href="apply.php?grade=<?php echo urlencode($fee['grade_level']); ?>"
+                                    class="block w-full bg-gradient-to-r from-primary to-accent text-white font-semibold py-3 px-4 rounded-xl hover:shadow-lg transition-all duration-300 text-center group relative overflow-hidden">
+                                    <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                    <span class="relative flex items-center justify-center text-sm md:text-base">
+                                        <i class="fas fa-file-import mr-2"></i>
+                                        Apply Now
+                                    </span>
+                                </a>
+                            </div>
                         </div>
-                        <ul class="space-y-3 text-gray-600 mb-6">
-                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span class="flex items-center">
-                                    <i class="fas fa-file-signature text-green-500 mr-2"></i>
-                                    Admission Fee (one time)
-                                </span>
-                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['admission_fee']); ?></span>
-                            </li>
-                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span class="flex items-center">
-                                    <i class="fas fa-book text-blue-500 mr-2"></i>
-                                    Quarterly
-                                </span>
-                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['tuition_fee']); ?></span>
-                            </li>
-                            <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span class="flex items-center">
-                                    <i class="fas fa-building text-purple-500 mr-2"></i>
-                                    Annual Fee
-                                </span>
-                                <span class="font-semibold text-primary">₹<?php echo number_format($fee['development_fee']); ?></span>
-                            </li>
-                        </ul>
-                        <a href="apply.php?grade=<?php echo urlencode($fee['grade_level']); ?>" 
-                           class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 w-full text-center block transform group-hover:scale-105 shadow-lg">
-                            Apply for <?php echo htmlspecialchars($fee['grade_level']); ?>
-                        </a>
                     </div>
-                </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="col-span-3 bg-white rounded-2xl p-8 text-center">
-                    <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-600 mb-2">Fee Structure</h3>
-                    <p class="text-gray-500">Detailed fee structure will be available soon. Please contact our admissions office for more information.</p>
+                <!-- Empty State -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-12 text-center border-2 border-dashed border-gray-300">
+                        <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-file-invoice-dollar text-gray-400 text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-700 mb-4">Fee Structure Coming Soon</h3>
+                        <p class="text-gray-600 max-w-md mx-auto mb-8">
+                            We are finalizing our fee structure for the upcoming academic year. Please contact our admissions office for current fee details.
+                        </p>
+                        <a href="contact.php" class="inline-flex items-center bg-accent hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            Contact Admissions
+                        </a>
+                    </div>
                 </div>
             <?php endif; ?>
         </div>
 
-        <!-- Hostel Fees -->
-        <!-- <?php if(!empty($hostel_fees)): ?>
-        <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border border-gray-200">
-            <h3 class="font-serif text-2xl font-bold text-primary mb-6 text-center flex items-center justify-center">
-                <i class="fas fa-home text-accent mr-3"></i>
-                Hostel Accommodation
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <?php foreach($hostel_fees as $hostel): ?>
-                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover-lift transition-all duration-300">
-                    <h4 class="font-bold text-primary mb-4 text-lg flex items-center">
-                        <i class="fas fa-bed text-accent mr-2"></i>
-                        <?php echo htmlspecialchars($hostel['hostel_type']); ?>
-                    </h4>
-                    <div class="text-center mb-4">
-                        <span class="text-2xl font-bold text-accent">₹<?php echo number_format($hostel['total_fee']); ?></span>
-                        <span class="text-gray-600">/ year</span>
+        <!-- Additional Information - Now 2 per row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <!-- Scholarship Info -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-6 border border-green-200">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-award text-green-600 text-xl"></i>
                     </div>
-                    <ul class="space-y-3 text-gray-600">
-                        <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span class="flex items-center">
-                                <i class="fas fa-door-open text-blue-500 mr-2"></i>
-                                Room Charges
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($hostel['room_charges']); ?></span>
-                        </li>
-                        <li class="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span class="flex items-center">
-                                <i class="fas fa-utensils text-green-500 mr-2"></i>
-                                Food Charges
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($hostel['food_charges']); ?></span>
-                        </li>
-                        <?php if($hostel['other_charges'] > 0): ?>
-                        <li class="flex justify-between items-center py-2">
-                            <span class="flex items-center">
-                                <i class="fas fa-cogs text-orange-500 mr-2"></i>
-                                Other Charges
-                            </span>
-                            <span class="font-semibold text-primary">₹<?php echo number_format($hostel['other_charges']); ?></span>
-                        </li>
-                        <?php endif; ?>
-                    </ul>
+                    <div>
+                        <h3 class="font-bold text-green-800 text-lg mb-2">Scholarships Available</h3>
+                        <p class="text-green-700 text-sm">Merit-based and need-based scholarships</p>
+                    </div>
                 </div>
-                <?php endforeach; ?>
+                <ul class="space-y-2">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
+                        <span class="text-green-800 text-sm">Academic Excellence Scholarships</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
+                        <span class="text-green-800 text-sm">Sports & Arts Scholarships</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
+                        <span class="text-green-800 text-sm">Sibling Discounts Available</span>
+                    </li>
+                </ul>
             </div>
-            <div class="mt-6 text-center">
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 inline-flex items-center">
-                    <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
-                    <span class="text-yellow-700 text-sm">
-                        Hostel fees include accommodation, meals, and basic medical facilities. Separate application required.
-                    </span>
+
+            <!-- Payment Plans -->
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl p-6 border border-blue-200">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-blue-800 text-lg mb-2">Flexible Payment</h3>
+                        <p class="text-blue-700 text-sm">Choose from multiple options</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/70 rounded-lg p-3 text-center">
+                        <div class="text-blue-600 font-bold">Monthly</div>
+                        <div class="text-xs text-blue-700">Easy installments</div>
+                    </div>
+                    <div class="bg-white/70 rounded-lg p-3 text-center">
+                        <div class="text-blue-600 font-bold">Quarterly</div>
+                        <div class="text-xs text-blue-700">3 payments/year</div>
+                    </div>
+                    <div class="bg-white/70 rounded-lg p-3 text-center">
+                        <div class="text-blue-600 font-bold">Annual</div>
+                        <div class="text-xs text-blue-700">Single payment</div>
+                    </div>
+                    <div class="bg-white/70 rounded-lg p-3 text-center">
+                        <div class="text-blue-600 font-bold">Online</div>
+                        <div class="text-xs text-blue-700">Secure payment</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <?php endif; ?> -->
+
+        <!-- Contact & Disclaimer - Full width -->
+        <div class="grid grid-cols-1 gap-6 md:gap-8 mt-6 md:mt-8">
+            <!-- Contact Support -->
+            <div class="bg-gradient-to-br from-purple-50 to-violet-100 rounded-2xl p-6 border border-purple-200">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-headset text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-purple-800 text-lg mb-2">Need Assistance?</h3>
+                        <p class="text-purple-700 text-sm mb-4">Our finance team is here to help with all fee-related queries</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="flex items-center gap-3 bg-white/50 rounded-lg p-3">
+                                <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-phone text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-purple-800 text-sm">+91-7618040040</div>
+                                    <div class="text-xs text-purple-600">Fee Queries</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-white/50 rounded-lg p-3">
+                                <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-envelope text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-purple-800 text-sm">fees@ourgurukul.org</div>
+                                    <div class="text-xs text-purple-600">Email Support</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="contact.php" class="flex-1 inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-300">
+                        <i class="fas fa-comments-dollar mr-2"></i>
+                        Schedule Consultation
+                    </a>
+                    <a href="downloads.php" class="flex-1 inline-flex items-center justify-center bg-white hover:bg-purple-50 text-purple-700 font-semibold py-3 px-4 rounded-lg border border-purple-300 transition-colors duration-300">
+                        <i class="fas fa-download mr-2"></i>
+                        Download Brochure
+                    </a>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-amber-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-3">Important Information</h4>
+                        <ul class="space-y-2 text-gray-600 text-sm">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
+                                <span>Fees are subject to revision at the beginning of each academic year with prior notice</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
+                                <span>Late payment may incur additional charges as per school policy</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
+                                <span>All fees are inclusive of GST as applicable. Refund policy available on request</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -531,32 +616,32 @@ try {
         <div class="max-w-4xl mx-auto">
             <!-- Timeline -->
             <div class="space-y-8">
-                <?php if(!empty($timeline)): ?>
-                    <?php foreach($timeline as $index => $event): 
+                <?php if (!empty($timeline)): ?>
+                    <?php foreach ($timeline as $index => $event):
                         $event_date = new DateTime($event['event_date']);
                         $is_past = $event_date < new DateTime();
                     ?>
-                    <div class="flex items-start group">
-                        <div class="bg-<?php echo $is_past ? 'gray-400' : 'accent'; ?> text-white rounded-xl px-5 py-3 min-w-32 text-center mr-6 shadow-lg transform group-hover:scale-105 transition-all duration-300">
-                            <div class="font-bold text-lg"><?php echo $event_date->format('M j'); ?></div>
-                            <div class="text-sm opacity-90"><?php echo $event_date->format('Y'); ?></div>
-                        </div>
-                        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex-1 hover-lift transition-all duration-300">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-bold text-primary text-lg"><?php echo htmlspecialchars($event['event_name']); ?></h3>
-                                <?php if(!$is_past): ?>
-                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                                    Upcoming
-                                </span>
-                                <?php else: ?>
-                                <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
-                                    Completed
-                                </span>
-                                <?php endif; ?>
+                        <div class="flex items-start group">
+                            <div class="bg-<?php echo $is_past ? 'gray-400' : 'accent'; ?> text-white rounded-xl px-5 py-3 min-w-32 text-center mr-6 shadow-lg transform group-hover:scale-105 transition-all duration-300">
+                                <div class="font-bold text-lg"><?php echo $event_date->format('M j'); ?></div>
+                                <div class="text-sm opacity-90"><?php echo $event_date->format('Y'); ?></div>
                             </div>
-                            <p class="text-gray-600 leading-relaxed"><?php echo htmlspecialchars($event['description']); ?></p>
+                            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex-1 hover-lift transition-all duration-300">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-bold text-primary text-lg"><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                                    <?php if (!$is_past): ?>
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                                            Upcoming
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
+                                            Completed
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <p class="text-gray-600 leading-relaxed"><?php echo htmlspecialchars($event['description']); ?></p>
+                            </div>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="bg-white rounded-2xl p-8 text-center">
@@ -609,20 +694,20 @@ try {
                     'answer' => 'English is the primary medium of instruction, with Hindi and Sanskrit as additional languages in the curriculum.'
                 ]
             ];
-            
+
             foreach ($faqs as $index => $faq):
             ?>
-            <div class="bg-white rounded-xl shadow-lg border border-gray-100 faq-item overflow-hidden">
-                <button class="faq-question w-full text-left p-6 font-semibold text-primary text-lg flex justify-between items-center hover:bg-gray-50 transition-colors duration-300">
-                    <span><?php echo $faq['question']; ?></span>
-                    <i class="fas fa-chevron-down text-accent transition-transform duration-300"></i>
-                </button>
-                <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
-                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-                        <?php echo $faq['answer']; ?>
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 faq-item overflow-hidden">
+                    <button class="faq-question w-full text-left p-6 font-semibold text-primary text-lg flex justify-between items-center hover:bg-gray-50 transition-colors duration-300">
+                        <span><?php echo $faq['question']; ?></span>
+                        <i class="fas fa-chevron-down text-accent transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+                            <?php echo $faq['answer']; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
 
@@ -672,108 +757,108 @@ try {
 <?php include '../../includes/footer.php'; ?>
 
 <style>
-.hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-.faq-question.active {
-    background-color: #f8fafc;
-}
-
-.faq-question.active i {
-    transform: rotate(180deg);
-}
-
-.faq-answer.open {
-    max-height: 500px !important;
-}
-
-/* Smooth scrolling */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Sticky navigation highlight */
-.sticky-nav {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    backdrop-filter: blur(10px);
-}
-
-/* Responsive improvements */
-@media (max-width: 768px) {
-    .flex.items-start.group {
-        flex-direction: column;
-        text-align: center;
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
-    .flex.items-start.group > div:first-child {
-        margin-right: 0;
-        margin-bottom: 1rem;
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     }
-}
+
+    .faq-question.active {
+        background-color: #f8fafc;
+    }
+
+    .faq-question.active i {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer.open {
+        max-height: 500px !important;
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Sticky navigation highlight */
+    .sticky-nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+        .flex.items-start.group {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .flex.items-start.group>div:first-child {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+    }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // FAQ Accordion
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', function() {
-            const answer = this.nextElementSibling;
-            const isOpen = answer.classList.contains('open');
-            
-            // Close all FAQs
-            document.querySelectorAll('.faq-answer').forEach(ans => {
-                ans.classList.remove('open');
-                ans.style.maxHeight = '0';
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Accordion
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isOpen = answer.classList.contains('open');
+
+                // Close all FAQs
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('open');
+                    ans.style.maxHeight = '0';
+                });
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                });
+
+                // Toggle current FAQ if it wasn't open
+                if (!isOpen) {
+                    this.classList.add('active');
+                    answer.classList.add('open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
             });
-            document.querySelectorAll('.faq-question').forEach(q => {
-                q.classList.remove('active');
+        });
+
+        // Open first FAQ by default
+        if (faqQuestions.length > 0) {
+            faqQuestions[0].click();
+        }
+
+        // Add scroll animation for elements
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
-            
-            // Toggle current FAQ if it wasn't open
-            if (!isOpen) {
-                this.classList.add('active');
-                answer.classList.add('open');
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-            }
+        }, observerOptions);
+
+        // Observe all elements with hover-lift class
+        document.querySelectorAll('.hover-lift').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
         });
     });
-    
-    // Open first FAQ by default
-    if (faqQuestions.length > 0) {
-        faqQuestions[0].click();
-    }
-    
-    // Add scroll animation for elements
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Observe all elements with hover-lift class
-    document.querySelectorAll('.hover-lift').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-});
 </script>

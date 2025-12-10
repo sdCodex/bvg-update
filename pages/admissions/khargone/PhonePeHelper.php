@@ -81,7 +81,7 @@ class PhonePeHelper {
      * @param string $orderId Merchant order ID
      * @param int $amount Amount in paise
      * @param string $redirectUrl Callback URL
-     * @param array $additionalData Additional payment data
+     * @param array $additionalData Additional payment data 
      * @return array Payment response
      * @throws Exception
      */
