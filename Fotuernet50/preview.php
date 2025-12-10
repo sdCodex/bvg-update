@@ -1,12 +1,26 @@
 <?php
+// ERROR REPORTING ON KARO DEBUG KE LIYE
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+date_default_timezone_set('Asia/Kolkata');
 // Check if session is already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// ✅ Pehle PHPMailer include karo
+require_once 'vendor/autoload.php';
+
+// ✅ PHPMailer classes
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// ✅ Database connection
 include '../includes/db.php';
 
 // Check if form data exists in session
 if (!isset($_SESSION['form_data'])) {
+    echo "Error: No form data found. Redirecting...";
     header('Location: register.php');
     exit;
 }
@@ -15,13 +29,17 @@ $form_data = $_SESSION['form_data'];
 
 // Handle final submission and save to database
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['final_submit'])) {
+    echo "<!-- DEBUG: Form submitted -->";
+    
     try {
-        // ✅ FIX: Generate PhonePe compatible unique ID (BVG + timestamp + random)
+        // ✅ Generate PhonePe compatible unique ID
         $timestamp = time();
         $random_suffix = mt_rand(1000, 9999);
         $unique_id = 'BVG' . $timestamp . $random_suffix;
         
-        // ✅ FIX: Count the parameters properly
+        echo "<!-- DEBUG: Unique ID generated: $unique_id -->";
+        
+        // ✅ Database mein save karo
         $stmt = $pdo->prepare("
             INSERT INTO fotuernet50_students 
             (unique_id, name, father_name, mother_name, gender, dob, phone, alt_contact, email, aadhaar, class, 
@@ -31,44 +49,134 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['final_submit'])) {
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 500, NOW())
         ");
 
-        // ✅ FIX: Now 20 parameters for 20 placeholders
         $stmt->execute([
-            $unique_id, // 1. unique_id
-            $form_data['name'], // 2. name
-            $form_data['father_name'], // 3. father_name
-            $form_data['mother_name'], // 4. mother_name
-            $form_data['gender'], // 5. gender
-            $form_data['dob'], // 6. dob
-            $form_data['contact'], // 7. phone
-            $form_data['alt_contact'] ?? '', // 8. alt_contact
-            $form_data['email'], // 9. email
-            $form_data['aadhaar'], // 10. aadhaar
-            $form_data['class'], // 11. class
-            $form_data['school_name'], // 12. school_name
-            $form_data['city'], // 13. city
-            $form_data['district'], // 14. district
-            $form_data['state'], // 15. state
-            $form_data['pincode'], // 16. pincode
-            $form_data['address'], // 17. address
-            $form_data['landmark'] ?? '', // 18. landmark
-            $form_data['photo'] ?? '', // 19. photo
-            $form_data['sign'] ?? '' // 20. sign
-            // 'pending', 100, NOW() - these are fixed in query
+            $unique_id,
+            $form_data['name'],
+            $form_data['father_name'],
+            $form_data['mother_name'],
+            $form_data['gender'],
+            $form_data['dob'],
+            $form_data['contact'],
+            $form_data['alt_contact'] ?? '',
+            $form_data['email'],
+            $form_data['aadhaar'],
+            $form_data['class'],
+            $form_data['school_name'],
+            $form_data['city'],
+            $form_data['district'],
+            $form_data['state'],
+            $form_data['pincode'],
+            $form_data['address'],
+            $form_data['landmark'] ?? '',
+            $form_data['photo'] ?? '',
+            $form_data['sign'] ?? ''
         ]);
 
         $registration_id = $pdo->lastInsertId();
+        echo "<!-- DEBUG: Database saved. Registration ID: $registration_id -->";
 
-        // ✅ Store the same unique_id in session
+        // ✅ Session mein store karo
         $_SESSION['registration_id'] = $registration_id;
         $_SESSION['unique_id'] = $unique_id;
-        $_SESSION['form_data'] = $form_data;
 
-        // ✅ Redirect to payment page WITH the unique_id
+        // ✅ ✅ ✅ ADMIN KO EMAIL BHEJO
+        echo "<!-- DEBUG: Starting email process -->";
+        
+        $mail = new PHPMailer(true);
+        
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'cmd@ourgurukul.org';
+        $mail->Password = 'swdr epfq ffdd fjuk'; // DOUBLE CHECK THIS!
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        
+        // Enable debugging (optional)
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = function($str, $level) {
+        //     echo "Debug level $level; message: $str<br>";
+        // };
+        
+        // Recipients
+        $mail->setFrom('cmd@ourgurukul.org', 'Bhaktivedanta Gurukul Fortunate 51 Scholarship');
+        $mail->addAddress('cmd@ourgurukul.org'); // Admin email
+        $mail->addReplyTo('cmd@ourgurukul.org', 'Bhaktivedanta Gurukul Support');
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'New Scholarship Registration - ' . $unique_id;
+        
+        // Simple email body for testing
+        $mail->Body = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; }
+                .header { background: #800000; color: white; padding: 20px; }
+                .content { padding: 20px; background: #f9f9f9; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2>New Scholarship Application</h2>
+                    <p>Registration ID: ' . $unique_id . '</p>
+                </div>
+                <div class="content">
+                    <h3>Student Details:</h3>
+                    <p><strong>Name:</strong> ' . htmlspecialchars($form_data['name']) . '</p>
+                    <p><strong>Father:</strong> ' . htmlspecialchars($form_data['father_name']) . '</p>
+                    <p><strong>Class:</strong> Class ' . htmlspecialchars($form_data['class']) . '</p>
+                    <p><strong>School:</strong> ' . htmlspecialchars($form_data['school_name']) . '</p>
+                    <p><strong>Phone:</strong> ' . htmlspecialchars($form_data['contact']) . '</p>
+                    <p><strong>Email:</strong> ' . htmlspecialchars($form_data['email']) . '</p>
+                    
+                    <h3>Payment Status:</h3>
+                    <p><strong>Status:</strong> Pending</p>
+                    <p><strong>Amount:</strong> ₹500.00 </p>
+                    <p><strong>Time:</strong> ' . date('d/m/Y h:i A') . '</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ';
+        
+        $mail->AltBody = "New Scholarship Registration\n" .
+                         "Registration ID: $unique_id\n" .
+                         "Student: " . $form_data['name'] . "\n" .
+                         "Class: " . $form_data['class'] . "\n" .
+                         "School: " . $form_data['school_name'] . "\n" .
+                         "Phone: " . $form_data['contact'] . "\n" .
+                         "Payment Status: Pending\n";
+        
+        echo "<!-- DEBUG: Attempting to send email -->";
+        
+        if ($mail->send()) {
+            echo "<!-- DEBUG: Email sent successfully -->";
+        } else {
+            echo "<!-- DEBUG: Email sending failed: " . $mail->ErrorInfo . " -->";
+        }
+        
+        // ✅ Redirect to payment page
+        echo "<!-- DEBUG: Redirecting to payment page -->";
         header('Location: package/request.php?order_id=' . $unique_id);
         exit;
         
     } catch (PDOException $e) {
+        echo "<!-- DEBUG: Database Error: " . $e->getMessage() . " -->";
         $error = "Registration failed: " . $e->getMessage();
+    } catch (Exception $emailError) {
+        echo "<!-- DEBUG: Email Error: " . $emailError->getMessage() . " -->";
+        // Log the error
+        error_log("Email sending failed: " . $emailError->getMessage());
+        
+        // Email fail hua to bhi payment page redirect karo
+        header('Location: package/request.php?order_id=' . $unique_id);
+        exit;
     }
 }
 
@@ -77,6 +185,11 @@ if (isset($_GET['edit'])) {
     $_SESSION['edit_mode'] = true;
     header('Location: register.php');
     exit;
+}
+
+// Agar koi error ho to dikhaye
+if (isset($error)) {
+    echo "<!-- ERROR: $error -->";
 }
 ?>
 <!DOCTYPE html>
