@@ -74,9 +74,10 @@ $current_directory = '';
 
     <style>
         .text-accent {
-                color: #DC143C;
-            }
-            .bg-accent {
+            color: #DC143C;
+        }
+
+        .bg-accent {
             background-color: #DC143C;
         }
     </style>
@@ -85,8 +86,8 @@ $current_directory = '';
 
 <body>
 
-<?php include 'includes/header.php'; ?>
-<!-- index.php में -->
+    <?php include 'includes/header.php'; ?>
+    <!-- index.php में -->
 
     <!-- Hero Section with Swiper Carousel -->
     <section class="relative overflow-hidden">
@@ -123,7 +124,7 @@ $current_directory = '';
                     </div>
                 </div>
 
-               <!-- Slide 3 -->
+                <!-- Slide 3 -->
                 <div class="swiper-slide">
                     <div class="absolute inset-0 bg-gradient-to-br from-secondary/30 to-primary/40 z-10"></div>
                     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?php echo $base_url; ?>/images/icons/home-hero-11.jpeg')"></div>
@@ -131,12 +132,12 @@ $current_directory = '';
                         <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow">
                             <span class="text-accent">Vidya</span>
                         </h1>
-                     <p class="text-xl md:text-2xl mb-3 text-gray-200 text-shadow">
-    <span class="text-primary bg-white px-2 py-1 rounded-md"> विद्या - Modern Education</span>
-</p>
-<p class="text-lg mb-12 text-gray-300 max-w-2xl mx-auto text-shadow ">
-    Expert Faculties for Formal Education
-</p>
+                        <p class="text-xl md:text-2xl mb-3 text-gray-200 text-shadow">
+                            <span class="text-primary bg-white px-2 py-1 rounded-md"> विद्या - Modern Education</span>
+                        </p>
+                        <p class="text-lg mb-12 text-gray-300 max-w-2xl mx-auto text-shadow ">
+                            Expert Faculties for Formal Education
+                        </p>
 
 
                     </div>
@@ -177,23 +178,23 @@ $current_directory = '';
 
                     </div>
                 </div>
-                
+
                 <!-- Slide 6 -->
                 <!--<div class="swiper-slide">-->
                 <!--    <div class="absolute inset-0 bg-gradient-to-br from-secondary/30 to-primary/40 z-10"></div>-->
                 <!--    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('<?php echo $base_url; ?>/images/background/bg-cr-6.jpg')"></div>-->
-                    <!--<div class="swiper-slide-content">-->
-                    <!--    <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow">-->
-                    <!--        Brahma <span class="text-accent">Vidya</span>-->
-                    <!--    </h1>-->
-                    <!--    <p class="text-xl md:text-2xl mb-3 text-gray-200 text-shadow">-->
-                    <!--        <span class="text-primary bg-white px-2 py-1 rounded-md"> ब्रह्म विद्या - Spiritual Education </span>-->
-                    <!--    </p>-->
-                    <!--    <p class="text-lg mb-12 text-gray-300 max-w-2xl mx-auto text-shadow">-->
-                    <!--        Preserving and Propagating the Timeless Wisdom in Modern Times-->
-                    <!--    </p>-->
+                <!--<div class="swiper-slide-content">-->
+                <!--    <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-shadow">-->
+                <!--        Brahma <span class="text-accent">Vidya</span>-->
+                <!--    </h1>-->
+                <!--    <p class="text-xl md:text-2xl mb-3 text-gray-200 text-shadow">-->
+                <!--        <span class="text-primary bg-white px-2 py-1 rounded-md"> ब्रह्म विद्या - Spiritual Education </span>-->
+                <!--    </p>-->
+                <!--    <p class="text-lg mb-12 text-gray-300 max-w-2xl mx-auto text-shadow">-->
+                <!--        Preserving and Propagating the Timeless Wisdom in Modern Times-->
+                <!--    </p>-->
 
-                    <!--</div>-->
+                <!--</div>-->
                 <!--</div>-->
             </div>
 
@@ -643,7 +644,7 @@ $current_directory = '';
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <div class="flex items-center mb-4">
-                        <p  class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">PK
+                        <p class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">PK
                         </p>
                         <div>
                             <div class="font-semibold text-primary">Pragati Kesharwani </div>
@@ -659,15 +660,15 @@ $current_directory = '';
                     </div>
                     <p class="text-secondary italic">
                         "My son Aayu Kesharwani is a student of Class IV at Bhaktivedanta Gurukul
-I  have noticed many positive changes in my son .
-He has become more confident and happy. He wants to learn more and more in this safe ,calm  and spiritual environment 
-My gratitude to the Gurukul for creating such an academically spiritual environment for the holistic growth of my child."
+                        I have noticed many positive changes in my son .
+                        He has become more confident and happy. He wants to learn more and more in this safe ,calm and spiritual environment
+                        My gratitude to the Gurukul for creating such an academically spiritual environment for the holistic growth of my child."
                     </p>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <div class="flex items-center mb-4">
-                         <p  class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">MS
+                        <p class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">MS
                         </p>
                         <div>
                             <div class="font-semibold text-primary">Meena Sahu </div>
@@ -682,20 +683,21 @@ My gratitude to the Gurukul for creating such an academically spiritual environm
                         <i class="fas fa-star"></i>
                     </div>
                     <p class="text-secondary italic">
-                        "My son Rudra Sahu is a student of Class II at Bhaktivedanta Gurukul and I 've seen a remarkable transformation in my child since joining this school - from shy and hesitant to confident and expressive. 
+                        "My son Rudra Sahu is a student of Class II at Bhaktivedanta Gurukul and I 've seen a remarkable transformation in my child since joining this school - from shy and hesitant to confident and expressive.
 
-The perfect blend of academic, spiritual, creative and care brings out the best in every child!
+                        The perfect blend of academic, spiritual, creative and care brings out the best in every child!
 
-We are thankful to the Gurukul for the efforts and it not just focuses on marks, but on values, discipline, emotional and spiritual growth.
-"
+                        We are thankful to the Gurukul for the efforts and it not just focuses on marks, but on values, discipline, emotional and spiritual growth.
+                        "
                     </p>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <div class="flex items-center mb-4">
                         <div>
- <p  class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">RK
-                        </p>                        </div>
+                            <p class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold mr-4">RK
+                            </p>
+                        </div>
                         <div>
                             <div class="font-semibold text-primary">Ruchi Kesarwani.</div>
                             <div class="text-sm text-secondary">Parent of Vastvik Kesarwani</div>
@@ -709,8 +711,8 @@ We are thankful to the Gurukul for the efforts and it not just focuses on marks,
                         <i class="fas fa-star"></i>
                     </div>
                     <p class="text-secondary italic">
-                        "As a parent of Vastvik Kesarwani  of Class VII, I am extremely pleased with the holistic development of my child. Beyond the commendable academic improvement in areas like Science, Mathematics, we deeply appreciate the strong emphasis on values, discipline, and spiritual education. 
-"
+                        "As a parent of Vastvik Kesarwani of Class VII, I am extremely pleased with the holistic development of my child. Beyond the commendable academic improvement in areas like Science, Mathematics, we deeply appreciate the strong emphasis on values, discipline, and spiritual education.
+                        "
                     </p>
                 </div>
             </div>

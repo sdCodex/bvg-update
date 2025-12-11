@@ -1,14 +1,16 @@
 <?php
 
-class PhonePeHelper {
+class PhonePeHelper
+{
     private $apiUrl;
     private $env;
     private $clientId;
     private $clientSecret;
     private $clientVersion;
 
-    public function __construct($clientId, $clientSecret, $clientVersion, $env) {
-        if($env === 'PRODUCTION') {
+    public function __construct($clientId, $clientSecret, $clientVersion, $env)
+    {
+        if ($env === 'PRODUCTION') {
             $this->apiUrl = 'https://api.phonepe.com/apis';
         } else {
             $this->apiUrl = 'https://api-preprod.phonepe.com/apis/pg-sandbox';
@@ -19,7 +21,8 @@ class PhonePeHelper {
         $this->clientVersion = $clientVersion;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         $url = $this->getUrl('token');
 
         $data = [
@@ -56,7 +59,8 @@ class PhonePeHelper {
     }
 
     // More & Payload Info : https://developer.phonepe.com/payment-gateway/website-integration/standard-checkout/api-integration/api-reference/create-payment
-     public function createPayment($orderId, $amount, $redirectUrl) {
+    public function createPayment($orderId, $amount, $redirectUrl)
+    {
         $url = $this->getUrl('pay');
         $token = $this->getToken();
         $payload = [
@@ -75,7 +79,7 @@ class PhonePeHelper {
             "Content-Type: application/json",
             "Authorization: O-Bearer {$token}"
         ];
-                $ch = curl_init();
+        $ch = curl_init();
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -101,66 +105,68 @@ class PhonePeHelper {
 
     // For More Info : https://developer.phonepe.com/payment-gateway/website-integration/standard-checkout/api-integration/api-reference/order-status
     // $details = fales, get the latest details of last attemp payment, else get all details of attemp of payment
-    public function checkPaymentStatus($orderId, $details = false) {
-    $token = $this->getToken();
-    $url = $this->getUrl('status') . "?details=" . ($details ? 'true' : 'false');
-    
-    // ✅ CHANGE {orderId} TO {merchantOrderId}
-    $url = str_replace('{merchantOrderId}', $orderId, $url);
-    
-    $headers = [
-        "Content-Type: application/json",
-        "Authorization: O-Bearer {$token}"
-    ];
-    
-    // ✅ DEBUG URL
-    error_log("🔗 CHECK STATUS URL: " . $url);
-    
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => $headers
-    ]);
-    
-    $response = curl_exec($ch);
-    if (curl_errno($ch)) {
-        throw new Exception("cURL Error: " . curl_error($ch));
-    }
-    curl_close($ch);
+    public function checkPaymentStatus($orderId, $details = false)
+    {
+        $token = $this->getToken();
+        $url = $this->getUrl('status') . "?details=" . ($details ? 'true' : 'false');
 
-    $result = json_decode($response, true);
-    
-    // ✅ BETTER RESPONSE CHECKING
-    if (isset($result['orderId']) || isset($result['state'])) {
-        return $result;
-    }
-    
-    throw new Exception("Failed to get payment status: " . $response);
-}
-
-
-   private function getUrl($type = null) {
-    if ($type === 'token') {
-        if ($this->env === 'PRODUCTION') {
-            return $this->apiUrl . '/identity-manager/v1/oauth/token';
-        } else {
-            return $this->apiUrl . '/v1/oauth/token';
-        }
-    } elseif ($type === 'pay') {
-        if ($this->env === 'PRODUCTION') {
-            return $this->apiUrl . '/pg/checkout/v2/pay';
-        } else {
-            return $this->apiUrl . '/checkout/v2/pay';
-        }
-    } elseif ($type === 'status') {
         // ✅ CHANGE {orderId} TO {merchantOrderId}
-        if ($this->env === 'PRODUCTION') {
-            return $this->apiUrl . '/pg/checkout/v2/order/{merchantOrderId}/status';
-        } else {
-            return $this->apiUrl . '/checkout/v2/order/{merchantOrderId}/status';
+        $url = str_replace('{merchantOrderId}', $orderId, $url);
+
+        $headers = [
+            "Content-Type: application/json",
+            "Authorization: O-Bearer {$token}"
+        ];
+
+        // ✅ DEBUG URL
+        error_log("🔗 CHECK STATUS URL: " . $url);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers
+        ]);
+
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            throw new Exception("cURL Error: " . curl_error($ch));
         }
+        curl_close($ch);
+
+        $result = json_decode($response, true);
+
+        // ✅ BETTER RESPONSE CHECKING
+        if (isset($result['orderId']) || isset($result['state'])) {
+            return $result;
+        }
+
+        throw new Exception("Failed to get payment status: " . $response);
     }
-    return null;
-}
+
+
+    private function getUrl($type = null)
+    {
+        if ($type === 'token') {
+            if ($this->env === 'PRODUCTION') {
+                return $this->apiUrl . '/identity-manager/v1/oauth/token';
+            } else {
+                return $this->apiUrl . '/v1/oauth/token';
+            }
+        } elseif ($type === 'pay') {
+            if ($this->env === 'PRODUCTION') {
+                return $this->apiUrl . '/pg/checkout/v2/pay';
+            } else {
+                return $this->apiUrl . '/checkout/v2/pay';
+            }
+        } elseif ($type === 'status') {
+            // ✅ CHANGE {orderId} TO {merchantOrderId}
+            if ($this->env === 'PRODUCTION') {
+                return $this->apiUrl . '/pg/checkout/v2/order/{merchantOrderId}/status';
+            } else {
+                return $this->apiUrl . '/checkout/v2/order/{merchantOrderId}/status';
+            }
+        }
+        return null;
+    }
 }
