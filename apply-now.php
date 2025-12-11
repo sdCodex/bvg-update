@@ -202,7 +202,7 @@ $base_url = ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =
                         </div>
 
                         <!-- Action Button -->
-                        <a href="<?php echo $base_url; ?>/Fotuernet50/register.php"
+                        <a href="<?php echo $base_url; ?>/admissions/forms/fortunate.php"
                             class="block w-full bg-accent hover:bg-blue-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 text-sm sm:text-base">
                             Apply for Fortunate 51
                         </a>
@@ -272,7 +272,7 @@ $base_url = ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =
                         </div>
 
                         <!-- Action Buttons -->
-                        <a href="<?php echo $base_url; ?>/pages/admissions/index.php"
+                        <a href="<?php echo $base_url; ?>/admissions/forms/prayagraj.php"
                             class="block w-full bg-primary hover:bg-red-800 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
                             Apply for Prayagraj
                         </a>
@@ -348,7 +348,7 @@ $base_url = ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =
                         </div>
 
                         <!-- Action Buttons -->
-                        <a href="<?php echo $base_url; ?>/pages/admissions/khargone/khargone.php"
+                        <a href="<?php echo $base_url; ?>/admissions/forms/khargone.php"
                             class="block w-full bg-secondary hover:bg-amber-900 text-white text-center font-semibold py-3 rounded-lg transition duration-300 mb-3 text-sm sm:text-base">
                             Apply for Khargone
                         </a>

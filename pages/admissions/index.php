@@ -464,64 +464,10 @@ try {
         </div>
 
         <!-- Additional Information - Now 2 per row -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            <!-- Scholarship Info -->
-            <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-6 border border-green-200">
-                <div class="flex items-start gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-award text-green-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-green-800 text-lg mb-2">Scholarships Available</h3>
-                        <p class="text-green-700 text-sm">Merit-based and need-based scholarships</p>
-                    </div>
-                </div>
-                <ul class="space-y-2">
-                    <li class="flex items-center gap-2">
-                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
-                        <span class="text-green-800 text-sm">Academic Excellence Scholarships</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
-                        <span class="text-green-800 text-sm">Sports & Arts Scholarships</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="fas fa-check-circle text-green-500 text-sm"></i>
-                        <span class="text-green-800 text-sm">Sibling Discounts Available</span>
-                    </li>
-                </ul>
-            </div>
+       
 
             <!-- Payment Plans -->
-            <div class="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl p-6 border border-blue-200">
-                <div class="flex items-start gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-blue-800 text-lg mb-2">Flexible Payment</h3>
-                        <p class="text-blue-700 text-sm">Choose from multiple options</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white/70 rounded-lg p-3 text-center">
-                        <div class="text-blue-600 font-bold">Monthly</div>
-                        <div class="text-xs text-blue-700">Easy installments</div>
-                    </div>
-                    <div class="bg-white/70 rounded-lg p-3 text-center">
-                        <div class="text-blue-600 font-bold">Quarterly</div>
-                        <div class="text-xs text-blue-700">3 payments/year</div>
-                    </div>
-                    <div class="bg-white/70 rounded-lg p-3 text-center">
-                        <div class="text-blue-600 font-bold">Annual</div>
-                        <div class="text-xs text-blue-700">Single payment</div>
-                    </div>
-                    <div class="bg-white/70 rounded-lg p-3 text-center">
-                        <div class="text-blue-600 font-bold">Online</div>
-                        <div class="text-xs text-blue-700">Secure payment</div>
-                    </div>
-                </div>
-            </div>
+         
         </div>
 
         <!-- Contact & Disclaimer - Full width -->
@@ -557,43 +503,11 @@ try {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="contact.php" class="flex-1 inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-300">
-                        <i class="fas fa-comments-dollar mr-2"></i>
-                        Schedule Consultation
-                    </a>
-                    <a href="downloads.php" class="flex-1 inline-flex items-center justify-center bg-white hover:bg-purple-50 text-purple-700 font-semibold py-3 px-4 rounded-lg border border-purple-300 transition-colors duration-300">
-                        <i class="fas fa-download mr-2"></i>
-                        Download Brochure
-                    </a>
-                </div>
+                
             </div>
 
             <!-- Disclaimer -->
-            <div class="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-exclamation-triangle text-amber-600"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-gray-800 mb-3">Important Information</h4>
-                        <ul class="space-y-2 text-gray-600 text-sm">
-                            <li class="flex items-start gap-2">
-                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
-                                <span>Fees are subject to revision at the beginning of each academic year with prior notice</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
-                                <span>Late payment may incur additional charges as per school policy</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fas fa-circle text-amber-500 text-xs mt-1"></i>
-                                <span>All fees are inclusive of GST as applicable. Refund policy available on request</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </div>
 </section>
