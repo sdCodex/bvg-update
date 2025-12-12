@@ -9,7 +9,7 @@ session_start();
 $base_url = '/Gurkul_Project';
 
 // Include database connection
-include '../../includes/db.php';
+include '../../../includes/db.php';
 
 // Form submission handling
 $success_message = '';
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program']) : '';
 ?>
 
-<?php include '../../includes/header.php'; ?>
+<?php include '../../../includes/header.php'; ?>
 
 
 <!-- 🧩 SEO Optimization -->
@@ -830,7 +830,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
     </div>
 </section>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../../includes/footer.php'; ?>
 
 <style>
     .hover-lift {

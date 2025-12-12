@@ -1,5 +1,5 @@
-<?php include '../../includes/header.php';
-include '../../includes/db.php';
+<?php include '../../../includes/header.php';
+include '../../../includes/db.php';
 
 // Database se data fetch karna
 try {
@@ -668,7 +668,7 @@ try {
     </div>
 </section>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../../includes/footer.php'; ?>
 
 <style>
     .hover-lift {
