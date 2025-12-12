@@ -180,14 +180,10 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 <meta name="language" content="English">
 <meta name="revisit-after" content="7 days">
 
-<!-- 🔗 Canonical (Avoid Duplicate URLs in Google) -->
-<link rel="canonical" href="https://institution.com/">
-
 <!-- 🧠 Open Graph for Social Media -->
 <meta property="og:title" content="Khargone Campus Admission | Application Fee ₹500">
 <meta property="og:description" content="Apply for admission to our premier Khargone Campus with modern facilities and experienced faculty.">
 <meta property="og:image" content="<?php echo $base_url; ?>/images/campus-banner.jpg">
-<meta property="og:url" content="https://institution.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Khargone Campus">
 
