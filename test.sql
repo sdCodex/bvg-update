@@ -1,0 +1,1 @@
+["birth_certificate", "aadhaar_card", "photographs", ]

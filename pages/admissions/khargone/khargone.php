@@ -636,6 +636,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     <option value="Grade 5" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 5') ? 'selected' : ''; ?>>Grade 5</option>
                                     <option value="Grade 6" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 6') ? 'selected' : ''; ?>>Grade 6</option>
                                     <option value="Grade 7" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 7') ? 'selected' : ''; ?>>Grade 7</option>
+                                    <option value="Grade 8" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 8') ? 'selected' : ''; ?>>Grade 8</option>
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-graduation-cap"></i>

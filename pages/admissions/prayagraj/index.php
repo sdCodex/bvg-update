@@ -4,11 +4,11 @@ include '../../../includes/db.php';
 // Database se data fetch karna
 try {
     // Admission requirements
-    $stmt = $pdo->query("SELECT * FROM admission_requirements WHERE active = TRUE ORDER BY grade_level");
+    $stmt = $pdo->query("SELECT * FROM admission_requirements WHERE active = TRUE ORDER BY id");
     $requirements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fee structure
-    $stmt = $pdo->query("SELECT * FROM fee_structure WHERE academic_year = '2026-27' AND active = TRUE ORDER BY grade_level");
+    $stmt = $pdo->query("SELECT * FROM fee_structure WHERE academic_year = '2026-27' AND active = TRUE ORDER BY id");
     $fee_structure = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Admission timeline
@@ -346,7 +346,7 @@ try {
                                             <i class="fas fa-graduation-cap text-2xl <?php echo $iconClass; ?>"></i>
                                         </div>
                                         <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
-                                            Grade <?php echo $index + 1; ?>
+                                            <!-- Grade <?php echo $index + 1; ?> -->
                                         </span>
                                     </div>
 

@@ -18,7 +18,7 @@ $error_message = '';
 // Debug: Check if form is being submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     error_log("Form submitted via POST method");
-
+    
     // Debug: Print all POST data
     error_log("POST data: " . print_r($_POST, true));
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // All validation passed, insert into database
             error_log("All validations passed, inserting into database");
-
+            
             $stmt = $pdo->prepare("
                 INSERT INTO admission_inquiries 
                 (student_name, parent_name, email, phone, grade, program, address, city, state, pincode, previous_school, message, status, created_at) 
@@ -84,17 +84,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result) {
                 $last_id = $pdo->lastInsertId();
                 error_log("Database insertion successful. Last insert ID: " . $last_id);
-
+                
                 $success_message = "Thank you! Your admission inquiry has been submitted successfully. We will contact you within 24 hours.";
 
                 // Store success message in session for redirect
                 $_SESSION['form_success'] = $success_message;
-
+                
                 // Clear POST data
                 $_POST = array();
-
+                
                 // Redirect to prevent form resubmission
-                header("Location: " . $base_url . "/pages/admissions/index.php");
+                header("Location: " . $base_url . "/pages/admissions/prayagraj/index.php");
                 exit();
             } else {
                 $error_message = "Failed to save your application. Please try again.";
@@ -218,7 +218,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                         </div>
                         <h2 class="font-serif text-3xl font-bold">Admission at Prayagraj</h2>
                     </div>
-
+                    
                     <p class="text-blue-100 text-lg mb-6 leading-relaxed">
                         Experience the perfect blend of modern education and spiritual wisdom at our serene campus in the holy city of Prayagraj.
                     </p>
@@ -260,14 +260,13 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 <!-- Right Content - Features -->
                 <div class="p-8 lg:p-12">
                     <h3 class="font-serif text-2xl font-bold text-primary mb-6">Why Choose Our Prayagraj Campus?</h3>
-
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-6 hover-lift transition-all duration-300">
                             <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2c1.657 0 3 1.343 3 3 0 1.657-1.343 3-3 3s-3-1.343-3-3c0-1.657 1.343-3 3-3zM6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" />
-                                </svg>
-                            </div>
+<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2c1.657 0 3 1.343 3 3 0 1.657-1.343 3-3 3s-3-1.343-3-3c0-1.657 1.343-3 3-3zM6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" />
+</svg>                            </div>
                             <h4 class="font-semibold text-gray-800 mb-2">Spiritual Atmosphere</h4>
                             <p class="text-gray-600 text-sm">Immerse in the divine energy of Prayagraj while pursuing academic excellence.</p>
                         </div>
@@ -298,8 +297,8 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                     </div>
 
                     <div class="mt-8 text-center">
-                        <a href="<?php echo $base_url; ?>/contact.php"
-                            class="inline-flex items-center px-6 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <a href="<?php echo $base_url; ?>/contact.php" 
+                           class="inline-flex items-center px-6 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
                             <i class="fas fa-calendar-check mr-2"></i>
                             Schedule Campus Visit
                         </a>
@@ -323,7 +322,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 ['icon' => 'fas fa-check-circle', 'label' => 'Confirmation', 'active' => false]
             ];
             ?>
-
+            
             <!-- Progress Line -->
             <div class="absolute top-6 left-0 right-0 h-1 bg-gray-200 -z-10">
                 <div class="h-full bg-accent transition-all duration-500" style="width: 25%"></div>
@@ -332,8 +331,8 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
             <?php foreach ($steps as $index => $step): ?>
                 <div class="flex flex-col items-center relative z-10">
                     <div class="<?php echo $step['active']
-                                    ? 'bg-accent text-white shadow-lg scale-110 border-2 border-white'
-                                    : 'bg-gray-200 text-gray-400 border-2 border-white'; ?>
+                        ? 'bg-accent text-white shadow-lg scale-110 border-2 border-white'
+                        : 'bg-gray-200 text-gray-400 border-2 border-white'; ?>
                         w-12 h-12 rounded-full flex items-center justify-center mb-3 text-lg
                         transition-all duration-300 transform hover:scale-105">
                         <i class="<?php echo $step['icon']; ?>"></i>
@@ -354,8 +353,8 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 <?php foreach ($steps as $index => $step): ?>
                     <div class="flex flex-col items-center">
                         <div class="<?php echo $step['active']
-                                        ? 'bg-accent text-white shadow-lg scale-105'
-                                        : 'bg-gray-200 text-gray-400'; ?>
+                            ? 'bg-accent text-white shadow-lg scale-105'
+                            : 'bg-gray-200 text-gray-400'; ?>
                             w-12 h-12 rounded-full flex items-center justify-center mb-2 text-lg
                             border-2 border-white transition-all duration-300">
                             <i class="<?php echo $step['icon']; ?>"></i>
@@ -366,7 +365,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                     </div>
                 <?php endforeach; ?>
             </div>
-
+            
             <!-- Mobile Progress Bar -->
             <div class="mt-6 bg-gray-200 rounded-full h-2">
                 <div class="bg-accent h-2 rounded-full transition-all duration-500" style="width: 25%"></div>
@@ -930,7 +929,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
         function showError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const errorElement = document.getElementById(fieldId + '_error');
-
+            
             if (field && errorElement) {
                 field.classList.add('field-error');
                 field.classList.remove('field-success');
@@ -943,7 +942,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
         function showSuccess(fieldId) {
             const field = document.getElementById(fieldId);
             const errorElement = document.getElementById(fieldId + '_error');
-
+            
             if (field && errorElement) {
                 field.classList.remove('field-error');
                 field.classList.add('field-success');
@@ -955,7 +954,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
         function clearValidation(fieldId) {
             const field = document.getElementById(fieldId);
             const errorElement = document.getElementById(fieldId + '_error');
-
+            
             if (field && errorElement) {
                 field.classList.remove('field-error', 'field-success');
                 errorElement.style.display = 'none';
@@ -1003,7 +1002,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 
         // Real-time validation on blur
         const fieldsToValidate = ['student_name', 'parent_name', 'email', 'phone', 'grade', 'pincode'];
-
+        
         fieldsToValidate.forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
@@ -1041,7 +1040,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                     });
                     firstError.focus();
                 }
-
+                
                 // Show error message
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'bg-red-50 border border-red-200 rounded-xl p-4 mb-6 animate-fade-in';
