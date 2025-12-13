@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 session_start();
 
 // Database connection and base URL setup
-$base_url = '/Gurkul_Project';
+$base_url = '/Gurkul_website';
 
 // Include database connection
 include '../../../includes/db.php';
@@ -14,6 +14,15 @@ include '../../../includes/db.php';
 // Form submission handling
 $success_message = '';
 $error_message = '';
+$registration_no = '';
+
+// Generate unique registration number
+function generateRegistrationNo() {
+    $prefix = 'BVGPRY';
+    $year = date('Y');
+    $random = mt_rand(1000, 9999);
+    return $prefix . $year . $random;
+}
 
 // Debug: Check if form is being submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -55,17 +64,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_message = "Please enter a valid 10-digit phone number.";
             error_log("Validation failed: Invalid phone");
         } else {
+            // Generate registration number
+            $registration_no = generateRegistrationNo();
+            
             // All validation passed, insert into database
             error_log("All validations passed, inserting into database");
             
             $stmt = $pdo->prepare("
                 INSERT INTO admission_inquiries 
-                (student_name, parent_name, email, phone, grade, program, address, city, state, pincode, previous_school, message, status, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+                (registration_no, student_name, parent_name, email, phone, grade, program, 
+                 address, city, state, pincode, previous_school, message, 
+                 registration_fee, payment_status, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 500.00, 'pending', NOW())
             ");
 
             // Execute the statement
             $result = $stmt->execute([
+                $registration_no,
                 $student_name,
                 $parent_name,
                 $email,
@@ -85,16 +100,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $last_id = $pdo->lastInsertId();
                 error_log("Database insertion successful. Last insert ID: " . $last_id);
                 
-                $success_message = "Thank you! Your admission inquiry has been submitted successfully. We will contact you within 24 hours.";
-
-                // Store success message in session for redirect
-                $_SESSION['form_success'] = $success_message;
+                // Store in session for payment page
+                $_SESSION['registration_data'] = [
+                    'registration_no' => $registration_no,
+                    'student_name' => $student_name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'inquiry_id' => $last_id
+                ];
                 
-                // Clear POST data
-                $_POST = array();
-                
-                // Redirect to prevent form resubmission
-                header("Location: " . $base_url . "/pages/admissions/prayagraj/index.php");
+                // Redirect to payment page
+                header("Location: " . $base_url . "/pages/admissions/prayagraj/pay.php");
                 exit();
             } else {
                 $error_message = "Failed to save your application. Please try again.";
@@ -114,7 +130,6 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 ?>
 
 <?php include '../../../includes/header.php'; ?>
-
 
 <!-- 🧩 SEO Optimization -->
 <meta name="description" content="Bhaktivedanta Gurukul School of Excellence blends modern education with traditional Vedic values for holistic student development. Enroll now for spiritual and academic excellence.">
@@ -149,11 +164,8 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-
 <!-- 🖼️ Favicon -->
 <link rel="icon" type="image/png" href="<?php echo $base_url; ?>/images/bvgLogo.png">
-
-
 
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-primary via-primary to-accent text-white overflow-hidden">
@@ -190,16 +202,39 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 <div class="text-gray-300 text-sm">Response Time</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-yellow-300 mb-2">4</div>
-                <div class="text-gray-300 text-sm">Simple Steps</div>
+                <div class="text-2xl font-bold text-yellow-300 mb-2">₹500</div>
+                <div class="text-gray-300 text-sm">Registration Fee</div>
             </div>
             <div class="text-center">
                 <div class="text-2xl font-bold text-yellow-300 mb-2">100%</div>
-                <div class="text-gray-300 text-sm">Secure</div>
+                <div class="text-gray-300 text-sm">Secure Payment</div>
             </div>
             <div class="text-center">
                 <div class="text-2xl font-bold text-yellow-300 mb-2">Free</div>
                 <div class="text-gray-300 text-sm">Application</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Registration Fee Info Section -->
+<section class="py-8 bg-gradient-to-r from-green-50 to-emerald-100">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fas fa-rupee-sign text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-xl font-bold text-gray-800">Registration Fee: ₹500</h3>
+                        <p class="text-gray-600">Required to complete your admission application</p>
+                    </div>
+                </div>
+                <div class="text-center md:text-right">
+                    <div class="text-3xl font-bold text-green-600 mb-1">₹500</div>
+                    <div class="text-sm text-gray-500">One-time fee</div>
+                </div>
             </div>
         </div>
     </div>
@@ -317,7 +352,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
             <?php
             $steps = [
                 ['icon' => 'fas fa-user-edit', 'label' => 'Application', 'active' => true],
-                ['icon' => 'fas fa-calendar-check', 'label' => 'Schedule Visit', 'active' => false],
+                ['icon' => 'fas fa-rupee-sign', 'label' => 'Pay Fee', 'active' => false],
                 ['icon' => 'fas fa-file-alt', 'label' => 'Documentation', 'active' => false],
                 ['icon' => 'fas fa-check-circle', 'label' => 'Confirmation', 'active' => false]
             ];
@@ -415,6 +450,22 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 
             <!-- Form Content -->
             <form method="POST" class="p-8 space-y-8" id="admissionForm">
+                <!-- Registration Fee Notice -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-6">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Registration Fee: ₹500 Required</h4>
+                            <p class="text-gray-700 text-sm">
+                                After submitting this form, you will be redirected to the payment page to pay the registration fee of ₹500. 
+                                Your application will be processed only after successful payment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Student Information Section -->
                 <div class="bg-blue-50 rounded-2xl p-6 transition-all duration-300 hover:shadow-md">
                     <div class="flex items-center mb-6">
@@ -465,10 +516,6 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     <option value="Grade 6" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 6') ? 'selected' : ''; ?>>Grade 6</option>
                                     <option value="Grade 7" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 7') ? 'selected' : ''; ?>>Grade 7</option>
                                     <option value="Grade 8" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 8') ? 'selected' : ''; ?>>Grade 8</option>
-                                    <!--<option value="Grade 9" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 9') ? 'selected' : ''; ?>>Grade 9</option>-->
-                                    <!--<option value="Grade 10" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 10') ? 'selected' : ''; ?>>Grade 10</option>-->
-                                    <!--<option value="Grade 11" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 11') ? 'selected' : ''; ?>>Grade 11</option>-->
-                                    <!--<option value="Grade 12" <?php echo (isset($_POST['grade']) && $_POST['grade'] == 'Grade 12') ? 'selected' : ''; ?>>Grade 12</option>-->
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-graduation-cap"></i>
@@ -583,9 +630,6 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                     class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 form-select appearance-none bg-white">
                                     <option value="">Select Program</option>
                                     <option value="CBSE" <?php echo (isset($_POST['program']) && $_POST['program'] == 'CBSE') || $selected_program == 'CBSE' ? 'selected' : ''; ?>>CBSE</option>
-                                    <!--<option value="Vedic Studies" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Vedic Studies') || $selected_program == 'Vedic Studies' ? 'selected' : ''; ?>>Vedic Studies</option>-->
-                                    <!--<option value="Integrated Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Integrated Program') || $selected_program == 'Integrated Program' ? 'selected' : ''; ?>>Integrated Program</option>-->
-                                    <!--<option value="Residential Program" <?php echo (isset($_POST['program']) && $_POST['program'] == 'Residential Program') || $selected_program == 'Residential Program' ? 'selected' : ''; ?>>Residential Program</option>-->
                                 </select>
                                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <i class="fas fa-book-open"></i>
@@ -708,6 +752,10 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                                 <i class="fas fa-shield-alt text-green-500 mr-2"></i>
                                 Your information is secure and confidential
                             </p>
+                            <p class="flex items-center mt-2">
+                                <i class="fas fa-rupee-sign text-yellow-500 mr-2"></i>
+                                Registration Fee: <span class="font-bold text-green-600 ml-1">₹500</span>
+                            </p>
                         </div>
 
                         <div class="flex space-x-4">
@@ -718,7 +766,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                             <button type="submit"
                                 class="bg-accent hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center submit-button">
                                 <i class="fas fa-paper-plane mr-3"></i>
-                                <span class="submit-text">Submit Application</span>
+                                <span class="submit-text">Submit & Pay ₹500</span>
                                 <i class="fas fa-spinner fa-spin ml-2 hidden loading-icon"></i>
                             </button>
                         </div>
@@ -770,7 +818,6 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 <p class="text-gray-600 mb-4 text-sm">Get detailed information</p>
                 <a href="mailto:info@ourgurukul.org" class="text-green-600 hover:text-green-700 font-semibold text-sm inline-flex items-center">
                     info@ourgurukul.org
-
                 </a>
             </div>
 
@@ -802,29 +849,29 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
                 <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-accent font-bold text-lg">1</span>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Form Review</h3>
-                <p class="text-gray-600 text-sm">We'll review your application within 24 hours</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Submit Form</h3>
+                <p class="text-gray-600 text-sm">Fill and submit the admission form</p>
             </div>
             <div class="text-center p-6 bg-white rounded-2xl shadow-lg hover-lift transition-all duration-300">
                 <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-accent font-bold text-lg">2</span>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Initial Contact</h3>
-                <p class="text-gray-600 text-sm">Our team will contact you for next steps</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Pay Registration Fee</h3>
+                <p class="text-gray-600 text-sm">Pay ₹500 registration fee online</p>
             </div>
             <div class="text-center p-6 bg-white rounded-2xl shadow-lg hover-lift transition-all duration-300">
                 <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-accent font-bold text-lg">3</span>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Campus Visit</h3>
-                <p class="text-gray-600 text-sm">Schedule a campus tour and interaction</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Document Verification</h3>
+                <p class="text-gray-600 text-sm">Submit required documents for verification</p>
             </div>
             <div class="text-center p-6 bg-white rounded-2xl shadow-lg hover-lift transition-all duration-300">
                 <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-accent font-bold text-lg">4</span>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Admission</h3>
-                <p class="text-gray-600 text-sm">Complete documentation and join us</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Admission Confirmation</h3>
+                <p class="text-gray-600 text-sm">Receive admission confirmation letter</p>
             </div>
         </div>
     </div>
@@ -1063,7 +1110,7 @@ $selected_program = isset($_GET['program']) ? htmlspecialchars($_GET['program'])
 
             // Show loading state
             submitButton.disabled = true;
-            submitText.textContent = 'Submitting...';
+            submitText.textContent = 'Processing...';
             loadingIcon.classList.remove('hidden');
 
             // Submit the form
