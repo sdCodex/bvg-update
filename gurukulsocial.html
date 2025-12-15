@@ -3,232 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bhaktivedanta Gurukul | Social Media Hub</title>
+  <title>Bhaktivedanta Gurukul | Social Media Links</title>
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #fff7e6, #fff);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow-x: hidden;
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      color: #c96a12;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 16px;
-      color: #555;
-      letter-spacing: 1px;
-    }
-
-    /* Swiper Container */
-    .swiper {
-      width: 100%;
-      max-width: 1100px;
-      padding: 40px 0 60px 0;
-    }
-
-    .swiper-slide {
-      display: flex;
-      justify-content: center;
-    }
-
-    /* Social Card */
-    .social-card {
-      width: 260px;
-      height: 260px;
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .social-card:hover {
-      transform: translateY(-12px) scale(1.05);
-      box-shadow: 0 30px 60px rgba(201,106,18,0.25);
-    }
-
-    .social-card i {
-      font-size: 42px;
-      color: #c96a12;
-      margin-bottom: 20px;
-    }
-
-    .social-card h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    .social-card a {
-      margin-top: 12px;
-      padding: 10px 24px;
-      border-radius: 30px;
-      background: linear-gradient(135deg, #d97706, #f59e0b);
-      color: #fff;
-      text-decoration: none;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-      transition: opacity 0.3s ease;
-    }
-
-    .social-card a:hover {
-      opacity: 0.85;
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 30px;
-      padding: 15px 0;
-      font-size: 13px;
-      color: #777;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      .hero h1 {
-        font-size: 30px;
-      }
-    }
+    .font-spiritual { font-family: 'Playfair Display', serif; }
   </style>
 </head>
-<body>
+<body class="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
 
-  <!-- Hero -->
-  <section class="hero">
-    <h1>Bhaktivedanta Gurukul</h1>
-    <p>Connect With Us</p>
-  </section>
+  <main class="w-full max-w-md px-5 py-8 text-center">
 
-  <!-- Swiper -->
-  <div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fas fa-globe"></i>
-          <h3>Official Website</h3>
-          <a href="https://bhaktivedantagurukul.com/" target="_blank">Visit</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-whatsapp"></i>
-          <h3>WhatsApp Channel</h3>
-          <a href="https://www.whatsapp.com/channel/0029VbB2O3F8KMqcp0Eu4A21" target="_blank">Join</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-instagram"></i>
-          <h3>Instagram</h3>
-          <a href="https://www.instagram.com/bhaktivedanta.gurukul/" target="_blank">Follow</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-youtube"></i>
-          <h3>YouTube</h3>
-          <a href="https://www.youtube.com/@BhaktivedantaGurukul" target="_blank">Subscribe</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-linkedin"></i>
-          <h3>LinkedIn</h3>
-          <a href="https://www.linkedin.com/in/bhaktivedanta-gurukul/" target="_blank">Connect</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-x-twitter"></i>
-          <h3>X (Twitter)</h3>
-          <a href="https://x.com/BVGurukulOffice" target="_blank">Follow</a>
-        </div>
-      </div>
-
-      <div class="swiper-slide">
-        <div class="social-card">
-          <i class="fab fa-telegram"></i>
-          <h3>Telegram</h3>
-          <a href="https://t.me/BhaktivedantaGurukul" target="_blank">Join</a>
-        </div>
-      </div>
-
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="font-spiritual text-3xl text-orange-700 mb-2">Bhaktivedanta Gurukul</h1>
+      <p class="text-sm text-gray-600 tracking-wide">Official Social Media Links</p>
     </div>
-  </div>
 
-  <footer>
-    © Bhaktivedanta Gurukul – Official Social Media Hub
-  </footer>
+    <!-- Links -->
+    <section class="space-y-4">
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+      <a href="https://bhaktivedantagurukul.com/" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center text-white">
+          <i class="fas fa-globe"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">Official Website</p>
+          <span class="text-xs text-gray-500">bhaktivedantagurukul.com</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
 
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+      <a href="https://www.whatsapp.com/channel/0029VbB2O3F8KMqcp0Eu4A21" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-green-500 to-green-400 flex items-center justify-center text-white">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">WhatsApp Channel</p>
+          <span class="text-xs text-gray-500">Join our updates</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
 
-  <script>
-    // GSAP Animations
-    gsap.from('.hero h1', { y: 40, opacity: 0, duration: 1 });
-    gsap.from('.hero p', { y: 30, opacity: 0, delay: 0.3, duration: 1 });
-    gsap.from('.social-card', { opacity: 0, scale: 0.8, stagger: 0.15, duration: 1, delay: 0.6 });
+      <a href="https://www.instagram.com/bhaktivedanta.gurukul/" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white">
+          <i class="fab fa-instagram"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">Instagram</p>
+          <span class="text-xs text-gray-500">@bhaktivedanta.gurukul</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
 
-    // Swiper Init
-    const swiper = new Swiper('.mySwiper', {
-      slidesPerView: 1,
-      spaceBetween: 30,
-      loop: true,
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
-      },
-      breakpoints: {
-        640: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 }
-      }
-    });
-  </script>
+      <a href="https://www.youtube.com/@BhaktivedantaGurukul" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center text-white">
+          <i class="fab fa-youtube"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">YouTube</p>
+          <span class="text-xs text-gray-500">Bhaktivedanta Gurukul</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
+
+      <a href="https://www.linkedin.com/in/bhaktivedanta-gurukul/" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center text-white">
+          <i class="fab fa-linkedin"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">LinkedIn</p>
+          <span class="text-xs text-gray-500">Professional updates</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
+
+      <a href="https://x.com/BVGurukulOffice" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white">
+          <i class="fab fa-x-twitter"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">X (Twitter)</p>
+          <span class="text-xs text-gray-500">@BVGurukulOffice</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
+
+      <a href="https://t.me/BhaktivedantaGurukul" target="_blank"
+        class="group flex items-center gap-4 w-full bg-white rounded-xl px-5 py-4 shadow-md hover:shadow-xl transition">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-sky-500 to-sky-400 flex items-center justify-center text-white">
+          <i class="fab fa-telegram"></i>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">Telegram</p>
+          <span class="text-xs text-gray-500">Official channel</span>
+        </div>
+        <i class="fas fa-chevron-right text-orange-600 group-hover:translate-x-1 transition"></i>
+      </a>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-xs text-gray-500">
+      © Bhaktivedanta Gurukul – Official Link Page
+    </footer>
+
+  </main>
 
 </body>
 </html>
